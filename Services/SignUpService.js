@@ -2,14 +2,15 @@
 
 const bodyParser = require("body-parser");
 const validator = require("email-validator");
-require('dotenv').config();
+const dotenv = require('dotenv');
+dotenv.config();
 require('cross-fetch/polyfill');
 
 global.navigator = () => null;
 const AmazonCognitoIdentity = require('amazon-cognito-identity-js');
 const poolData = {
-   UserPoolId: "us-east-2_ZziRfzq2R",
-   ClientId:"50ai330m6l388tuj2rk0linfd"
+  UserPoolId: process.env.UserPoolId,
+  ClientId:  process.env.ClientId
 };
 const pool_region = "us-east-2";
 const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);

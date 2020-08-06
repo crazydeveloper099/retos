@@ -1,0 +1,65 @@
+<%- include('partials/header') %>
+
+
+
+<style media="screen">
+
+
+  .table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+  background-color: rgba(255,255,255,0.3);
+}
+</style>
+
+<div class="jumbotron jumbotron-fluid" style="background-color:transparent; text-align:center; font-family: 'Monoton', cursive;font-weight:normal;font-style:normal;">
+  <div class="container">
+    <p style="color:#ffa500; font-size:2rem; font-family: 'BIGMACCA';">Tabla de clasificación</p>
+  </div>
+</div>
+
+
+
+
+
+<div style="  margin-top:-20px; text-align:center;" >
+  <div class="shadow_admin" style="background:#000000; border-radius:10px; padding:15px; height:190px;     display: inline-block;">
+    <img style="border-radius:10px;
+      margin-right:10px;
+      float:left;
+      height:160px;
+      width:300px;
+      margin-top:0px
+      ;padding-top:0px;" src=<%=unitChallenge.src.S%>>
+
+
+    <div style="display: inline-block; margin-right:50px;">
+      <h4 style="color:#00c400;font-size:1.5rem; "><strong><%= unitChallenge.challengeName.S %></strong></h4>
+      <h6 style="color:#AAAAAA;">ID: <%= unitChallenge.challengeId.S %></h6>
+      <h6 style="color:#AAAAAA; margin-top:35px;">Prize:</h6>
+      <h1 style="color:#d8d800; "><strong> <%=unitChallenge.challengePrize.S %></strong></h1>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="container-fluid" style="margin-top:20px; padding: 0px 250px 0px;">
+
+  <table class="table table-hover">
+    <thead >
+      <tr style="text-align:center" >
+        <th style="color:#a8a8a8; font-size:1.5rem;" scope="col">Position</th>
+        <th style="color:#a8a8a8;font-size:1.5rem;" scope="col">User Name</th>
+      </tr>
+    </thead>
+    <% userData.map((datai,i)=>{ %>
+    <tbody>
+      <tr style="text-align:center" >
+        <th style="color:#ffffff;font-size:1.5rem; " scope="row"><strong><%=i+1 %></strong></th>
+
+        <td style="color:#ffffff; font-size:1.5rem;" >
+          <strong><%=datai.M.user_name.S %></strong></td>
+      </tr>
+    </tbody>
+    <% }); %>
+  </table>
+</div>

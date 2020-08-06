@@ -1,14 +1,69 @@
 <%- include('partials/header') %>
 
+<script type="text/javascript">
+  $(document).ready(function() {
+    $(window).bind('beforeunload', function(){
+    myfun();
+    });
+    function myfun(){
+      $.post("http://localhost:3000/challenge", function(response){
+      window.location.replace("http://localhost:3000/adminPanel");
+      });
+}
+});
+</script>
+<style media="screen">
+  .buttonCard{
+    margin-top:15px;
+    padding:10px;
+    width:90%;
+    border:0px solid #222222;
+    border-radius: 20px;
+    font-weight: bold;
+    background: #6666ff;
+    color:#FFF;
+  }
+</style>
 <ol class="breadcrumb mt-4" style="background-color: 	#383838; margin-left:100px; margin-right:100px; ">
   <li class="breadcrumb-item" style="color:white;"><a href="/">HOGAR</a></li>
   <li class="breadcrumb-item active" style="color:white;" aria-current="page">DESAFÍOS</li>
 </ol>
 
-<div class="jumbotron jumbotron-fluid" style="background-color:transparent; text-align:center;">
-  <div class="container">
-    <p style="color:white;" class="lead">DESAFÍOS</p>
+
+<div class="jumbotron jumbotron-fluid"  style="background-color:transparent; text-align:center; font-family: 'Monoton', cursive;font-weight:normal;font-style:normal;">
+  <div class="container" >
+    <h1  class="display-4" style="color:#ffa500;  font-family: 'BIGMACCA';">DESAFÍOS</h1>
   </div>
 </div>
 
-<div style="margin-top:-50px;" id="20154-fyrvahk9" class="sw_container"><script type="text/javascript" src="https://sweepwidget.com/w/j/w_init.js"></script></div>
+<div style="  margin-top:-20px; text-align:center;" >
+  <div class="shadow_admin" style="background:#000000; border-radius:10px; padding:15px; height:190px;     display: inline-block;">
+    <img style="border-radius:10px;
+      margin-right:10px;
+      float:left;
+      height:160px;
+      width:300px;
+      margin-top:0px
+      ;padding-top:0px;" src=<%=src%>>
+
+
+    <div style="display: inline-block; margin-right:50px;">
+      <h4 style="color:#00c400;font-size:1.5rem; "><strong><%= challengeName %></strong></h4>
+      <h6 style="color:#AAAAAA;">ID: <%= challengeId %></h6>
+      <h6 style="color:#AAAAAA; margin-top:35px;">Prize:</h6>
+      <h1 style="color:#d8d800; "><strong> <%=prize %></strong></h1>
+    </div>
+  </div>
+</div>
+
+<div class="" style="text-align:center; margin-bottom:50px;">
+  <% if(code==null) { %>
+    <h3 style="color:white; margin-top:50px;">Too bad! Your Subscription has expired on <%=end_date%>.<br /> To join this challenge please subscribe again by<br /> clicking on Recharge button. </h3>
+    <button style="margin-top:50px; width:120px;" name="id" value=<%= challengeId %> class="buttonCard" type="submit" >Recharge</button>
+    <% } %>
+  <% if(code!=null) { %>
+    <%- code %>
+      <% } %>
+</div>
+
+<!-- <div style="margin-top:-80px;" id="20211-0nr9d61l" class="sw_container"><script type="text/javascript" src="https://sweepwidget.com/w/j/w_init.js"></script></div> -->

@@ -6,7 +6,6 @@ const ejs = require("ejs");
 const _ = require("lodash");
 const validator = require("email-validator");
 const flash = require('connect-flash');
-const session = require('express-session');
 const cookieParser = require('cookie-parser');
 require('dotenv').config();
 require('cross-fetch/polyfill');
@@ -48,7 +47,10 @@ exports.Login = function(req, res){
   };
   authService.Login(data,function(result){
     console.log( result.idToken.payload.email);
-    res.cookie('username', result.idToken.payload.email);
+    res.cookie('username', result.idToken.payload.name,{ httpOnly: true,  overwrite: true});
+    res.cookie('email',result.idToken.payload.email,{ httpOnly: true,  overwrite: true});
+    res.cookie('phone',result.idToken.payload.phone_number,{ httpOnly: true,  overwrite: true});
+
     res.redirect('/dashboard');
   },true);
 };

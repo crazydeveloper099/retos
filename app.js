@@ -5,7 +5,6 @@ const bodyParser = require("body-parser");
 const ejs = require("ejs");
 const _ = require("lodash");
 const validator = require("email-validator");
-const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const fileUpload = require('express-fileupload');
 const flash = require('express-flash-messages');
@@ -22,16 +21,20 @@ const subscription = require('./controllers/subscription.js');
 const admin = require('./controllers/admin.js');
 const challenges = require('./controllers/challenges.js');
 const adminPanel = require('./controllers/adminPanel.js');
-const addChallenge =require('./controllers/addChallenge.js');
+const declareResult =require('./controllers/declareResult.js');
+const leaderBoardChallenge =require('./controllers/leaderBoardChallenge.js');
+const myProfile =require('./controllers/myProfile.js');
 
+app.use(fileUpload());
 app.use(cookieParser('secret'));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static(__dirname + '/public'));
-app.use(session({cookie: { maxAge:10}}));
 app.use(flash());
 app.use(fileUpload());
 
-
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended:false}));
+app.use(bodyParser.json()).use(bodyParser.urlencoded());
 app.set('view engine', 'ejs');
 
 
@@ -45,14 +48,17 @@ app.post('/signup',signup.register);
 app.get('/dashboard',dashboard.dashboard);
 app.post('/dashboard',dashboard.postDashboard);
 app.get('/leaderboard',leaderboard.leaderboard);
+app.post('/leaderboard',leaderboard.postLeaderBoard);
 app.get('/subscription',subscription.subscription);
 app.get('/admin',admin.loginModal);
 app.get('/challenge',challenges.challenges);
 app.post('/admin',admin.postAdmin);
 app.get('/adminPanel',adminPanel.getAdminPanel);
-app.get('/addChallenge',addChallenge.getAddChallenge);
-app.post('/addChallenge',addChallenge.postAddChallenge);
 app.post('/adminPanel',adminPanel.postAdminPanel);
+app.get('/declareResult',declareResult.getResults);
+app.get('/leaderBoardChallenge', leaderBoardChallenge.leaderboardChallenge);
+app.get('/myProfile', myProfile.getMyProfile);
+app.post('/declareResult',declareResult.uploadMiddleWare);
 
 app.listen(3000, function() {
   console.log("Server started on port 3000");

@@ -3,8 +3,9 @@ const bodyParser = require("body-parser");
 const validator = require("email-validator");
 const request = require('request');
 const util = require('util');
+const dotenv = require('dotenv');
+dotenv.config();
 
-require('dotenv').config();
 require('cross-fetch/polyfill');
 
 const AmazonCognitoIdentity = require('amazon-cognito-identity-js');
@@ -13,17 +14,16 @@ exports.Login = function (body, callback, user) {
 let poolData=null;
 if(user){
     poolData = {
-       UserPoolId: "us-east-2_ZziRfzq2R",
-       ClientId: "50ai330m6l388tuj2rk0linfd"
+       UserPoolId: process.env.UserPoolId,
+       ClientId:  process.env.ClientId
     };
   }
-else{
+  else{
   poolData = {
-     UserPoolId: "us-east-2_dFYnNRbNz",
-     ClientId: "6oq5otis5gnqimrb5r6jcppo40"
+     UserPoolId: process.env.AdminPoolId,
+     ClientId: process.env.AdminClientId
   };
 }
-
 const pool_region = "us-east-2";
 const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
 
@@ -35,7 +35,7 @@ const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
         Username: userName,
         Password: password
     });
-    const userData = {
+   const userData = {
         Username: userName,
         Pool: userPool
     };
@@ -51,5 +51,3 @@ const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
        })
    });
 };
-//admin500@gmail.com
-//adminHere500

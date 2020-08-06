@@ -1,9 +1,7 @@
 .card_image{
-  height:195px;
+  height:160px;
   width:300px;
-  background-position: center center;
-  background-repeat: no-repeat;
-  position: relative;
+  border-radius:10px 10px 0px 0px;
 
 }
 
@@ -29,7 +27,22 @@
 .card-title i:hover{
   transform: scale(1.25) rotate(100deg);
   color:#18d4ca;
+}
 
+.headingFont{
+  font-family: 'bigmaccaregular', Arial, sans-serif;
+  font-weight:normal;
+  font-style:normal;
+}
+.buttonCard{
+  margin-top:15px;
+  padding:10px;
+  width:90%;
+  border:0px solid #222222;
+  border-radius: 20px;
+  font-weight: bold;
+  background: #000000;
+  color:#FFF;
 }
 .card:hover{
   transform: scale(1.05);
@@ -69,8 +82,8 @@
 }
 
 .dashboardClass{
-background: #000000;
-    background-attachment: fixed;
+  /* background-image: url(https://files.slack.com/files-pri/TLJF6GQPK-F017WU27K39/red_1.jpg); */
+  background: #000;
 }
 .cardModified{
   margin:0px;
@@ -123,4 +136,78 @@ filter: blur(4px);
   padding: 20px;
   border: 1px solid #AAAAAA;
   text-align: center;
+}
+@font-face {
+  font-family: "BIGMACCA";
+
+  src: url("/fonts/bigmacca.woff") format("woff"), /* Modern Browsers */
+    url("/fonts/bigmacca.woff2") format("woff2"); /* Modern Browsers */
+  font-weight: normal;
+  font-style: normal;
+}
+.cardShadow{
+  -webkit-box-shadow: 0px 0px 84px 21px rgba(0,0,0,1);
+  -moz-box-shadow: 0px 0px 84px 21px rgba(0,0,0,1);
+  box-shadow: 0px 0px 84px 21px rgba(0,0,0,1);
+}
+.carder{
+  border-radius: 10px;
+  background: #222;
+}
+.table_head{
+  font-size:1.5rem;
+  vertical-align:middle;
+  text-align:center;
+  color:white;
+}
+.table_row{
+   margin:10px;
+   background-color:#222;
+   padding-left:15px;
+}
+.shadow_admin{
+  -webkit-box-shadow: 0px 0px 36px 13px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 0px 36px 13px rgba(0,0,0,0.75);
+  box-shadow: 0px 0px 36px 13px rgba(0,0,0,0.75);
+}
+
+
+
+
+.active-pink-2 input.form-control[type=text]:focus:not([readonly]) {
+  border-bottom: 1px solid #f48fb1;
+  box-shadow: 0 1px 0 0 #f48fb1;
+}
+.active-pink input.form-control[type=text] {
+  border-bottom: 1px solid #f48fb1;
+  box-shadow: 0 1px 0 0 #f48fb1;
+}
+.active-purple-2 input.form-control[type=text]:focus:not([readonly]) {
+  border-bottom: 1px solid #ce93d8;
+  box-shadow: 0 1px 0 0 #ce93d8;
+}
+.active-purple input.form-control[type=text] {
+  border-bottom: 1px solid #ce93d8;
+  box-shadow: 0 1px 0 0 #ce93d8;
+}
+.active-cyan-2 input.form-control[type=text]:focus:not([readonly]) {
+  border-bottom: 1px solid #4dd0e1;
+  box-shadow: 0 1px 0 0 #4dd0e1;
+}
+.active-cyan input.form-control[type=text] {
+  border-bottom: 1px solid #4dd0e1;
+  box-shadow: 0 1px 0 0 #4dd0e1;
+}
+.active-cyan .fa, .active-cyan-2 .fa {
+  color: #4dd0e1;
+}
+.active-purple .fa, .active-purple-2 .fa {
+  color: #ce93d8;
+}
+.active-pink .fa, .active-pink-2 .fa {
+  color: #f48fb1;
+}
+.button_adminPanel{
+    padding:0px;
+    border-radius: 50px;
 }

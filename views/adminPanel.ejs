@@ -1,16 +1,29 @@
 <%- include('partials/header') %>
 
+<script type="text/javascript">
+    $(document).ready(function() {
+      $('.publishButtonClass').click(function(e) {
+          var str=$(this).val();
+          $('#modalSubscriptionForm').modal({ show : true });
+          $("#publishChallengeModal").val(str);
+
+      });
+    });
+</script>
+
+
 <% if(successMessage) {%>
   <div class="alert alert-warning alert-dismissible fade show" role="alert">
-    <strong>Published Successfully!</strong> You can now edit or delete challenge
+    <strong><%=showMessage%></strong>
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
 <% } %>
-<div class="jumbotron jumbotron-fluid" style="background-color:transparent; text-align:center;">
-  <div class="container">
-    <p style="color:white;" class="display-4">ADMINISTRAR | RETOS Y TORNEOS</p>
+
+<div class="jumbotron jumbotron-fluid"  style="background-color:transparent; text-align:center; font-family: 'Monoton', cursive;font-weight:normal;font-style:normal;">
+  <div class="container" >
+    <p  style="color:#ffa500; font-size:2rem; font-family: 'BIGMACCA';">ADMINISTRAR | RETOS Y TORNEOS</p>
   </div>
 </div>
 
@@ -18,72 +31,119 @@
 
 <!-- <div style="width:100%; text-align:center;">
 <form action="https://sweepwidget.com/" method="get">
-  <button type="submit" class="btn btn-primary btn-lg">Add Challenge</button>
+  <button type="submit" class="btn btn-primary  ">Add Challenge</button>
 </form>
 </div> -->
 <form id="editChallenge" action="/editChallenge" method="post"/>
 
+<h2 style="color:white; font-weight:bold; margin-left:250px;"><%= data.length %> Challenges Available</h2>
 
-<div class="list-group" id="list-tab" role="tablist" style="text-align:center;">
-  <% data.map(datai=>{ %>
-  <hr style="display: block; height: 1px;
-    border: 0; border-top: 1px solid #222;
-    margin: 1em 0; padding: 0;">
-  <div class="container-fluid" style="margin-top:20px; padding: 0px 250px 0px;">
-    <div class="row h-100">
-      <div class="col my-auto" style="margin-right:70px;">
-        <img style="border-radius:10px" class="card_image"
-        src=https://sweepwidget.com/<%=datai.image_loc%>.thumb_600_width.jpg>
-      </div>
-      <div class="col my-auto">
-        <button type="button" form="editChallenge"
-        class="btn btn-lg" style="background: #222; color:#FFFFFF;">EDITAR</button>
-      </div>
-      <div class="col my-auto">
-        <button type="button" form="editChallenge"
-        class="btn btn-lg" style="background: #222; color:#FFFFFF;">ENTRADAS</button>
-      </div>
-      <% if(datai.isPublished) {%>
-        <div class="col my-auto">
-            <button name="id" value= <%= datai.competition_id %> type="submit"
-              form="addChallenge" class="btn btn-lg" style="background: #222; color:#FFFFFF;">
-              RESULT
-            </button>
-        </div>
-        <div class="col my-auto">
-          <form id="deleteChallenge" action="/adminPanel" method="post">
-          <input type="hidden" id="custId" name="deleteButton" value=true>
-            <button name="delete" value= <%= datai.competition_id %> type="submit"
-            form="deleteChallenge" class="btn btn-lg" style="background: #222; color:#FFFFFF;">
-              DELETE MATCH
-            </button>
+<div class="list-group" id="list-tab" role="tablist">
+  <% data.map((datai,i)=>{ %>
+    <div style="padding: 0px 250px 0px; margin-top:35px;" >
+      <div class="shadow_admin" style="background:#222; border-radius:10px; padding:15px;">
+        <img style="
+          margin-right:20px;
+          float:left;
+          height:160px;
+          width:260px;
+          padding-bottom:10px;"
+          src=<%=datai.image_loc%>>
+
+
+        <div>
+          <h4 style="color:white;"><%= datai.title %></h4>
+          <h6 style="color:#AAAAAA; margin-top: 2px;">Sweepwidget: <%= datai.type %></h6>
+          <h6 style="color:#AAAAAA;">ID: <%= datai.competition_id %></h6>
+          <form id="publishResult" action="/adminPanel" method="post">
+          <input type="hidden" id="custId" name="publishResult" value=true />
+
           </form>
-        </div>
-      <% } %>
-      <% if(!datai.isPublished) {%>
-        <div class="col my-auto">
-          <form id="addChallenge" action="/adminPanel" method="post" >
-          <input type="hidden" id="custId" name="publish" value=true>
-            <button name="id" value= <%= datai.competition_id %> type="submit"
-              form="addChallenge" class="btn btn-lg" style="background: #222; color:#FFFFFF;">
-              PUBLISH
-            </button>
-            </form>
-        </div>
 
-        <% } %>
+          <% if(!datai.isPublished) {%>
 
-      <div class="col my-auto">
-        <h4 style="color:white;"><%= datai.title %></h4>
-        <div class="textStyle" style="color:white;   margin-top: 2px;">
-          Status: <%= datai.type %>
+                  <button id="publishButton" value= <%= datai.competition_id %>
+                    type="button"
+                    class="btn btn-warning publishButtonClass">
+                    PUBLISH
+                </button>
+            <% } %>
+            <% if(datai.isPublished) {%>
+                  <form id="deleteChallenge" action="/adminPanel" method="post">
+                  <input type="hidden" id="custId" name="deleteButton" value=true>
+                    <button name="delete" value= <%= datai.competition_id %> type="submit"
+                    form="deleteChallenge" class="btn   btn-danger" style="background: #222; color:#FFFFFF;float:left;">
+                      DELETE CHALLENGE
+                    </button>
+                  </form>
+                  <% if(!datai.isResultPublished) {%>
+                  <button type="submit" form="publishResult"
+                  class="btn btn-success"
+                  name="resultButton"
+                  value= <%= datai.competition_id %>
+                  style="background: #222;
+                  color:#FFFFFF;">PUBLISH RESULT</button>
+                  <% } %>
+                  <% if(datai.isResultPublished) {%>
+                      <form id="deleteResult" action="/adminPanel" method="post" >
+                        <input type="hidden" id="custId" name="deleteResult" value=true>
+                          <button
+                            name="deleteResultId"
+                            value= <%= datai.competition_id %>
+                            type="submit"
+                            form="deleteResult"
+                            class="btn btn-deep-purple button_adminPanel"
+                            style="background: #222; color:#FFFFFF; float:left; ">
+                            Delete Result
+                        </button>
+                      </form>
+                      <form id="editResult" action="/adminPanel" method="post" >
+                        <input type="hidden" id="custId" name="publish" value=true>
+                          <button
+                            name="resultButton"
+                            value= <%= datai.competition_id %>
+                            type="submit"
+                            form="publishResult"
+                            class="btn btn-dark-green"
+                            style="background: #222; color:#FFFFFF; ">
+                            EDIT RESULT
+                        </button>
+                      </form>
+                    <% } %>
+            <% } %>
+
         </div>
-        <h6 style="color:#AAAAAA;">ID: <%= datai.competition_id %></h6>
       </div>
     </div>
-  </div>
   <% }); %>
+
 </div>
-<hr style="display: block; height: 1px;
-  border: 0; border-top: 1px solid #222;
-  margin: 1em 0; padding: 0;">
+<br/>
+
+<div class="modal fade show" id="modalSubscriptionForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Publish Challenge</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form action="/adminPanel" method="post" >
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <i class="fas fa-user prefix grey-text"></i>
+          <input name="prize" type="text" id="form3" class="form-control validate" placeholder="Enter Prize Amount Ex. $10" value="">
+        </div>
+
+
+      </div>
+      <div class="modal-footer d-flex justify-content-center">
+          <input type="hidden" id="custId" name="publish" value=true />
+        <button type="submit" id="publishChallengeModal" name="id" class="btn btn-indigo" value="">PUBLISH </button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>

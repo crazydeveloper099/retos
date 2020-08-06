@@ -12,9 +12,9 @@ exports.register = function(req, res){
     if(err)
         res.send(err);
     else{
-      res.cookie('username', req.body.name);
-      res.cookie('email', req.body.email);
-      res.cookie('phone', result.phone);
+      res.cookie('username', req.body.name,{ httpOnly: true,  overwrite: true});
+      res.cookie('email', req.body.email,{ httpOnly: true,  overwrite: true});
+      res.cookie('phone', result.phone,{ httpOnly: true,  overwrite: true});
       res.redirect('/dashboard');
     }
   });

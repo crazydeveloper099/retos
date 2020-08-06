@@ -1,6 +1,5 @@
 //jshint esversion:6
 const axios = require('axios');
-var session = require('express-session');
 
 const authService = require('../Services/LoginService.js');
 
@@ -33,6 +32,7 @@ exports.postAdmin=(req,res)=>{
   };
   authService.Login(data,function(result){
     console.log( result.idToken.payload.email);
+    res.cookie('adminUser', req.body.username, { httpOnly: true });
     res.cookie('isValid', true, { httpOnly: true });
     res.redirect('/adminPanel');
   }, false);
