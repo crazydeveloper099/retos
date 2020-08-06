@@ -82,8 +82,7 @@
 }
 
 .dashboardClass{
-  /* background-image: url(https://files.slack.com/files-pri/TLJF6GQPK-F017WU27K39/red_1.jpg); */
-  background: #000;
+  background-image: url(/images/background.jpg);
 }
 .cardModified{
   margin:0px;

@@ -9,7 +9,7 @@ exports.leaderboard=(req,res)=>{
 
       }
       else if(data){
-
+        console.log("-------");
         console.log(data.Items);
         res.cookie('dataLeaderboard', data, { httpOnly: true });
         res.render("leaderboards",
