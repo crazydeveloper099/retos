@@ -24,7 +24,7 @@ const data = require('../data/dashboard_data.js');
 exports.postAddChallenge=(dataStore, prize, callback)=>{
   console.log(dataStore);
   const challengeName=dataStore.title;
-  const time=dataStore.start_time;
+  const time=dataStore.end_time;
   const image=dataStore.image_loc;
   const id=dataStore.competition_id;
   const description=dataStore.description;
@@ -47,7 +47,7 @@ exports.postAddChallenge=(dataStore, prize, callback)=>{
       callback(err, data);
     }
     else if(data){
-      
+
       callback(err, data);
     }
 

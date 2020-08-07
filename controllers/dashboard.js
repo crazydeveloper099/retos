@@ -36,6 +36,7 @@ exports.dashboard = (req, res) => {
   const challengeData = data.dbChallengeFetcher(function(err, dataFetched) {
     if (err) {} else if (phone, dataFetched) {
       subscriptionFetcher(phone, ()=>{
+        console.log(dataFetched.Items);
         res.cookie('dataDashboard', dataFetched, { httpOnly: true,  overwrite: true});
         res.render('dashboard', {
 
