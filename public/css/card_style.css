@@ -1,12 +1,9 @@
 .card_image{
-  height:230px;
-  width:400px;
-  border-radius: 10px;
+  height:17vh;
+  width:13vw;
+   border-radius: 1vh 0px 0px 1vh;
 }
-html, body {
-  /* IE 10-11 didn't like using min-height */
-  height: 100%;
-}
+
 .card_item{
   padding-left:5px;
   padding-right:5px;
@@ -37,8 +34,7 @@ html, body {
   font-style:normal;
 }
 .buttonCard{
-  margin-top:15px;
-  padding:10px;
+  margin-top:10px;
   min-width:150px;
   padding-left: 50px;
   padding-right:50px;
@@ -84,10 +80,26 @@ html, body {
     background-image: none;
     background-color: #262828;
 }
+.blurredBackground{
 
+  background-image: url("/images/background.jpg");
+
+  /* Add the blur effect */
+  filter: blur(8px);
+  -webkit-filter: blur(8px);
+
+  /* Full height */
+  height: 100%;
+
+  /* Center and scale the image nicely */
+  /* background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover; */
+
+}
 .dashboardClass{
-  /* background-color: 	#130F0E; */
-  background-image: url(/images/background.jpg);
+  background:#090f0f;/* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
 }
 .cardModified{
   margin:0px;
@@ -123,7 +135,6 @@ background-repeat: no-repeat;
     background-color: white;
     color: #5A4181;
 }
-
 .pagination > li > a:focus,
 .pagination > li > a:hover,
 .pagination > li > span:focus,
@@ -160,6 +171,9 @@ background-repeat: no-repeat;
     url("/fonts/bigmacca.woff2") format("woff2"); /* Modern Browsers */
   font-weight: normal;
   font-style: normal;
+}
+.challengeBackground{
+ background: url('images/background.jpg');
 }
 .cardShadow{
   -webkit-box-shadow: 0px 0px 84px 21px rgba(0,0,0,1);
@@ -351,7 +365,36 @@ background-repeat: no-repeat;
 	}
 }
 
-/* .square_btn:hover {
-  background-image: -webkit-linear-gradient(45deg, #7f7fff 0%, #3232ff 100%);
-  background-image: linear-gradient(45deg, #7f7fff 0%, #3232ff 100%);
-} */
+.cardDarkBackground{
+  height:17vh;
+  background:#121f1f;
+  border-radius: 1vh;
+  overflow:hidden;
+}
+
+
+.shimmer {
+  display: inline-block;
+  color:#ffb327;
+  background: #ffb327 -webkit-gradient(linear, 100% 0, 0 0, from(#ffb327), color-stop(0.9, #ffffff), to(#ffb327));
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-animation-name: shimmer;
+  -webkit-animation-duration: 2.9s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-background-size: 4rem 100%;
+}
+@-webkit-keyframes shimmer {
+    0% {
+        background-position: -4rem top;
+    }
+
+    70% {
+        background-position: 12.5rem top;
+    }
+
+    100% {
+        background-position: 12.5rem top;
+    }
+}

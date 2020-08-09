@@ -3,6 +3,10 @@
 
 <script type="text/javascript">
   $(document).ready(function() {
+    $('.counter').counterUp({
+      delay: 10,
+      time: 1000
+  });
     $('#acceptTANDC').click(function(event){
       $.cookie("tandc", true);
        $('#exampleModalCenter').modal("hide");
@@ -57,14 +61,16 @@
 
   }
   .view_more_bck{
-    background: #111111;
+    background: #ff4c4c;
     border-radius:5px; /* fallback for old browsers */
 /* background: -webkit-linear-gradient(to right, #56ab2f, #a8e063); /* Chrome 10-25, Safari 5.1-6 */
   }
 </style>
 
 
+<div class="blurredBackground">
 
+</div>
 
 
 
@@ -79,15 +85,14 @@
    <div class="carousel-inner text-center" role="listbox">
     <div class="carousel-item active text-center"  >
       <div class="view align-items-center justify-content-center">
-        <img class="d-block w-100 imageCarousel" src="https://wallpaperaccess.com/full/1895145.jpg"
-          alt="First slide">
-        <div class="mask rgba-black-strong"></div>
+        <img class="d-block w-100 imageCarousel" src="https://wallpaperaccess.com/full/1895145.jpg" alt="First slide">
+        <div class="mask rgba-black-slight"></div>
       </div>
-      <div class="carousel-caption " style="padding:30vh;">
+      <div class="carousel-caption " style="padding:25vh;">
 
-            <h1 style="color:#ffffff; font-family: 'BIGMACCA';" style="font-size:3rem;margin-bottom:20px;">Participate in challenges and win daily!</h1>
+            <div style="color:#ffffff; font-family: 'Rowdies';font-size:3vw;margin-bottom:1vh;">Participate in challenges and win daily!</div>
 
-            <a href="#" class="square_btn" style="font-size:1.7rem;">SUBSCRIBE</a>
+            <a href="#" class="square_btn" style="font-size:1vw;">SUBSCRIBE</a>
 
       </div>
     </div>
@@ -95,24 +100,24 @@
       <div class="view">
         <img class="d-block w-100 imageCarousel" src="https://wallpapercave.com/wp/wp1912709.png"
           alt="Second slide">
-        <div class="mask rgba-black-strong"></div>
+        <div class="mask rgba-black-slight"></div>
       </div>
       <div class="carousel-caption" style="padding:30vh;">
 
-            <h1 style="color:#ffffff; font-family: 'BIGMACCA';" style="font-size:3rem;margin-bottom:20px;">1000s of games to choose from!</h1>
+        <div style="color:#ffffff; font-family: 'Rowdies';font-size:3vw;margin-bottom:1vh;">Participate in challenges and win daily!</div>
 
-            <a href="#" class="square_btn" style="font-size:1.7rem;">SUBSCRIBE</a>
+            <a href="#" class="square_btn" style="font-size:1vw;">SUBSCRIBE</a>
       </div>
     </div>
     <div class="carousel-item" >
       <div class="view">
         <img class="d-block w-100 imageCarousel" src="https://wallpapercave.com/wp/wp3276769.jpg"
           alt="Third slide">
-        <div class="mask rgba-black-strong"></div>
+        <div class="mask rgba-black-slight"></div>
       </div>
       <div class="carousel-caption" style="padding:30vh;">
-        <h1 style="color:#ffffff; font-family: 'BIGMACCA';" style="font-size:3rem;margin-bottom:20px;">COMPETE WORLDWIDE!</h1>
-        <a href="#" class="square_btn" style="font-size:1.7rem;">SUBSCRIBE</a>
+        <div style="color:#ffffff; font-family: 'Rowdies';font-size:3vw;margin-bottom:1vh;">Participate in challenges and win daily!</div>
+        <a href="#" class="square_btn" style="font-size:1vw;">SUBSCRIBE</a>
       </div>
     </div>
   </div>
@@ -127,45 +132,46 @@
   </a>
 </div>
 
-<div class="container-fluid" style="text-align:center;padding:40px; ">
-  <h6  style="color:#ffa500; font-size:2.8rem; font-family: 'BIGMACCA';">RETOS   DISPONIBLES</h6>
+<div class="container" style="text-align:center;padding:40px; ">
+  <h6  style="color:#ffa500; font-size:2vw; font-family: 'BIGMACCA';">RETOS   DISPONIBLES</h6>
 </div>
 
       <div class="container-fluid  " >
         <% for (i = 0; i < ((data.length)/2); i++) { %>
-        <div class="row no-gutters" style="padding-left:10vw;padding-right:10vw; margin-top:50px;" >
+        <div class="row justify-content-center" style="margin-top:2vh;" >
 
     <% data.slice(2*i,(2*i)+2).map((datai,x) =>{ %>
+      <form action="/dashboard"  method="post" >
+        <input name="id" value=<%= datai.challengeId %> type="hidden" />
+      <a href="javascript:void(0);" onclick="$(this).closest('form').submit();">
+        <div class="col col-lg-6 col-md-6 col-sm-12" >
+        <div class="cardDarkBackground" style="display: inline-flex;">
 
-        <div class="col-6" >
-
-          <div style="display:table; padding:20px;" class="card_styles_back">
-
-          <div style="display:table-row;">
-            <div style="display:table-cell;">
-          <img  class="card_image" src=<%=datai.src%> style=" margin-right:50px;" >
-          </div>
-          <div style="display:table-cell;vertical-align:middle;">
-        <div class="textStyle" style="color:#27ff27; font-weight: bold; font-family: 'Lato', sans-serif; font-size:1.5rem; margin-top:20px;   font-weight: bold;  max-width: 150px;">
+        <div style="">
+          <img  class="card_image" src=<%=datai.src%> style="margin-right:2vw;" >
+        </div>
+        <div  style="width:15vw;" >
+          <div class="textStyle" style="color:#FFFFFF; font-weight: bold; font-family: 'Lato', sans-serif; font-size:1vw;   font-weight: bold;  ">
           <%= datai.challengeName %>
           </div>
-          <div class="textStyle" style="color:#FFFFFF;   margin-top: 8px;">
-            ID: <%= datai.challengeId %>
+          <hr style=" height:0.09vh; padding: 0 !important;margin: 0 !important; background:rgba(204, 204, 204,0.2); margin-top:0.5vh;">
+          <div class="textStyle" style="color:#cccccc;   margin-top: 0.5vh; font-size:1vw;">
+          <%= datai.challengeDescription %>
           </div>
-          <div class="textStyle" style="color:#FFFFFF;   margin-top: 2px;">
-            Status: <%= datai.challengeType %>
-          </div>
-            <div class="textStyle" id="<%="timeLeft"+x%>" style="color:#FFFFFF;   margin-top: 2px;">
+            <div class="textStyle" id="<%="timeLeft"+x%>" style="color:#cccccc;   margin-top: 0.5vh; font-size:1vw;">
         <%= datai.challengeTime %>
         </div>
+        <div class="textStyle" id="<%="timeLeft"+x%>" style="color:#ffb327;margin-top: 0.5vh; font-size:1.5vw;">
+          <i class="fa fa-trophy" aria-hidden="true" style="color:ffb327;height:1vh;"></i>
+          <%= datai.challengePrize %>
+        </div>
         <form action="/dashboard"  method="post" >
-      <button name="id" value=<%= datai.challengeId %> class="buttonCard button_gradient" type="submit" >JOIN</button>
-      </form>
+        </form>
       </div>
-      </div>
-          </div>
-</div>
-
+    </div>
+  </div>
+  </a>
+  </form>
       <% }) %>
   </div>
   <% } %>
@@ -304,8 +310,52 @@ En caso que usuarios de otros países utilicen La Plataforma para suscripciones 
 </div>
 <% } %>
 <div class="container-fluid" style="text-align:center; margin-top:50px;">
-  <button name="more_challenges"  class="buttonCard view_more_bck" style="height:60px; font-size:1.6rem;" type="submit" >View all Challenges</button>
+  <button
+  name="more_challenges"
+  class="buttonCard view_more_bck"
+  style="height:6vh;
+  font-size:1vw;
+  margin-bottom:5vh;"
+  type="submit" >
+  View all Challenges
+</button>
 </div>
 
+<div class="container-fluid"
+style="
 
+text-align:center;
+justify-content: center;
+align-items: center;
+background:url('https://images2.alphacoders.com/597/thumb-1920-597965.jpg') no-repeat center center fixed;
+   -moz-background-size: cover;
+   -webkit-background-size: cover;
+   -o-background-size: cover;
+   background-size: cover;
+   box-shadow: inset 0 0 0 1000px rgb(30, 30, 30,0.8);
+   padding: 12vh 0 12vh 0;">
+<div class="row"
+style="color:white;
+justify-content: center;
+font-size:1.9vw;">
+  <strong>Some Stats</strong>
+</div>
+  <div class="row" style="margin-top:2vh;">
+    <div class="col col-lg-4 col-sm-12" >
+      <i class="fa fa-user" aria-hidden="true" style="color:white;size:3vh;"></i>
+      <p style="color:white;font-size:1.5vw;font-weight:bold;">Players </p>
+      <span class="counter shimmer" style='color:white;font-weight:bold;font-size:2.5vw;margin-top:-1.5vh;'>30,000+</span>
+    </div>
+    <div class="col col-lg-4 col-sm-12" >
+      <i class="fa fa-money" aria-hidden="true" style="color:white;size:3vh;"></i>
+      <p style="color:white;font-size:1.5vw;font-weight:bold;">Prize distributed </p>
+      <span class="counter shimmer" style='color:white;font-weight:bold;font-size:2.5vw;margin-top:-1.5vh;'>$100,000+</span>
+    </div>  <div class="col col-lg-4 col-sm-12" >
+      <i class="fa fa-trophy" aria-hidden="true" style="color:white;size:3vh;"></i>
+      <p style="color:white;font-size:1.5vw;font-weight:bold;">Challenges </p>
+      <span class="counter shimmer" style='color:white;font-weight:bold;font-size:2.5vw;margin-top:-1.5vh;'>100+</span>
+      </div>
+</div>
+
+  </div>
 <%- include('partials/footer') %>
