@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>Retos Gamer</title>
+  <meta charset="utf-8">
+  <link rel="icon" type="image/png" href="/images/RG_16x16.png"/>
+  <link rel="stylesheet" type="text/css" href="css/card_style.css" />
+  <link rel="stylesheet" type="text/css" href="css/carousel_all_ch.css" />
+  <link rel="stylesheet" href="css/font-awesome.min.css"/>
+  <link rel="stylesheet" href="css/magnific-popup.css"/>
+  <link rel="stylesheet" href="css/owl.carousel.min.css"/>
+  <link rel="stylesheet" href="css/animate.css"/>
+  <link rel="stylesheet" href="css/slicknav.min.css"/>
+  <link rel="stylesheet" href="css/testimonial.css"/>
+  <link rel="stylesheet" href="css/simple-sidebar.css" >
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Monoton&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.1/css/mdb.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=PT+Sans:wght@700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Rowdies:wght@700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@800&display=swap" rel="stylesheet">
+
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.1/js/mdb.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/jquery.waypoints.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.theme.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+    <script src="js/jquery.rcounter.js"></script>
+<script src="https://static.landbot.io/landbot-widget/landbot-widget-1.0.0.js"></script>
+<style>
+  .navbar-toggler-icon{
+    font-size: 5vw;
+}
+</style>
+<nav 
+class="navbar sticky-top navbar-expand-lg navbar-dark mobile-otpimizeNav-cl" 
+style="background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(4px);  border-bottom: 0.01px solid rgba(255, 255, 255, 0.5);padding:0.5vh; ">
+
+<a href="/dashboard"><img class="navbar-brand" src="/images/RG 5.png" style="height: 6vh;" alt="logo"></a>
+
+<button class="navbar-toggler" type="button" data-toggle="collapse"
+data-target="#navbarNavDropdown"
+aria-controls="navbarNavDropdown"
+aria-expanded="false"
+aria-label="Toggle navigation"
+>
+  <span class="navbar-toggler-icon" ></span>
+</button>
+<!-- <style>
+dropdown-menu > li > a:hover {
+    background-image: none;
+    background-color: #262828;
+}
+</style> -->
+<div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown">
+  <ul class="navbar-nav">
+    <li class="nav-item px-2">
+      <a class="nav-link" href="/" style="font-size: 4vw;;"> INICIO </a>
+    </li>
+    <li class="nav-item px-2">
+      <a class="nav-link" href="/leaderboard" style="font-size: 4vw;;"> CLASIFICACIONES</a>
+    </li>
+    <li class="nav-item px-2">
+      <a class="nav-link" href="/aboutUs" style="font-size: 4vw;;"> NOSOTROS</a>
+    </li>
+      <% if (name!=null) { %>
+        <li class="nav-item px-2">
+          <a class="nav-link" href="/myProfile" style="font-size: 4vw;;"> MI PERFIL</a>
+        </li>
+    <li class="nav-item dropdown px-2">
+     <a class="nav-link dropdown-toggle"" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"style="font-size: 4vw;;">
+    CUENTA
+     </a>
+
+     <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="background-color: #000 !important;">
+       <% if (end_date!=null && end_date!="") { %>
+        <% var end_date_formatted =end_date.substring(0,4)+"/"+end_date.substring(4,6)+"/"+end_date.substring(6,8) %>
+
+       <a class="dropdown-item" href="#" style="color:white;font-size: 4vw;">Tu subscripción expira en: <br><%= end_date_formatted %></a>
+       <% } %>
+     </div>
+   </li class="nav-item px-2">
+     <% } %>
+    <% if (name==null) { %>
+      <li class="d-inline-block align-top" style="color:white;" >
+        <form method="get" action="/login">
+          <button type="submit" class="btn btn-outline-warning" style="font-size: 4vw;;">Iniciar sesión</button>
+      </form>
+      </li>
+      <% } %>
+      <% if (name!=null) { %>
+        <li class="d-inline-block align-top" style="color:white;" href="#">
+          <a class="nav-link"  href="#"style="font-size: 4vw;;"><%= name %></a>
+        </li>
+        <form method="get" action="/logout">
+          <button type="submit" class="btn btn-danger"  style="font-size: 4vw;;">cerrar sesión</button>
+      </form>
+        <% } %>
+  </ul>
+
+</div>
+
+</nav>
+</head>
+  <body style="display: flex;flex-direction: column;background: #000000;" >
+<div id="wrapper">
+  <aside id="sidebar-wrapper" >
+    <div class="sidebar-brand">
+      <h2 style="font-family: 'BIGMACCA';">RETOS GAMER</h2>
+      <hr style="background-color: #333333;">
+    </div>
+    <ul class="sidebar-nav">
+      <li class="active">
+        <a class="nav-link" href="/" ><i class='fas fa-home' style="margin-right:0.5vw;"></i>HOGAR </a>
+      </li>
+      <li>
+        <a class="nav-link" href="/leaderboard" ><i class="fa fa-trophy" style="margin-right:-1.4vw;font-size:1vw;"></i>CLASIFICACIONES</a>
+      </li>
+      <li>
+        <a class="nav-link" href="/aboutUs" ><i class="fa fa-info-circle" style="margin-right:-1.4vw;font-size:1vw;"></i>NOSOTROS</a>
+      </li>
+      <% if (name!=null) { %>
+        <li >
+          <a class="nav-link" href="/myProfile" ><i class="fa fa-user" style="margin-right:-1.4vw;font-size:1vw;"></i>MI PERFIL</a>
+        </li>
+    <li >
+     <a class="nav-link dropdown-toggle"" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <i class="fa fa-credit-card" style="margin-right:-1.4vw;font-size:1vw;"></i>CUENTA
+     </a>
+
+     <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="background-color: #0e1111 !important;">
+       <% if (end_date!=null) { %>
+       <a class="dropdown-item" href="#" style="color:white;">Expiring <%= end_date %></a>
+       <% } %>
+       <a class="dropdown-item" style="color:white;" href="/subscription">Recharge now</a>
+     </div>
+   </li >
+     <% } %>
+     <% if (name==null) { %>
+      <li style="color:white;" >
+        <form method="get" action="/login">
+          <button type="submit" class="btn btn-outline-warning"  onclick="/leaderboard">Iniciar sesión</button>
+      </form>
+      </li>
+      <% } %>
+      <% if (name!=null) { %>
+        <li style="color:white;" href="#">
+          <a class="nav-link"  href="#"><%= name %></a>
+        </li>
+        <li style="">
+        <form method="get" action="/logout">
+          <button type="submit" class="btn btn-danger"  onclick="/leaderboard"><i class="fa fa-power-off"></i></i>
+            cerrar sesión</button>
+            <hr style="background-color: #333333;">
+      </form>
+    </li>
+        <% } %>
+    </ul>
+  </aside>
+
+  
+
+  <script>
+  const $button  = document.querySelector('#sidebar-toggle');
+  const $wrapper = document.querySelector('#wrapper');
+  
+  $button.addEventListener('click', (e) => {
+    e.preventDefault();
+    $wrapper.classList.toggle('toggled');
+  });
+  </script>
+  
+  <script SameSite="None; Secure" src="https://static.landbot.io/landbot-widget/landbot-widget-1.0.0.js"></script>
+  <script>
+    var myLandbot = new LandbotLivechat({
+      index: 'https://chats.landbot.io/v2/H-681998-ZMNSD6NBYYKQ62P5/index.html',
+    });
+  </script><script>
+    // Show a proactive message after 10 seconds
+    setTimeout(function() {
+      myLandbot.sendProactive({
+    "message": "No dudes en clickearme si necesitas ayuda! 😉",
+    "author": "Retos Gamer",
+    "avatar": "https://storage.googleapis.com/media.helloumi.com/139922/channels/HMFH5X6PQZDEQVUW5WEPS7YHO9PFQ289.png",
+    "extra": {
+      "hide_textbox": true
+    }
+  });
+    }, 60000);
+  </script>

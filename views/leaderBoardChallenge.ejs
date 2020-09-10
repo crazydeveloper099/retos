@@ -3,8 +3,6 @@
 
 
 <style media="screen">
-
-
   .table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
   background-color: rgba(255,255,255,0.3);
 }
@@ -12,53 +10,81 @@
 
 <div class="jumbotron jumbotron-fluid" style="background-color:transparent; text-align:center; font-family: 'Monoton', cursive;font-weight:normal;font-style:normal;">
   <div class="container">
-    <p style="color:#ffa500; font-size:2rem; font-family: 'BIGMACCA';">Tabla de clasificación</p>
+    <p style="color:#ffa500; font-size:2rem; font-family: 'BIGMACCA';">Tabla de clasificacion</p>
   </div>
 </div>
 
 
+<div class="container-fluid" style="text-align:center;">
+  <div class="row">
+    <div class="col col-lg-6 col-sm-12" >
 
 
+<img class="zoomImg" style="width:16vw; height:9vw; border-radius:0.5vw;" src=<%="/uploads/"+unitChallenge.challengeId.S+".jpg"%> alt="">
+<h4 style="color:#FFFFFF;font-size:1vw; margin-top:1vh;">
+  <strong>Result Screenshot</strong>
+</h4>
+<a href="<%="/uploads/"+unitChallenge.challengeId.S+".jpg"%>" download style="color:white;font-size:1.5vw;"><i class="fas fa-arrow-circle-down"></i></a>
 
-<div style="  margin-top:-20px; text-align:center;" >
-  <div class="shadow_admin" style="background:#000000; border-radius:10px; padding:15px; height:190px;     display: inline-block;">
+</div>
+<div class="col col-lg-6 col-sm-12">
+<div style=" margin-bottom:25vh; " >
+  <div class="shadow_admin" style="background:#000000; border-radius:0.5vw; padding:1vw; height:10vh;">
     <img style="border-radius:10px;
-      margin-right:10px;
-      float:left;
-      height:160px;
-      width:300px;
+    width:16vw; height:9vw;
       margin-top:0px
       ;padding-top:0px;" src=<%=unitChallenge.src.S%>>
 
 
-    <div style="display: inline-block; margin-right:50px;">
-      <h4 style="color:#00c400;font-size:1.5rem; "><strong><%= unitChallenge.challengeName.S %></strong></h4>
-      <h6 style="color:#AAAAAA;">ID: <%= unitChallenge.challengeId.S %></h6>
-      <h6 style="color:#AAAAAA; margin-top:35px;">Prize:</h6>
-      <h1 style="color:#d8d800; "><strong> <%=unitChallenge.challengePrize.S %></strong></h1>
+    <div>
+      <h4 style="color:#FFFFFF;font-size:1vw; margin-top:1vh; ">
+        <strong><%- unitChallenge.challengeName.S %></strong>
+        <p style="color:#FF0000;"><strong> <%=unitChallenge.challengePrize.S %></strong></p>
+        <p style="color:#a8a8a8;"> <%=unitChallenge.challengeTime.S %></p>
+      </h4>
     </div>
   </div>
 </div>
-
-
+</div>
+</div>
+</div>
 
 <div class="container-fluid" style="margin-top:20px; padding: 0px 250px 0px;">
 
-  <table class="table table-hover">
+  <table class="table "style="border-radius:2vw;">
     <thead >
-      <tr style="text-align:center" >
-        <th style="color:#a8a8a8; font-size:1.5rem;" scope="col">Position</th>
-        <th style="color:#a8a8a8;font-size:1.5rem;" scope="col">User Name</th>
+      <tr style="text-align:center;background:#ffffffAA;" >
+        <th style="color:#000; font-size:1.5rem;" scope="col">Position</th>
+        <th style="color:#000;font-size:1.5rem;" scope="col">User Name</th>
+        <th style="color:#000;font-size:1.5rem;" scope="col">Email</th>
       </tr>
     </thead>
     <% userData.map((datai,i)=>{ %>
     <tbody>
-      <tr style="text-align:center" >
+      <%if(i%2!==0){%>
+      <tr style="text-align:center;background:#222;" >
         <th style="color:#ffffff;font-size:1.5rem; " scope="row"><strong><%=i+1 %></strong></th>
 
         <td style="color:#ffffff; font-size:1.5rem;" >
-          <strong><%=datai.M.user_name.S %></strong></td>
+          <strong><%=datai.user_name %></strong></td>
+
+          <th style="color:#ffffff;font-size:1rem; " scope="row"><strong><%=datai.email %></strong></th>
+
       </tr>
+
+      <%}%>
+      <%if(i%2===0){%>
+      <tr style="text-align:center;" >
+        <th style="color:#ffffff;font-size:1.5rem; " scope="row"><strong><%=i+1 %></strong></th>
+
+        <td style="color:#ffffff; font-size:1.5rem;" >
+          <strong><%=datai.user_name %></strong></td>
+          <th style="color:#ffffff;font-size:1rem; " scope="row"><strong><%=datai.email %></strong></th>
+
+      </tr>
+
+
+      <%}%>
     </tbody>
     <% }); %>
   </table>

@@ -1,0 +1,74 @@
+<%- include('partials/chooseSubscriberHeader.ejs') %>
+
+<style>
+    .bck{
+        background: #FFEFBA;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to right, #FFFFFF, #FFEFBA);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to right, #FFFFFF, #FFEFBA); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    }
+    .bck2{
+        background: #fc4a1a;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to right, #f7b733, #fc4a1a);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to right, #f7b733, #fc4a1a); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+    }
+    .centered {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  
+  z-index: 100;
+}
+
+table {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+td {
+    position: relative;
+    top: 0;
+    left: 0;
+}
+
+</style>
+<div><a href="/dashboard"><img src="images/RG 5.png" style="height:4vw; height:4vw;" alt=""></a>
+</div>
+
+<table>
+    <tr>
+        <td>
+            <div class="centered" style="text-align: center;">
+                <h1 style="color:white;margin-bottom:5vw;"><strong>Selecciona tu operador de celular para la suscripción:</strong> </h1>
+                   
+                    <div style="display: inline-block; margin-right:2vw;">
+                        <a href="">
+                        <div class="bck" style="border:2px solid #00000050;">
+                           <img style="width:3wv; height:3vw; margin-top:5vw; margin-bottom:5.5vw; margin-right: 3vw;margin-left: 3vw;" src="images/claro-logo.png"/> 
+                        </div>
+
+                        <h3 style="color:#FFF;margin-top:1vw;font-family: 'PT Sans', sans-serif;font-size: 1.5vw;">Claro </h3>
+                    </a>
+                    </div>
+                    <div style="display: inline-block;"> 
+                        <a href=""> 
+                        <div class="bck2" style="border:2px solid #00000050;">
+                            <img style="width:3wv; height:3vw; margin-top:5vw; margin-bottom:5.5vw; margin-right: 5vw;margin-left: 4.8vw;" src="images/tigo-logo.png"/> 
+                        </div>   
+                        <h3 style="color:#FFF;margin-top:1vw;font-family: 'PT Sans', sans-serif;font-size: 1.5vw;">Tigo </h3> 
+                        </a>   
+                    </div>         
+                </div>
+        </td>
+    </tr>
+</table>
+
+
+
+

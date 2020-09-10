@@ -1,4 +1,4 @@
-<%- include('partials/header') %>
+<%- include('partials/header_challengeList') %>
 
 <script type="text/javascript">
   $(document).ready(function() {
@@ -24,50 +24,140 @@
     color:#FFF;
   }
 </style>
-<!-- <ol class="breadcrumb mt-4" style="background-color: 	#383838; margin-left:100px; margin-right:100px; ">
-  <li class="breadcrumb-item" style="color:white;"><a href="/">HOGAR</a></li>
-  <li class="breadcrumb-item active" style="color:white;" aria-current="page">DESAFÍOS</li>
-</ol> -->
 
 
-<!-- <div class="jumbotron jumbotron-fluid"  style="background-color:transparent; text-align:center; font-family: 'Monoton', cursive;font-weight:normal;font-style:normal;">
-  <div class="container" >
-    <h1  class="display-4" style="color:#ffa500;  font-family: 'BIGMACCA';">DESAFÍOS</h1>
+<div style="height: 35vh;">
+  <div style='
+  background-image: url("<%=src%>");
+  height: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-color:rgba(0, 0, 0, 0.4);'>
+  <div style="padding: 3vw;">
+<h1 id="nameBanner" style="color:#fff; font-size:2vw; font-family: 'Open Sans', sans-serif;font-weight: bold;">
+  <%- challengeName %>
+</h1>
+<div style=" display:inline-block;">
+  <p id="timeBanner" style="color:white;margin-right:1vw;font-size:1.2vw;">
+    <i class="fa fa-clock-o" aria-hidden="true"></i>
+    Comienza en: <%=challengeTime%></p>
+ 
+  <% if(data.challengeType) {%>  
+    <p style="color: white;font-size:1.2vw;">
+      <%=data.challengeType.S%>
+    </p>
+  <%}%>  
+
+  <p id="prizeBanner" style="color:white;font-weight: bold;font-size:1.2vw; ">
+    <i class="fa fa-trophy" aria-hidden="true" style="color:ffb327;height:1vh;"></i>
+    <%if(prize.L.length>1) {%>
+     Multiple Prizes
+     <%}%>
+     <%if(prize.L.length===1) {%>
+      <%= prize %>
+      <%}%>
+    </p>
+</div>
+
+
+    <form action="/dashboard" method="post">
+      <button 
+      type="submit" 
+      name="more_challenges" 
+      class="button-view-all" 
+      style="background-image: linear-gradient(to right,#ff0000, #ff0000);color:#fff; font-size:1.5vw; font-family: 'Open Sans', sans-serif;" > 
+        JOIN
+        <i class="fas fa-chevron-right" style="margin-left:1vw;"></i>
+      </button>    
+    </form>
   </div>
-</div> -->
-<div style="">
+ </div>
+</div>
+<div style="width: 100%;height:100%;background:#121f1f;padding: 3vw;">
+  <h1  style="color:#fff; font-size:1.5vw; font-family: 'Open Sans', sans-serif;margin-bottom: 5vh;">
+    Prizes 
+    </h1>
+  <div style="display: inline-flex;">
 
-
-<div style="  margin-top:-20px; text-align:center;" >
-  <div class="shadow_admin" style="background:#000000; border-radius:10px; padding:15px; height:190px;     display: inline-block;">
-    <img style="border-radius:10px;
-      margin-right:10px;
-      float:left;
-      height:160px;
-      width:300px;
-      margin-top:0px
-      ;padding-top:0px;" src=<%=src%>>
-
-
-    <div style="display: inline-block; margin-right:50px;">
-      <h4 style="color:#00c400;font-size:1.5rem; "><strong><%= challengeName %></strong></h4>
-      <h6 style="color:#AAAAAA;">ID: <%= challengeId %></h6>
-      <h6 style="color:#AAAAAA; margin-top:35px;">Prize:</h6>
-      <h1 style="color:#d8d800; "><strong> <%=prize %></strong></h1>
-    </div>
+    <% for(i=0;i< prize.L.length; i++) {%>
+        <div style="background: #293535;border-radius: 10px;margin-right: 1vw;">
+          <h1  style="color:#fff; font-size:1.5vw; font-family: 'Open Sans', sans-serif;display: inline-flex;margin:1vw;margin-bottom: 0.1vw;;">
+            <%if(i===0){%>
+            <%=1%>st
+            <%}%>   
+            <%if(i===1){%>
+              <%=2%>nd
+              <%}%>
+            <%if(i===2){%>
+            <%=3%>rd
+            <%}%> 
+            <%if(i===3){%>
+              <%=4%>th
+              <%}%>  
+              <%if(i>=4){%>
+                <%=i+1%>th
+                <%}%>    
+          </h1>
+          <img src="images/treasure_box.png" style="height:15vh;margin-top:-8vh;margin-bottom: 2vh;" alt="">
+          <div style="background:#242f2f;color:white;text-align: center;color:#fff; font-size:1.5vw;padding:1vw; font-family: 'Open Sans', sans-serif;border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;">
+            <%console.log(prize.L)%>
+            <%= prize.L[i].S%>
+          </div>
+        </div>
+       <%}%>
+  </div>
+  <h1  style="color:#fff; font-size:1.5vw; font-family: 'Open Sans', sans-serif;;margin-top: 3vw;">
+    Description
+  </h1>
+  <div style="color: white;">
+    <%- challengeDescription %>
+  </div>
+  <h1  style="color:#fff; font-size:1.5vw; font-family: 'Open Sans', sans-serif;margin-top: 3vw;">
+    Rules
+  </h1>
+  <div style="color: white;">
+    <%- challengeDescription %>
   </div>
 </div>
 
-<div class="" style="text-align:center; margin-bottom:50px;">
-  <% if(code==null) { %>
-    <h3 style="color:white; margin-top:50px;">Too bad! Your Subscription has expired on <%=end_date%>.<br /> To join this challenge please subscribe again by<br /> clicking on Recharge button. </h3>
-    <button style="margin-top:50px; width:120px;" name="id" value=<%= challengeId %> class="buttonCard" type="submit" >Recharge</button>
-    <% } %>
-  <% if(code!=null) { %>
-    <%- code %>
+
+<!-- <div style="margin-top:13vh;">
+
+
+<%if(isLogged===false){%>
+  <div class="" style="text-align:center; margin-bottom:50px;">
+    <% if(code==null) { %>
+      <h3 style="color:white; margin-top:4vh;font-size:1.5vw;">Please Log in/ Sign Up First to join a challenge. </h3>
+      <form class="" action="/login" method="get">
+      <button name="id" value=<%= challengeId %> class="buttonCard" type="submit" style="margin-top:4vh; width:10vw;border-radius:0;background:#FF0000;font-size:1vw;"  >Inicia sesión/ Regístrate</button>
+    </form>
       <% } %>
-</div>
+  </div>
+<% } %>
+<%if(isLogged===true){%>
+  <%if(isEverSubscribed===true){%>
+    <div class="" style="text-align:center; margin-bottom:50px;">
+      <% if(code==null) { %>
+        <% var end_date_formatted =end_date.substring(0,4)+"/"+end_date.substring(4,6)+"/"+end_date.substring(6,8) %>
+        <h3 style="color:white;  margin-top:4vh;font-size:1.5vw;">¡Ups! Tu suscripción el: <%=end_date_formatted%>.<br /> Para participar en este reto por favor renueva tu membresía haciendo click.<br /> clicking on Recharge button. </h3>
+        <button name="id" value=<%= challengeId %> class="buttonCard" type="submit" style="margin-top:4vh; width:10vw;border-radius:0;background:#FF0000;font-size:1vw;"  >Renovar</button>
+        <% } %>
+      <% if(code!=null) { %>
+          <% } %>
+    </div>
+    <% } %>
+  <%if(isEverSubscribed===false){%>
+    <div class="" style="text-align:center; margin-bottom:50px;">
+      <% if(code==null) { %>
+        <h3 style="color:white; margin-top:4vh;font-size:1.5vw;">¡Comienza tu suscripción hoy y disfruta de acceso ilimitado a nuestros retos!</h3>
+        <button name="id" value=<%= challengeId %> class="buttonCard" type="submit" style="margin-top:4vh; width:10vw;border-radius:0;background:#FF0000;font-size:1vw;">COMIENZA YA <i class="fas fa-chevron-right" style="margin-left:1vw;"></i></button>
+        <% } %>
+    </div>
+    <% } %>
+<% } %>
+</div> -->
 
-<!-- <div style="margin-top:-80px;" id="20211-0nr9d61l" class="sw_container"><script type="text/javascript" src="https://sweepwidget.com/w/j/w_init.js"></script></div> -->
-<%- include('partials/footer') %>
-</div>
+<div style="margin-bottom: -100vh;">
+  <%- include('partials/footer') %>
+  </div>

@@ -1,127 +1,129 @@
 <%- include('partials/header') %>
 
 <script type="text/javascript">
-    $(document).ready(function() {
-      $('.publishButtonClass').click(function(e) {
-          var str=$(this).val();
-          $('#modalSubscriptionForm').modal({ show : true });
-          $("#publishChallengeModal").val(str);
+  $(document).ready(function() {
+    // $('#progress').hide();
+    // $('#overlay').hide();
 
+    $('.publishButtonClass').click(function(e) {
+      var str = $(this).val();
+      $('#modalSubscriptionForm').modal({
+        show: true
       });
+      $("#publishChallengeModal").val(str);
     });
+    if($('#categoryLen').val()>0) {$('.createCategory').hide();}
+   if($('#categoryLen').val()===0 || $('#categoryLen').val()===null){
+     $('.createCategory').show();
+    }
+
+    $('#dropdownUl li').click(function(e) {
+      $('.createCategory').hide();
+      document.getElementById("dropdownValueId").value="";
+      document.getElementById("dropdownValueId").value=$(this).text();
+      document.getElementById("category_newId").value=null;
+    });
+    $('#add_category').click(function(e) {
+      $('.createCategory').show();
+      document.getElementById("dropdownValueId").value=null;
+
+    });
+
+  });
 </script>
 
 
+
 <% if(successMessage) {%>
-  <div class="alert alert-warning alert-dismissible fade show" role="alert">
-    <strong><%=showMessage%></strong>
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+  <strong><%=showMessage%></strong>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
 <% } %>
 
-<div class="jumbotron jumbotron-fluid"  style="background-color:transparent; text-align:center; font-family: 'Monoton', cursive;font-weight:normal;font-style:normal;">
-  <div class="container" >
-    <p  style="color:#ffa500; font-size:2rem; font-family: 'BIGMACCA';">ADMINISTRAR | RETOS Y TORNEOS</p>
+
+<div class="jumbotron jumbotron-fluid" style="background-color:transparent; text-align:center; font-family: 'Monoton', cursive;font-weight:normal;font-style:normal;">
+  <div class="container">
+    <p style="color:#ffa500; font-size:2rem; font-family: 'BIGMACCA';">ADMINISTRAR | RETOS Y TORNEOS</p>
   </div>
 </div>
 
 
 
-<!-- <div style="width:100%; text-align:center;">
-<form action="https://sweepwidget.com/" method="get">
-  <button type="submit" class="btn btn-primary  ">Add Challenge</button>
-</form>
-</div> -->
-<form id="editChallenge" action="/editChallenge" method="post"/>
+<form id="editChallenge" action="/editChallenge" method="post" />
 
 <h2 style="color:white; font-weight:bold; margin-left:250px;"><%= data.length %> Challenges Available</h2>
 
 <div class="list-group" id="list-tab" role="tablist">
+  <div>
+    <div style="float:left;">
+    <a href="/userConsole" class="btn btn-primary" style="width:10vw;margin-left:250px;">User Console</a>
+    </div>
+    <div style="float:left;">
+      <a href="/addChallenge" class="btn btn-dark" style="width:10vw;">ADD CHALLENGE</a>
+      </div>
+      <div style="float:left;">
+        <a href="/posterConsole" class="btn btn-dark" style="width:10vw;">MANAGE POSTERS</a>
+        </div>
+      </div>
+    </div>
+   
   <% data.map((datai,i)=>{ %>
-    <div style="padding: 0px 250px 0px; margin-top:35px;" >
-      <div class="shadow_admin" style="background:#222; border-radius:10px; padding:15px;">
-        <img style="
+  <div style="padding: 0px 250px 0px; margin-top:35px;">
+    <div class="shadow_admin" style="background:#222; border-radius:10px; padding:15px;">
+      <img style="
           margin-right:20px;
           float:left;
           height:160px;
           width:260px;
-          padding-bottom:10px;"
-          src=<%=datai.image_loc%>>
+          padding-bottom:10px;" src=<%=datai.src%>>
 
 
-        <div>
-          <h4 style="color:white;"><%= datai.title %></h4>
-          <h6 style="color:#AAAAAA; margin-top: 2px;">Sweepwidget: <%= datai.type %></h6>
-          <h6 style="color:#AAAAAA;">ID: <%= datai.competition_id %></h6>
+      <div>
+        <h4 style="color:white;"><%- datai.challengeName %></h4>
+        <h6 style="color:#AAAAAA; margin-top: 2px;">Type: <%= datai.challengeType %></h6>
+        <h6 style="color:#AAAAAA; margin-top: 2px;"></h6>
+        <h6 style="color:#AAAAAA;"> <%= datai.category %></h6>
+      
+        <form id="deleteChallenge" action="/adminPanel" method="post">
+          <input type="hidden" id="custId" name="deleteButton" value=true>
+          <button name="delete" value=<%= datai.challengeId %> type="submit" form="deleteChallenge" class="btn   btn-danger" style="background: #222; color:#FFFFFF;float:left;">
+            DELETE CHALLENGE
+          </button>
+        </form>
+      
+        <% if(!datai.isResultPublished) {%>
           <form id="publishResult" action="/adminPanel" method="post">
-          <input type="hidden" id="custId" name="publishResult" value=true />
-
+            <input type="hidden" id="custId" name="publishResult" value=true />
+            <button type="submit" form="publishResult" class="btn btn-success" name="resultButton" value=<%= datai.challengeId %> style="background: #222;color:#FFFFFF;">PUBLISH RESULT</button>
           </form>
+          <% } %>
+        <% if(datai.isResultPublished) {%>
+        <form id="deleteResult" action="/adminPanel" method="post">
+          <input type="hidden" id="custId" name="deleteResult" value=true>
+          <button name="deleteResultId" value=<%= datai.challengeId %> type="submit" form="deleteResult" class="btn btn-deep-purple button_adminPanel" style="background: #222; color:#FFFFFF; float:left; ">
+            Delete Result
+          </button>
+        </form>
+        <form id="editResult" action="/adminPanel" method="post">
+          <input type="hidden" id="custId" name="publish" value=true>
+          <button name="resultButton" value=<%= datai.challengeId %> type="submit" form="publishResult" class="btn btn-dark-green" style="background: #222; color:#FFFFFF; ">
+            EDIT RESULT
+          </button>
+        </form>
+        <% } %>
 
-          <% if(!datai.isPublished) {%>
-
-                  <button id="publishButton" value= <%= datai.competition_id %>
-                    type="button"
-                    class="btn btn-warning publishButtonClass">
-                    PUBLISH
-                </button>
-            <% } %>
-            <% if(datai.isPublished) {%>
-                  <form id="deleteChallenge" action="/adminPanel" method="post">
-                  <input type="hidden" id="custId" name="deleteButton" value=true>
-                    <button name="delete" value= <%= datai.competition_id %> type="submit"
-                    form="deleteChallenge" class="btn   btn-danger" style="background: #222; color:#FFFFFF;float:left;">
-                      DELETE CHALLENGE
-                    </button>
-                  </form>
-                  <% if(!datai.isResultPublished) {%>
-                  <button type="submit" form="publishResult"
-                  class="btn btn-success"
-                  name="resultButton"
-                  value= <%= datai.competition_id %>
-                  style="background: #222;
-                  color:#FFFFFF;">PUBLISH RESULT</button>
-                  <% } %>
-                  <% if(datai.isResultPublished) {%>
-                      <form id="deleteResult" action="/adminPanel" method="post" >
-                        <input type="hidden" id="custId" name="deleteResult" value=true>
-                          <button
-                            name="deleteResultId"
-                            value= <%= datai.competition_id %>
-                            type="submit"
-                            form="deleteResult"
-                            class="btn btn-deep-purple button_adminPanel"
-                            style="background: #222; color:#FFFFFF; float:left; ">
-                            Delete Result
-                        </button>
-                      </form>
-                      <form id="editResult" action="/adminPanel" method="post" >
-                        <input type="hidden" id="custId" name="publish" value=true>
-                          <button
-                            name="resultButton"
-                            value= <%= datai.competition_id %>
-                            type="submit"
-                            form="publishResult"
-                            class="btn btn-dark-green"
-                            style="background: #222; color:#FFFFFF; ">
-                            EDIT RESULT
-                        </button>
-                      </form>
-                    <% } %>
-            <% } %>
-
-        </div>
       </div>
     </div>
+  </div>
   <% }); %>
 
 </div>
-<br/>
-
-<div class="modal fade show" id="modalSubscriptionForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-  aria-hidden="true">
+<br />
+<!-- <progress id='progress' class="pure-material-progress-circular"/> -->
+<!-- <div class="modal fade show" id="modalSubscriptionForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
@@ -130,21 +132,7 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form action="/adminPanel" method="post" >
-      <div class="modal-body mx-3">
-        <div class="md-form mb-5">
-          <i class="fas fa-user prefix grey-text"></i>
-          <input name="prize" type="text" id="form3" class="form-control validate" placeholder="Enter Prize Amount Ex. $10" value="">
-        </div>
-
-
-      </div>
-      <div class="modal-footer d-flex justify-content-center">
-          <input type="hidden" id="custId" name="publish" value=true />
-        <button type="submit" id="publishChallengeModal" name="id" class="btn btn-indigo" value="">PUBLISH </button>
-      </div>
-      </form>
     </div>
   </div>
-</div>
+</div> -->
 <%- include('partials/footer') %>

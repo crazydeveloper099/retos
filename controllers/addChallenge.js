@@ -1,55 +1,88 @@
 //jshint esversion:6
-const data = require('../data/dashboard_data.js');
+const dataFile = require('../data/dashboard_data.js');
+const data = require('../data/upload_file.js');
+const rootPath=require('../app.js');
+const fs = require('fs');
 
-
-// exports.getAddChallenge=(req,res)=>{
-//   const cookie=req.cookies;
-//   const isValidLogin = req.cookies.isValid;
-//   // res.clearCookie("isValid", { httpOnly: true });
-//   console.log(isValidLogin);
-//
-//   if(isValidLogin){
-//   res.cookie('dataPublish', req.cookies.dataPublish, { httpOnly: true });
-//   res.render('addChallenge',
-//   {
-//     name:typeof(cookie.username)  === 'undefined'?null:cookie.username,
-//     data:data.data,
-//     end_date:null
-//  });
-// }
-//
-// else res.redirect('/admin');
-// };
-
-exports.postAddChallenge=(dataStore, prize, callback)=>{
-  console.log(dataStore);
-  const challengeName=dataStore.title;
-  const time=dataStore.end_time;
-  const image=dataStore.image_loc;
-  const id=dataStore.competition_id;
-  const description=dataStore.description;
-  const rules=dataStore.rules;
-  const challengePrize=prize;
-  const code=dataStore.giveaway_embed_code;
-
-  data.createChallenge(
-    id,
-    image,
-    time,
-    description,
-    rules,
-    challengeName,
-    challengePrize,
-    code,
-    (err,data)=>{
-    if(err)
-    {
-      callback(err, data);
-    }
-    else if(data){
-
-      callback(err, data);
-    }
-
+exports.getAddChallenge=(req,res)=>{
+  dataFile.getCategory((errCategory, dataCategory) => {
+    console.log(dataCategory);
+  res.render('addChallenge',{name:null,end_date:null, dataCategory:dataCategory.Items});
   });
+};
+
+exports.postAddChallenges=(req,res)=>{
+  const jData= JSON.parse(req.body.jsonData);
+  console.log(jData);
+ const bufDataFile = new Buffer(req.files.screenshot.data, "utf-8");
+ const fname=String(Math.random()*Math.pow(10,17));
+  fs.writeFile(rootPath.rootPath+"/"+fname+'.jpg', bufDataFile, function(err) {
+    data.uploadFile(rootPath.rootPath+"/"+fname+'.jpg',fname , 'challenges', (url)=>{
+      fs.unlinkSync(rootPath.rootPath+"/"+fname+'.jpg');
+      const challengeName=jData.challengeName;
+      const challengeType= jData.challengeType;
+      const start_time=jData.start_time;
+      const end_time=jData.end_time;
+      const image=url;
+      const id=fname;
+      const description=jData.desc;
+      const rules=jData.rules;
+      const challengePrize=jData.prize;
+      const category=jData.category;
+      const cat_new=jData.new_cat;
+      if(cat_new){
+        dataFile.createCategory(category, (errFile, dataCatego) => {
+          dataFile.createChallenge(
+            id,
+            image,
+            start_time,
+            end_time,
+            description,
+            rules,
+            challengeName,
+            challengePrize,
+            challengeType,
+            category,
+            (err,data)=>{
+            if(err)
+            {
+              res.render(err);
+            }
+            else if(data){
+              res.cookie('publishSuccess', true, {
+                httpOnly: true
+              });
+              res.redirect('/adminPanel');
+            }
+          });
+      
+      });
+    }
+    else{
+       dataFile.createChallenge(
+            id,
+            image,
+            start_time,
+            end_time,
+            description,
+            rules,
+            challengeName,
+            challengePrize,
+            challengeType,
+            category,
+            (err,data)=>{
+            if(err)
+            {
+              res.render(err);
+            }
+            else if(data){
+              res.cookie('publishSuccess', true, {
+                httpOnly: true
+              });
+              res.redirect('/adminPanel');
+            }
+          });
+    }
+  });
+});
 };

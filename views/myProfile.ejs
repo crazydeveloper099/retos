@@ -1,9 +1,9 @@
 <%- include('partials/header_myProfile') %>
-<div class=" "  style="background-color:transparent; text-align:center; font-family: 'Monoton', cursive;font-weight:normal;font-style:normal;">
+<!-- <div class=" "  style="background-color:transparent; text-align:center; font-family: 'Monoton', cursive;font-weight:normal;font-style:normal;">
     <h6  style="font-size:2rem;color:#ffa500; margin-top:20px;  font-family: 'BIGMACCA';">MI PERFIL</h6>
-</div>
+</div> -->
 
-<div style=" display: flex;
+<!-- <div style=" display: flex;
 align-items: center;
 margin-top:80px;
 justify-content: center;
@@ -27,10 +27,60 @@ flex-direction: column; ">
 		</ul>
 	</div>
 </div>
+</div> -->
+<div style="padding-left: 10vw;
+padding-right: 10vw;">
 
 
+  <table class="table" style="margin-top:5vh;">
 
+    <tbody>
+      <tr>
+        <td style="color:gray;font-size:1.5vw;"><strong>SUBSCRIPTION DETAILS</strong></td>
+        <td><strong><%=email%></strong></td>
+        <td style="color:black;">
+          <% var end_date_formatted =end_date.S.substring(0,4)+"/"+end_date.S.substring(4,6)+"/"+end_date.S.substring(6,8) %>
+          <strong>Expiring: <%= end_date_formatted%></strong></td>
+      </tr>
+      <tr>
+        <td style="color:gray;font-size:1.5vw;"><strong>MIS RETOS</strong></td>
+        <td style="width:30vw;">
+          <div class="carouselNew">
+            <div class="carouselNew-row" style="margin-bottom:10vh;">
+              <%
+  if(challengesParticipated.length>0)
+   challengesParticipated.map((datai,x) =>{ %>
+              <div class="carouselNew-tile">
+                  <input name="id" value=<%= datai.competition_id %> type="hidden" />
+                  <a href="javascript:void(0);" onclick="$(this).closest('form').submit();">
+                    <div class="">
+                      <div class="">
+
+                        <div style="">
+                          <img class="card_image" src=<%=datai.image_loc%>>
+
+                        </div>
+                        <div style="width:15vw;">
+                          <div class="textStyle" style="color:#000; font-family: 'Public Sans', sans-serif; font-size:1.5vw;    ">
+                            <%=datai.title%>
+                          </div>
+                          <form action="/dashboard" method="post">
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
+              </div>
+              <% }); %>
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td style="color:gray;font-size:1.5vw;"><strong>RETOS GANADOS</strong></td>
+
+      </tr>
+    </tbody>
+  </table>
 </div>
-
-
 <%- include('partials/footer') %>

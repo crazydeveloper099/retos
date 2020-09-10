@@ -1,87 +1,53 @@
-<%- include('partials/header') %>
+<%- include('partials/header_leaderboards.ejs') %>
 <link rel="stylesheet" type="text/css" href="css/new_card.scss" />
 
-<ol class="breadcrumb mt-4" style="background-color: 	#383838; margin-left:100px; margin-right:100px; ">
-  <li class="breadcrumb-item" style="color:white;"><a href="/">HOGAR</a></li>
-  <li class="breadcrumb-item active" style="color:white;" aria-current="page">CLASIFICACIONES</li>
-</ol>
+ 
 
 
-<div class="jumbotron jumbotron-fluid" style="background-color:transparent; text-align:center; font-family: 'Monoton', cursive;font-weight:normal;font-style:normal;">
-  <div class="container">
-    <h1 style="color:#ffa500; font-family: 'BIGMACCA';" class="display-4">¡GANADORES!</h1>
+
+  <div class="lb-heading-container">
+    <h1  class="lb-heading-mobile" >¡GANADORES!</h1>
   </div>
-</div>
+    <div >
+    <% for (i = 0; i < ((data.length-5)/5)+1; i++) { %>
+      <div class="container-fluid" >
+        <div class="carouselNew">
+         <div class="carouselNew-row" style="margin-bottom:8vw;">
+        <% data.slice(5*i,(5*i)+5).map(datai =>{ %>
+            <div class="carouselNew-tile mobile-cl-optimize"  >
+              <form   action="/leaderboard" method="post">
+              <input name="id" value=<%= datai.unitChallenge.Item.challengeId.S %> type="hidden" />
+            <a style="max-width: 100%;" href="javascript:void(0);" onclick="$(this).closest('form').submit();">
+              <% var userData=datai.resultData.replace("'","");
+              userData=JSON.parse(userData); %>
+              <div style="padding-bottom:2vh;border-radius:0.5vw;padding-top:2vh;">
+             
+                <img class="card_image_all_ch" src=<%= datai.unitChallenge.Item.src.S %> style="" >
+              <div class="" >
+                <h1 class=" heading-card-cl" >
+                  <%- datai.unitChallenge.Item.challengeName.S %>
+                </h1>
+                <h1 class=" heading-card-cl" style="color: #ffff89;">
+                  <i class="fa fa-trophy" aria-hidden="true" style="color:ffb327;height:1vh;margin-right:0.5vw;"></i>
+                  <%- datai.unitChallenge.Item.challengePrize.S %>
+                </h1>
 
-<div id="demo" class="carousel slide" data-ride="carousel">
-  <div class="carousel-inner col-10 mx-auto">
-    <div class="carousel-item active">
-      <div class="container-fluid" style="text-align:center; padding:20px;">
-        <div class="card-deck" >
-      <% data.slice(0,4).map(datai =>{ %>
-        <div class="col-lg-3 col-xl-3 col-md-6 col-sm-12">
-          <div class="card mb-4" style="background:rgba(0,0,0,0)">
-            <div class="view overlay">
-              <img class="card-img-top" src=<%= datai.unitChallenge.image_loc %> alt="Card image cap">
-              <a href="#!">
-                <div class="mask rgba-white-slight"></div>
-              </a>
-            </div>
-            <div class="card-body" >
-              <h4 class="card-title" style="color:#4dff4d"><%= datai.unitChallenge.title %></h4>
-              <img src="images/winner.png" style="width:50px;"  alt="">
-              <h4 class="card-title" style="color:white;margin-top:10px;"><%=  datai.resultData[0].user_name %></h4>
-              <h6 style="color:#A8A8A8; ">Challenge Id: <%= datai.unitChallenge.competition_id %></h6>
-              <h4 style="color:white"></h4>
-              <form  action="/leaderboard" method="post">
-              <button type="submit" name="id" value=<%= datai.unitChallenge.competition_id %> class="btn btn-light-blue btn-md">Result</button>
-              </form>
-            </div>
-          </div>
-          </div>
-            <% }) %>
-        </div>
-      </div>
-    </div>
-    <% for (i = 1; i < ((data.length-4)/4)+1; i++) { %>
-      <div class="carousel-item">
-        <div class="container-fluid" style="text-align:center;">
-          <div class="card-deck" >
-        <% data.slice(4*i,(4*i)+4).map(datai =>{ %>
-          <div class="col-lg-3 col-xl-3 col-md-6 col-sm-12">
-            <div class="card mb-4" style="background:rgba(0,0,0,0)">
-              <div class="view overlay">
-                <img class="card-img-top" src=<%= datai.unitChallenge.image_loc %> alt="Card image cap">
-                <a href="#!">
-                  <div class="mask rgba-white-slight"></div>
-                </a>
-              </div>
-              <div class="card-body" >
-                <h4 class="card-title" style="color:#4dff4d"><%= datai.unitChallenge.title %></h4>
-                <img src="images/winner.png" style="width:50px;"  alt="">
-                <h4 class="card-title" style="color:white;margin-top:10px;"><%=  datai.resultData[0].user_name %></h4>
-                <h6 style="color:#A8A8A8; ">Challenge Id: <%= datai.unitChallenge.competition_id %></h6>
+              <!-- <div style="width:100%;text-align:center;  margin: 0;margin-top:-1vh;">
+                <img src="images/winner.png" style="width:6vw; margin-left: auto;margin-right: auto;display: block;">
+              </div> -->
                 <h4 style="color:white"></h4>
-                <form  action="/leaderboard" method="post">
-                <button type="submit" name="id" value=<%= datai.unitChallenge.competition_id %> class="btn btn-light-blue btn-md">Result</button>
-                </form>
+                  <div style="  display: flex;justify-content: center;">
+            </div>
               </div>
             </div>
-            </div>
-
+          </a>
+        </form>
+          </div>
       <% }) %>
       </div>
-  </div>
+     </div>
     </div>
     <% } %>
   </div>
-  <a class="carousel-control-prev" href="#demo" data-slide="prev">
-    <span class="carousel-control-prev-icon"></span>
-  </a>
-  <a class="carousel-control-next" href="#demo" data-slide="next">
-    <span class="carousel-control-next-icon"></span>
-  </a>
-</div>
-
 
 <%- include('partials/footer') %>

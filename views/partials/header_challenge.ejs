@@ -1,4 +1,7 @@
 <!DOCTYPE html>
+
+
+
 <html lang="en" dir="ltr">
 
 <head>
@@ -29,7 +32,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
-
+<script src="https://static.landbot.io/landbot-widget/landbot-widget-1.0.0.js"></script>
     <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark" style="background-color: #000 !important; ">
 
     <img class="navbar-brand" src="/images/RG 5.png" height="50vh" alt="logo">
@@ -55,7 +58,7 @@
           <a class="nav-link" href="/leaderboard" > CLASIFICACIONES</a>
         </li>
         <li class="nav-item px-2">
-          <a class="nav-link" href="/leaderboard" > NOSOTROS</a>
+          <a class="nav-link" href="/aboutUs" > NOSOTROS</a>
         </li>
           <% if (name!=null) { %>
             <li class="nav-item px-2">
@@ -77,7 +80,7 @@
         <% if (name==null) { %>
           <li class="d-inline-block align-top" style="color:white;" >
             <form method="get" action="/login">
-              <button type="submit" class="btn btn-outline-warning"  onclick="/leaderboard">INICIA SESION</button>
+              <button type="submit" class="btn btn-outline-warning"  onclick="/leaderboard">Iniciar sesión</button>
           </form>
           </li>
           <% } %>
@@ -85,6 +88,9 @@
             <li class="d-inline-block align-top" style="color:white;" href="#">
               <a class="nav-link"  href="#"><%= name %></a>
             </li>
+            <form method="get" action="/logout">
+              <button type="submit" class="btn btn-danger"  onclick="/leaderboard">cerrar sesión</button>
+          </form>
             <% } %>
       </ul>
 
@@ -94,3 +100,22 @@
 
   <body class="challengeBackground" style="display: flex;
   flex-direction: column;">
+
+<script SameSite="None; Secure" src="https://static.landbot.io/landbot-widget/landbot-widget-1.0.0.js"></script>
+<script>
+  var myLandbot = new LandbotLivechat({
+    index: 'https://chats.landbot.io/v2/H-681998-ZMNSD6NBYYKQ62P5/index.html',
+  });
+</script><script>
+  // Show a proactive message after 10 seconds
+  setTimeout(function() {
+    myLandbot.sendProactive({
+  "message": "No dudes en clickearme si necesitas ayuda! 😉",
+  "author": "Retos Gamer",
+  "avatar": "https://storage.googleapis.com/media.helloumi.com/139922/channels/HMFH5X6PQZDEQVUW5WEPS7YHO9PFQ289.png",
+  "extra": {
+    "hide_textbox": true
+  }
+});
+  }, 60000);
+</script>

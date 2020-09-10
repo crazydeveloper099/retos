@@ -10,8 +10,7 @@ exports.leaderboard=(req,res)=>{
       }
       else if(data){
         console.log("-------");
-        console.log(data.Items);
-        res.cookie('dataLeaderboard', data, { httpOnly: true });
+        console.log(data);
         res.render("leaderboards",
         {name:typeof(cookie.username) === 'undefined' ? null : cookie.username,
         data: data.Items,
@@ -24,6 +23,7 @@ exports.leaderboard=(req,res)=>{
 };
 
 exports.postLeaderBoard=(req,res)=>{
+  console.log(req.body.id);
   res.cookie("leaderBoardChallengeClickedID", req.body.id,{ httpOnly: true, secure: false, overwrite: true});
     res.redirect('/leaderBoardChallenge');
 };

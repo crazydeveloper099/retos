@@ -16,10 +16,9 @@ const CognitoUserPool = AmazonCognitoIdentity.CognitoUserPool;
 
 const authService = require('../Services/LoginService.js');
 
-
-const userPoolId="us-east-2_ZziRfzq2R";
+const userPoolId=process.env.UserPoolId;
 const region="us-east-2";
-const clientId="50ai330m6l388tuj2rk0linfd";
+const clientId=process.env.ClientId;
 
 
 const poolData = {
@@ -41,6 +40,7 @@ exports.getLogin=(req,res)=> {
 
 
 exports.Login = function(req, res){
+
   const data={
     username: req.body.email,
     password: req.body.password
@@ -50,7 +50,6 @@ exports.Login = function(req, res){
     res.cookie('username', result.idToken.payload.name,{ httpOnly: true,  overwrite: true});
     res.cookie('email',result.idToken.payload.email,{ httpOnly: true,  overwrite: true});
     res.cookie('phone',result.idToken.payload.phone_number,{ httpOnly: true,  overwrite: true});
-
     res.redirect('/dashboard');
   },true);
 };

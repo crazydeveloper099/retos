@@ -16,7 +16,7 @@ exports.leaderboardChallenge=(req,res)=>{
         {
         name:typeof(cookie.username) === 'undefined' ? null : cookie.username,
         // userData:userData.data,
-        userData:dataResult.Item.resultData.L,
+        userData:JSON.parse(dataResult.Item.resultData.S.replace("'","")),
         unitChallenge:dataChallenge.Item,
         end_date:null
       });

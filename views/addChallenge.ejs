@@ -1,47 +1,188 @@
 <%- include('partials/header') %>
 
+<script type="text/javascript">
+$(document).ready(function() {
+  var j=2;
+  var new_cat=false;  
+    $("#add_a_prize").click(function () { 
+          $('#thisUl').append('<li><label id="label'+j+'" for="exampleInputPassword1">Challenge Prize '+j+'</label><input name="prize" type="text" class="form-control" id="list'+j+'" placeholder="$50"></li>');
+          if(j>=2) $('.delete').css('display','inline');
+          j++;
+        }); 
+      $('.delete').click(function(){
+        j=j-1;
+         if(j<=2) $('.delete').css('display','none');
+        $('#list'+j).remove();
+        $('#label'+j).remove();
+      });  
+      $('#publishButton').click(function(){
+          var prizeData=[];
+          for(i=1;i<=j-1;i++){
+               prizeData.push($('#list'+i).val());
+          }
+          
+          if(new_cat){
+           var category=$('#category_newId').val();
+          var obj={
+            "challengeName":$('#challengeName').val(),
+            "challengeType":$('#challengeType').val(),
+            "prize":prizeData,
+            "start_time":$('#start_time').val(),
+            "end_time":$('#end_time').val(),
+            "challengeTime":$('#end_time').val(),
+            "rules": $('#rules').val(),
+            "desc": $("#desc").val(),
+            "category": category,
+            "new_cat":new_cat
+          }
+          $("#jsonData").val(JSON.stringify(obj));
+          $('#uploadForm').submit();
+          }
+          else{
+            category=$('#category').val();
+          var obj={
+            "challengeName":$('#challengeName').val(),
+            "challengeType":$('#challengeType').val(),
+            "prize":prizeData,
+            "start_time":$('#start_time').val(),
+            "end_time":$('#end_time').val(),
+            "challengeTime":$('#end_time').val(),
+            "rules": $('#rules').val(),
+            "desc": $("#desc").val(),
+            "category": category,
+            "new_cat":new_cat
+          }
+          $("#jsonData").val(JSON.stringify(obj));
+          $('#uploadForm').submit();
+          }
+         
+      });
+      $("#add_category").click(function(){
+          new_cat=true;  
+          $(".createCategory").css('display','block');
+          $("#category").css('display','none');
+      });
+      $('.dropdown-item-li').click(function(e) 
+      { 
+        new_cat=false;  
+        $("#category").css('display','block');
+        $(".createCategory").css('display','none');
+        $("#category").val( $(this).html());
+      });
+});
+</script>
+
+<style>
+  ul {
+  list-style-type: none;
+}
+</style>
+
+
+
 
 <div class="jumbotron jumbotron-fluid" style="background-color:transparent; text-align:center;">
   <div class="container">
     <p style="color:white;" class="display-4">Crea un nuevo desafío</p>
   </div>
 </div>
-
-
-
-
-
-<div style="">
+<div >
+ 
 
 <div class="container">
 <div class="row text-center">
-  <div class="col d-flex justify-content-center">
+  <div class="col d-flex ">
 
 
-    <div style="margin 0 auto; padding:2%; padding-left:5%; padding-right:5%; width:800px; background:rgba(255,255,255,1); border-radius:15px;">
+    <div style="margin :0 auto; padding:2%; padding-left:5%; padding-right:5%; width:800px; background:rgba(255,255,255,1); border-radius:15px;">
 
-<form  action="/addChallenge" method="post">
+  <div class="col-sm">
+    <div style="color:#a8a8a8; font-size:1.5rem; margin-top:20px; ">
+      Choose a Picture
+    </div>
+    <div class="help-block with-errors"></div>
 
+    <div class="input-group mb-3" stryle="margin-top:20px;">
+      <div class="custom-file">
+        <form id='uploadForm' action='/addChallenge' method='POST' encType="multipart/form-data">
+          <input id="jsonData" type="hidden" name="jsonData" value="">
+          <input type="file" name="screenshot" class="custom-file-input" id="inputGroupFile02" required />
+          <label class="custom-file-label" for="inputGroupFile02">Choose file</label>
+        </form>
+      </div>
+    </div>
+  </div>
 
   <div class="form-group">
    <label for="exampleInputPassword1">Challenge Title</label>
-   <input name="challengeName" type="text" class="form-control" id="exampleInputPassword1" placeholder="Call Of Duty">
+   <input name="challengeName" type="text" class="form-control" id="challengeName" placeholder="Call Of Duty">
  </div>
  <div class="form-group">
    <label for="exampleInputPassword1">Challenge Type</label>
-   <input name="challengeType" type="text" class="form-control" id="exampleInputPassword1" placeholder="Global • 1v1 • 50 CUPOS">
+   <input name="challengeType" type="text" class="form-control" id="challengeType" placeholder="Global • 1v1 • 50 CUPOS">
  </div>
+ 
  <div class="form-group">
-   <label for="exampleInputPassword1">Challenge Prize</label>
-   <input name="prize" type="text" class="form-control" id="exampleInputPassword1" placeholder="$50">
+  <ul id="thisUl">
+    <li>
+      <label for="exampleInputPassword1">Challenge Prize 1</label>
+      <input name="prize" type="text" class="form-control" id="list1" placeholder="$50">
+    </li>
+  </ul> 
  </div>
- <div class="form-group">
-   <label for="exampleInputPassword1">Code to embed</label>
-   <textarea name="code" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
- </div>
- <button type="submit" class="btn btn-outline-primary">Publish</button>
 
-</form>
+ <button id="add_a_prize"  class="btn btn-success">Add a Prize</button>
+ <button class="delete btn btn-danger" style="display: none;">Remove Prize</button>
+ <div class="form-group">
+   <label for="exampleInputPassword1">Challenge Description</label>
+   <textarea name="desc" class="form-control" id="desc" rows="3"></textarea>
+ </div>
+<div class="form-group">
+  <label for="exampleInputPassword1">Start Time</label>
+  <input name="startTime" type="text" class="form-control" id="start_time" placeholder="2020-09-15 23:59:00">
+</div>
+ <div class="form-group">
+  <label for="exampleInputPassword1">End Time</label>
+  <input name="endTime" type="text" class="form-control" id="end_time" placeholder="2020-09-16 23:59:00">
+</div>
+<div class="form-group">
+  <label for="exampleInputPassword1">Challenge Rules</label>
+  <textarea name="rules" class="form-control" id="rules" rows="3"></textarea>
+</div>
+
+<% if(dataCategory  !== null && dataCategory.length >0) { %>
+  <label for="exampleInputPassword1">Category</label>
+
+  <input type="hidden" id="dropdownValueId" name="dropdownValue" value="">
+<div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Select a Category
+  </button>
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+      <ul id="dropdownUl">
+  <%dataCategory.map(datai=>{%>
+    <li><a class="dropdown-item-li" href="#"><%= datai.categoryId %></a></li>
+<%});%>
+</ul>
+<a class="dropdown-item" id="add_category" href="#">+ Add a category</a>
+
+</div>
+
+</div>
+<div class="form-group">
+  <input name="category" type="text" class="form-control" id="category" placeholder="Action">
+</div>
+
+<%}%>
+
+<div class="createCategory" style="display: none;">
+  <div class="md-form mb-5">
+    <input name="category_new" id="category_newId" type="text" id="form3" class="form-control validate" placeholder="Enter a category name" value="">
+  </div>
+
+</div>
+
+ <button type="submit" id="publishButton" class="btn btn-dark">Publish</button>
 </div>
 </div>
 </div>
