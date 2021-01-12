@@ -1,17 +1,20 @@
 <%- include('partials/header') %>
-
-
 <script type="text/javascript">
   $(document).ready(function() {
     var a = 0;
- 
+    $(".meter-m > span").each(function() {
+  	$(this)
+		.data("origWidth", $(this).width())
+		.width(0)
+		.animate({
+			width: $(this).data("origWidth")
+		}, 1200);
+});
     $("#verCat").click(function() {
       $('html, body').animate({
         scrollTop: $("#catalogo").offset().top
       }, 2000);
     });
-
-
     $('#acceptTANDC').click(function(event) {
       $.cookie("tandc", true);
       $('#exampleModalCenter').modal("hide");
@@ -23,7 +26,7 @@
     
     for (var i = 0; i < len; i++) {
 
-var time = document.getElementById("timeLeft" + i).innerText;
+var time = document.getElementById("cal" + i).innerText;
 var countDownDate = new Date(time).getTime();
 var x = timer("timeLeft" + i, countDownDate);
 myFunction("cal" + i, time)
@@ -31,7 +34,7 @@ myFunction("cal" + i, time)
 
 function timer(id, countDownDate) {
 setInterval(function() {
-  var now = new Date().getTime();
+  var now = new Date(moment.tz(new Date(), "GMT").utcOffset(-300).format("DD-MM-YYYY hh:mm:ss a")).getTime();
   var distance = countDownDate - now;
   var days = Math.floor(distance / (1000 * 60 * 60 * 24));
   var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
@@ -39,22 +42,33 @@ setInterval(function() {
   var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
   if(days===0){
-    $('#'+id).css("background-color", "tomato");
+    // $('#'+id).css("background-color", "red");
     document.getElementById(id).innerHTML =  hours + "H " + minutes + "M " + seconds + "S ";
+    // $('#'+id).css("font-size", "0.8vw");
+    // $('#'+id).css("font-weight","bold");
+    // $('#'+id).css("padding","0px");
+    // $('#'+id).css("margin","0px");
+
   }
   else if(days>=1){
-    document.getElementById(id).innerHTML =  "en "+days+" Days"
+    document.getElementById(id).innerHTML =  "en "+days+" Días";
+    // $('#'+id).css("font-size", "0.8vw");
+    // $('#'+id).css("font-weight","bold");
+    // $('#'+id).css("padding","0px");
+    // $('#'+id).css("margin","0px");
   }
   else {
-    $('#'+id).css("background-color", "black");
     document.getElementById(id).innerHTML = "EXPIRED";
+    // $('#'+id).css("font-size", "0.8vw");
+    // $('#'+id).css("font-weight","bold");
+    // $('#'+id).css("padding","0px");
+    // $('#'+id).css("margin","0px");
   }
 }, 1000);
 }
 
 
 function myFunction(id, time) {
-
 var weekday = new Array(7);
 weekday[0] = "Sunday";
 weekday[1] = "Monday";
@@ -98,7 +112,6 @@ document.getElementById(id).innerHTML = '<i class="fa fa-calendar" aria-hidden="
     /* Chrome 10-25, Safari 5.1-6 */
     background: linear-gradient(to right, #F9D423, #FF4E50);
     /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-
   }
 
   .view_more_bck {
@@ -117,7 +130,6 @@ document.getElementById(id).innerHTML = '<i class="fa fa-calendar" aria-hidden="
 
 
 <input type="hidden" id="lengthData" name="length" value=<%=data.length%> >
-<input type="hidden" id="categoryData" name="category" value=<%=dataCategory%> >
 
 
 <div class="" style="
@@ -160,7 +172,7 @@ height:100vh;
       <h1 class="h1-dashboard-heading" >
        Participa por<br>
        Premios Semanales<br>
-       En tus juegos favoritos
+       En tus juegos Favoritos
       </h1>
     </li>
     <li>
@@ -190,11 +202,8 @@ height:100vh;
         <div class="mask rgba-black-strong"></div>
       </div>
       <div class="carousel-caption " style="top: 50%;transform: translateY(-50%);bottom: initial;">
-
-        <div class="carousel-caption-custom">!Participa en retos y gana cada semana!</div>
-
+       <div class="carousel-caption-custom">¡Participa en retos y gana cada semana!</div>
         <a href="#" class="square_btn " class="carousel-button-custom">Registrate <i class="fas fa-chevron-right" style="margin-left:1vw;"></i></a>
-
       </div>
     </div>
 
@@ -214,7 +223,7 @@ height:100vh;
         <div class="mask rgba-black-strong"></div>
       </div>
       <div class="carousel-caption" style="top: 50%;transform: translateY(-50%);bottom: initial;">
-        <div class="carousel-caption-custom">Retos semanales en tus juegos Favoritos</div>
+        <div class="carousel-caption-custom">Retos Semanales en tus juegos Favoritos</div>
         <a href="#" class="square_btn" class="carousel-button-custom">Suscribete ya <i class="fas fa-chevron-right" style="margin-left:1vw;"></i></a>
       </div>
     </div>
@@ -233,72 +242,84 @@ height:100vh;
 <!-- <div class="container" style="text-align:center;padding:40px; ">
   <h6 style="color:#ffa500; font-size:2vw; font-family: 'BIGMACCA';">RETOS DISPONIBLES</h6>
 </div> -->
+<div style="color:white;margin-top: 2vw;display: inline-block;">
+<h2 class="category-dashboard-heading" style="float: left;" >Retos en VIVO</h2>
+  <div class="pulse" style="float: left;margin-left: 0.5vw;" ></div>
+</div>
+
 <% var o=0; %>
-<div class="container-fluid" id="catalogo" style="margin-top: 2vw;">
-  <% var len=dataCategory.length;
-        if(dataCategory.length>3){
-          len=3;
+<% var k=5; %>
+
+<div class="container-fluid" id="catalogo" style="margin-top: 0.5vw;">
+  <% var len=data.length;
+        if(len>10){
+          len=10;
         }
-         for (i = 0; i < (len); i++) { %>
-  <% var filteredArray=data.filter((e)=>{
-            return e.category===dataCategory[i].categoryId;
-          }); %>
-  <% if(Array.isArray(filteredArray) && filteredArray.length){ %>
+  for(i = 0; i < (len)/k; i++){ %>
   <div class="" style="color:white;">
-    <h2 class="category-dashboard-heading"><%= dataCategory[i].categoryId %></h2>
     <div class="carouselNew">
       <div class="carouselNew-row ">
-        <%t=5>filteredArray.length?filteredArray.length:5%>
-        <% for(l=0; l< t;l++){ %>
-
+        <%var t=len/k%>
+        <% var filteredArray=data.slice(i*k,(i*k)+k); %>
+        <% for(l=0; l< filteredArray.length;l++){ %>
         <div class="carouselNew-tile mobile-cl-optimize">
           <div style="flex-basis: 0;">
           <form action="/dashboard" method="post">
             <input name="id" value='<%= filteredArray[l].challengeId %>' type="hidden" />
-            <a style="max-width: 100%;" href="javascript:void(0);" onclick="$(this).closest('form').submit();">
-             
+              <a style="max-width: 100%;" href="javascript:void(0);" onclick="$(this).closest('form').submit();">
                   <div style="">
-                    <img class="card_image" src=<%=filteredArray[l].src%>>
+                    <img class="card_image" src="<%=filteredArray[l].src%>"
+                    style="border-top-left-radius: 0.5vw;
+                    border-top-right-radius: 0.5vw;">
                   </div>
+                  <div style="background: #040707; padding-top: 0.5vw;
+                  padding-right: 0.5vw;
+                  padding-bottom: 0.5vw;
+                  padding-left: 0.5vw;
+                  height: 8vw;
+                  border-bottom-left-radius: 0.5vw;
+                  border-bottom-right-radius: 0.5vw;">
                   <h1 class="challenge-heading" style="font-weight:bold;">
                     <%- filteredArray[l].challengeName %>
                   </h1>                 
                     <% var edited_date=filteredArray[l].challengeTime.split(" ")[0].split("-");%>
-                    <% var edited_time=filteredArray[l].challengeTime.split(" ");%>
-                    
-                    <div class="dashboard-card-time-style" id='<%="cal"+o%>' >
+                    <% var edited_time=filteredArray[l].challengeTime.split(" ");%>      
+                    <div class="dashboard-card-time-style" id='<%="cal"+o%>' style="display: none;" >
                       <%= filteredArray[l].challengeTime %>
                     </div>
                     <div class="mobile_center">
-                      <div class="d-board-cardTxt2" id='<%="timeLeft"+o%>' >
-                        <%= filteredArray[l].challengeTime %>
+                      <div class="d-board-cardTxt2" id='<%="timeLeft"+o%>'>
                       </div>
                     </div>
-                     
-
-                   
-                    <div class="dashboard-card-time-style"  style="font-weight:bold;color: white;">
-                      <i class="fa fa-trophy" aria-hidden="true" style="color:ffb327;height:1vh;"></i>
+                  
+                    <div class="dashboard-card-time-style"  style="font-weight:bold;color: white;width: 100%;">
+                      <i class="fa fa-trophy" aria-hidden="true" style="color:ffb327;height:1vh;margin-right: 0.5vw;;"></i>
                       <% if(filteredArray[l].challengePrize.length>1) {%>
                       Multiple Prizes
                       <% } %>
                       <% if(filteredArray[l].challengePrize.length===1) { %>
-                        <% filteredArray[l].challengePrize %>
+                        <%= filteredArray[l].challengePrize[0] %>
                         <% } %>
                     </div>
-                    <!-- <div class="textStyle" style="color:#cccccc;   margin-top: 0.5vh; font-size:0.5vw;">
-        <%- filteredArray[l].challengeDescription %>
-        </div> -->
+                    
+                    <div>
+                      <%var spots=filteredArray[l].spots.split('/');%>  
+                      <div class="meter-m" style="width: 97%;">
+                        <span style="width:<%=(parseInt(spots[0])/parseInt(spots[1]))*100%>%"></span>
+                      </div>
+                      <div style="padding-top:0.5vw;">
+                        <p style="font-size:0.8vw;color:white;padding:0;margin:0;"><%=spots[0]+"/"+spots[1]%></p>  
+                      </div>
+                    </div>
                     <form action="/dashboard" method="post">
-                    </form>
-              
+                    </form> 
+                  </div>    
             </a>
           </form>
         </div>
         </div>
-
         <% o++; %>
-        <% }; }%>
+        <% }; %>
       </div>
     </div>
   </div>
@@ -504,9 +525,7 @@ font-size:1.9vw;">
       <p class="counter-value" >100+</span>
     </div>
   </div>
-
 </div>
-
 <div class="container-fluid align-self-center" style="
   padding-top:3vh;
   padding-bottom:3vh;
@@ -522,9 +541,10 @@ font-size:1.9vw;">
       <i class="fas fa-gamepad p-foot-note" ></i>
     </div>
     <div class="col col-sm-12 col-lg-6 align-self-center counter" style="text-align:center;">
-      <button type="button" class="btn btn-warning button-foot-note"><strong>Suscríbete</strong></button>
+      <form action="/subscribe" method="get">
+      <button type="submit" class="btn btn-warning button-foot-note"><strong>Suscríbete</strong></button>
+      </form>
     </div>
   </div>
 </div>
-
 <%- include('partials/footer') %>

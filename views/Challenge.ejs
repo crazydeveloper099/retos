@@ -2,17 +2,213 @@
 
 <script type="text/javascript">
   $(document).ready(function() {
-    $(window).bind('beforeunload', function(){
-    myfun();
+   
+  $(".meter-m > span").each(function() {
+	    $(this)
+	  	.data("origWidth", $(this).width())
+		  .width(0)
+		  .animate({
+			  width: $(this).data("origWidth")
+		  }, 1200);
+  });
+ 
+  
+
+    var iframeHTML=$(($('#ytLinkTutorial').val())).prop( 'id','iframeTut');
+    $('#modalVideoRow').html(iframeHTML);
+    $('#button_Join').show();;
+    var isParticipated=$('#isParticipated').val();
+    var password=$('#password').val();
+    var endDateChallenge=$('#endTimeChallenge').val();
+    var passwordTimer=$('#passwordTimer').val();
+    if(isParticipated==='true'){
+      $('#button_Join').prop('disabled', true);
+    }
+    if(endDateChallenge){
+        $('#exampleModalCenterExp').modal('show');      
+    }
+    if(password!='null' ){
+        $('#passwordDialogButton').show()
+        for(var i=0;i<JSON.parse(password).length;i++) {
+          $('#modalVideo-PasswordRow').append('<h4 style="color: white;padding-bottom:1vw ;">'+JSON.parse(password)[i].key+': <strong>'+
+            JSON.parse(password)[i].value+'</strong></h4>')
+        }
+        var iframeLobbyVideoHTML=$(($('#ytLinkLobbyTutorial').val())).prop('id','iframeLobbyTut');
+        $('#modalVideo-PasswordRow').append(iframeLobbyVideoHTML)
+        $('#exampleModalCenterExpPass').modal('show');
+    }
+
+    $('#tutorialDialogButton').click(()=>{
+      $('#ytVideoParticipationTutorial').modal('show');
+    })
+
+    $('#closeVideoDialog').click(()=>{
+
+    var url = iframeHTML.attr('src');
+    iframeHTML.attr('src', '');
+      
+      iframeHTML.attr('src', url);
+      $('#modalVideoRow').html(iframeHTML)
+    })
+
+    $('#closePasswordDialog').click(()=>{
+      var url = $('#iframeLobbyTut').attr('src');
+      $('#iframeLobbyTut').attr('src', '');
+        
+      $('#iframeLobbyTut').attr('src', url);
+    })
+
+    if(passwordTimer!='null' && $('#isMathEnded').val()!='true'){
+      var now = moment(moment.tz(new Date(), "GMT").utcOffset(-300).format("MM-DD-YYYY hh:mm:ss a"),'MM-DD-YYYY hh:mm:ss a').valueOf()
+      var distance = new Date(passwordTimer).getTime() - now;
+      setInterval(function() {
+        var timer="";
+        var now = moment(moment.tz(new Date(), "GMT").utcOffset(-300).format("MM-DD-YYYY hh:mm:ss a"),'MM-DD-YYYY hh:mm:ss a').valueOf()
+        var distance = new Date(passwordTimer).getTime() - now;
+        var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        if(days===0){
+          
+          document.getElementById('timeBannerPass').style.display='table';
+          // document.getElementById('timeBannerPass').css('width','fit-content');
+          document.getElementById('timeBannerPass').innerHTML =   'Starts In: '+minutes + "M " + seconds + "S ";  
+        }
+        if(distance<0){
+          document.getElementById('timeBannerPass').style.display='table';
+          document.getElementById('timeBannerPass').innerHTML ="La sala ha comenzado"
+        $('#button_Join').prop('disabled', true);
+        $('#button_Join').css('background-color', 'gray');
+        $('#button_Join').html('Expired');
+      }
+      else{
+        document.getElementById('timeBannerPass').style.display='table';
+        document.getElementById('timeBannerPass').innerHTML =   'Starts en: '+days+" day(s)";  
+      }
+      },1000)
+    }
+
+    if($('#isMathEnded').val()=='true'){
+    $('#matchEnded').show()
+    document.getElementById('timeBannerPass').style.display='none';
+    if($('#resultTimer').val()!='null'){
+      var now = new Date(moment.tz(new Date(), "GMT").utcOffset(-300).format("MM-DD-YYYY hh:mm:ss a")).getTime();
+      var distance = new Date(($('#resultTimer').val())).getTime() - now;
+      setInterval(function() {
+        var timer="";
+        var now = new Date(moment.tz(new Date(), "GMT").utcOffset(-300).format("MM-DD-YYYY hh:mm:ss a")).getTime();
+        var distance = new Date(($('#resultTimer').val())).getTime() - now;
+        var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        if(days===0){
+          document.getElementById('timeBannerRes').style.display='table';
+          document.getElementById('timeBannerRes').innerHTML =   'Results In: '+minutes + "M " + seconds + "S ";  
+        }
+        if(distance<0){
+          document.getElementById('timeBannerRes').style.display='table';
+          document.getElementById('timeBannerRes').innerHTML ="Results Announced"
+        $('#button_Join').prop('disabled', true);
+        $('#button_Join').css('background-color', 'gray');
+        $('#button_Join').html('Expired');
+      }
+      },1000)
+    
+  }
+  }
+    $('#passwordDialogButton').click(()=>{
+      $('#exampleModalCenterExpPass').modal('toggle');
+    })
+
+      var time12=$('#challengeTime').val();
+
+      var countDownDate1= new Date(time12).getTime()
+      setInterval(function() {
+      var timer="";
+      var now = new Date(moment.tz(new Date(), "GMT").utcOffset(-300).format("MM-DD-YYYY hh:mm:ss a")).getTime();
+      var distance = countDownDate1 - now;
+      alert(distance)
+      var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      if(days===0 && $('#button_Join').html()!='Expired'){
+        document.getElementById('timeBanner').innerHTML =   '<i class="fa fa-clock-o" aria-hidden="true"></i> '+hours + "H " + minutes + "M " + seconds + "S ";  
+      }
+      else if(days>=1 && $('#button_Join').html()!='Expired'){ 
+        document.getElementById('timeBanner').innerHTML = '<i class="fa fa-clock-o" aria-hidden="true"></i> '+ "en "+days+" Días"
+      }
+      else {
+
+        document.getElementById('timeBanner').innerHTML = '<i class="fa fa-clock-o" aria-hidden="true"></i> '+"EXPIRED";
+      }
+    },1000)
+
+    var j=0;
+    $('#button_choose_image').click(function(){
+      j=1;
+    $('#inputGroupFile02').click();
     });
-    function myfun(){
-      $.post("http://localhost:3000/challenge", function(response){
-      window.location.replace("http://localhost:3000/adminPanel");
-      });
-}
+    console.log(window.location.origin);
+    //  $('#button_choose_image').click(function(e){
+      
+        // $('#fileName').html(e.target.files[0].name);
+        $('#button_choose_image').html('participar <i class="fas fa-chevron-right" style="margin-left:1vw;"></i>');
+        // $('#button_choose_image').unbind('click')
+        $('#button_choose_image').click(function(){
+          $('#button_choose_image').html('<div class="spinner-border" style="height:2vw;width:2vw;"></div>');
+
+          var formData = new FormData();
+          // formData.append('file', $('#inputGroupFile02')[0].files[0]);
+          formData.append('data', $('#inputScore').val());
+          $.ajax({
+            url: window.location.origin+'/challenge',  
+            type: 'POST',
+            data: formData,
+            success:function(data){
+                if(data.status==="success"){
+                  $('#fileName').css("display","none");
+                  $('#input-block').css("display","none"); 
+                  $('#timeLeft').css("display","block");
+                  $('#exampleModalLongTitle').html("¡Participación exitosa!")
+                  $('#button_choose_image').html("Success");
+                  $('#button_choose_image').prop('disabled', true);
+                  $('#button_Join').html('<i class="fa fa-check" aria-hidden="true" style="margin-right:0.5vw"></i>Estás participando');
+                  $('#button_Join').prop('disabled', true);
+                  $('#cancel_footer').html("Hecho");
+                  $('#passwordDialogButton').show()
+                  $('#modalVideo-PasswordRow').empty()
+                  for(var i=0;i<JSON.parse(data.result).length;i++) {
+                    $('#modalVideo-PasswordRow').append('<h4 style="color: white;padding-bottom:1vw ;">'+JSON.parse(data.result)[i].key+': <strong>'+
+                                                                                                         JSON.parse(data.result)[i].value+'</strong></h4>');
+                  }        
+                  var iframeLobbyVideoHTML=$(($('#ytLinkLobbyTutorial').val())).prop('id','iframeLobbyTut');
+                  $('#modalVideo-PasswordRow').append(iframeLobbyVideoHTML)
+                  alert($('#modalVideo-PasswordRow').html())
+                  $('#passwordDialogButton').click(()=>{
+                    $('#exampleModalCenterExpPass').modal('toggle');
+                  })
+                }
+            },
+            cache: false,
+            contentType: false,
+            processData: false
+          });
+        });
+      
+    // }); 
+    setTimeout(()=>{
+      $('#button_Join').show();
+    },1000)
 });
 </script>
 <style media="screen">
+  @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@500&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
   .buttonCard{
     margin-top:15px;
     padding:10px;
@@ -23,104 +219,489 @@
     background: #6666ff;
     color:#FFF;
   }
+  a:hover{
+    color:rgb(233, 159, 159);
+  }
+::-webkit-scrollbar {
+  width: 0.4vw;
+  visibility: hidden;
+
+}
+::-webkit-scrollbar:hover{
+  visibility: visible;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  border-radius: 5px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb { 
+  background:#fd264f; 
+  border-radius: 5px; 
+}  
+ 
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background:#fd264f; 
+  
+}
+.buttonStyle {
+	background: #FFF;
+	color: #d8d800;
+	font: bold 11px "Helvetica";
+	padding: 12px;
+	text-decoration: none;
+
+	-webkit-border-radius: 20px;
+	-moz-border-radius: 20px;
+	border-radius: 20px;
+
+	-webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, .25);
+	-moz-box-shadow: 0px 0px 10px rgba(0, 0, 0, .25);
+	box-shadow: 0px 0px 10px rgba(0, 0, 0, .25);
+	
+	-webkit-transition: all 0.3s ease;
+	-moz-transition: all 0.3s ease;
+	-o-transition: all 0.3s ease;
+	transition: all 0.3s ease;
+}
+
+.buttonStyle:after {
+	background: #d8d800;
+	color: #FFF;
+	content: "!";
+	display: inline-block;
+	font: bold 11px "Georgia";
+	height: 25px;
+	line-height: 25px;
+	margin-left: 10px;
+	text-align: center;
+	width: 25px;
+	
+	-webkit-border-radius: 20px;
+	-moz-border-radius: 20px;
+	border-radius: 20px;
+}
+
+.buttonStyle:hover {
+	-webkit-box-shadow: 0px 0px 15px rgba(0, 0, 0, 1);
+	-moz-box-shadow: 0px 0px 15px rgba(0, 0, 0, 1);
+	box-shadow: 0px 0px 15px rgba(0, 0, 0, 1);
+
+	-webkit-transition: all 0.3s ease;
+	-moz-transition: all 0.3s ease;
+	-o-transition: all 0.3s ease;
+	transition: all 0.3s ease;
+}
+
+.buttonShdwEffect {
+  
+  padding-left: 1vw;
+  padding-right: 1vw;
+  font-family: 'Roboto', sans-serif;
+  font-size: 1vw;
+  font-weight: 500;
+  color: #000;
+  background-color: #fff;
+  border: none;
+  border-radius: 45px;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease 0s;
+  cursor: pointer;
+  outline: none;
+  }
+
+
+button:focus {
+    outline: none;
+}
+
+.buttonStyleTimer {
+	background: #FFF;
+	color: black;
+	font: bold 12px "Helvetica";
+	padding: 8px;
+	text-decoration: none;
+  font-weight: bold;
+	-webkit-border-radius: 20px;
+	-moz-border-radius: 20px;
+	border-radius: 20px;
+
+	-webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, .25);
+	-moz-box-shadow: 0px 0px 10px rgba(0, 0, 0, .25);
+	box-shadow: 0px 0px 10px rgba(0, 0, 0, .25);
+	
+	-webkit-transition: all 0.3s ease;
+	-moz-transition: all 0.3s ease;
+	-o-transition: all 0.3s ease;
+	transition: all 0.3s ease;
+}
+
 </style>
+<input id="endTimeChallenge" type="hidden" value="<%=end_date%>">
+<input id="challengeTime" type="hidden" value="<%=challengeTime%>">
+<input id="isParticipated" type="hidden" value="<%=isParticipated%>">
+<input id="password" type="hidden" value="<%=password%>">
+<input id="passwordTimer" type="hidden" value="<%=passwordTimer%>">
+<input id="ytLinkTutorial" type="hidden" value="<%=ytInstructionLink%>">
+<input id="ytLinkLobbyTutorial" type="hidden" value="<%=ytLobbyTutorial%>">
+<input id="isMathEnded" type="hidden" value="<%=isEnded%>">
+<input id="resultTimer" type="hidden" value="<%=resultTimer%>">
 
 
-<div style="height: 35vh;">
-  <div style='
-  background-image: url("<%=src%>");
-  height: 100%;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-color:rgba(0, 0, 0, 0.4);'>
-  <div style="padding: 3vw;">
-<h1 id="nameBanner" style="color:#fff; font-size:2vw; font-family: 'Open Sans', sans-serif;font-weight: bold;">
+<div style="height:100vh;
+background-image: url('<%=src%>');
+ background-position: center;
+ background-repeat: repeat-y;
+ background-size: cover;
+ box-shadow: inset 0 0 0 1000px rgba(0,0,0,0.3);">
+<div style="height: 40vh;width: 100%;font-family: 'Raleway', sans-serif;">
+  <div style="padding: 3vw; height:40vh;display: inline-block;">
+<div>
+<h1 id="nameBanner" class="c-challenge-name">
   <%- challengeName %>
 </h1>
-<div style=" display:inline-block;">
-  <p id="timeBanner" style="color:white;margin-right:1vw;font-size:1.2vw;">
-    <i class="fa fa-clock-o" aria-hidden="true"></i>
-    Comienza en: <%=challengeTime%></p>
- 
+
+<div class="c-div-mobile">
+  <div id="timeBanner" class="c-callengeTime" style="font-family: 'Lato', sans-serif;">
+   </div>
   <% if(data.challengeType) {%>  
-    <p style="color: white;font-size:1.2vw;">
+    <p class="c-challengePrize">
       <%=data.challengeType.S%>
     </p>
   <%}%>  
-
-  <p id="prizeBanner" style="color:white;font-weight: bold;font-size:1.2vw; ">
-    <i class="fa fa-trophy" aria-hidden="true" style="color:ffb327;height:1vh;"></i>
-    <%if(prize.L.length>1) {%>
-     Multiple Prizes
-     <%}%>
-     <%if(prize.L.length===1) {%>
-      <%= prize %>
+  <div class="c-buttonCenter" style="font-family: 'Lato', sans-serif;">
+    <p id="prizeBanner" class="c-challengePrize" style="">
+      <i class="fa fa-trophy" aria-hidden="true" style="color:ffb327;height:1vh;"></i> 
+      <%if(prize.L.length>1) {%>
+        Premios múltiples
       <%}%>
-    </p>
+      <%if(prize.L.length===1) {%>
+        <%= prize.L[0].S %>
+        <%}%>
+      </p>
+    </div>
 </div>
+  <div class="c-buttonCenter">
+        <%if(!isLogged){%>
+          <form action="/login" method="get">
+            <button
+            id=""
+            type="submit" 
+            name="more_challenges" 
+            
+            class="button-view-all c-buttonJoin" >                    
+            Iniciar sesión
+              <i class="fas fa-chevron-right" style="margin-left:1vw;"></i>           
+            </button>
+        </form>
+        <%}%>
+       <%if(isFull<1) {%> 
+        <%if(isLogged){%> 
+          <%if(isEverSubscribed){%> 
+            <%if(code){%> 
+             
+                
+                <%if(!isParticipated){%>
+                  <button 
+                  id="button_Join"
+                  type="submit" 
+                  name="more_challenges" 
+                  class="button-view-all c-buttonJoin" 
+                  data-toggle="modal" data-target="#exampleModalCenter" > 
+                  Participar
+                  <i class="fas fa-chevron-right" style="margin-left:1vw;"></i>
+                </button>
+                <%}%> 
+                <%if(isParticipated){%>
+                  <button 
+                  id="button_Join"
+                  type="submit" 
+                  name="more_challenges" 
+                  class="button-view-all c-buttonJoin" 
+                   > 
+                  <i class="fa fa-check" aria-hidden="true" style="margin-right:0.5vw"></i>
+                  Estás participando       
+                </button>         
+                <%}%> 
+            <%}%>
+            <%if(!code){%> 
+              <%if(isParticipated){%>
+                <button 
+                id="button_Join"
+                type="submit" 
+                name="more_challenges" 
+                class="button-view-all c-buttonJoin" 
+                 > 
+                <i class="fa fa-check" aria-hidden="true" style="margin-right:0.5vw"></i>
+                Estás participando       
+              </button>         
+              <%}%> 
+              <%if(!isParticipated){%>
+              <form action="/subscribe" method="get">
+                <button 
+                id=""
+                type="submit" 
+                name="more_challenges" 
+                class="button-view-all c-buttonJoin"> 
+                Resubscribe  
+                <i class="fas fa-chevron-right" style="margin-left:1vw;"></i>     
+              </button> 
+            </form>
+          <%}%>    
+          <%}%>
+          <%}%>
+          <%if(!isEverSubscribed){%> 
+            <%if(isParticipated){%>
+              <button 
+              id="button_Join"
+              type="submit" 
+              name="more_challenges" 
+              class="button-view-all c-buttonJoin" 
+               > 
+              <i class="fa fa-check" aria-hidden="true" style="margin-right:0.5vw"></i>
+              Estás participando       
+            </button>         
+            <%}%> 
+            <%if(!isParticipated){%>
+              <p style="color: #FFF;">
+                No tienes una suscripción activa, para ver la contraseña de esta partida,<br> activa tu suscripción haciendo click en "Comienza ya"
+              </p>
+            <form action="/subscribe" method="get">
+              <button 
+              id=""
+              type="submit" 
+              name="more_challenges" 
+              class="button-view-all c-buttonJoin" > 
+               COMIENZA YA  
+              <i class="fas fa-chevron-right" style="margin-left:1vw;"></i>     
+            </button> 
 
-
-    <form action="/dashboard" method="post">
-      <button 
-      type="submit" 
-      name="more_challenges" 
-      class="button-view-all" 
-      style="background-image: linear-gradient(to right,#ff0000, #ff0000);color:#fff; font-size:1.5vw; font-family: 'Open Sans', sans-serif;" > 
-        JOIN
-        <i class="fas fa-chevron-right" style="margin-left:1vw;"></i>
-      </button>    
-    </form>
-  </div>
+          </form>
+          <%}%>    
+          <%}%> 
+        <%}%> 
+      <%}%> 
+      <%if(isFull==1){%>
+        <button 
+        id="button_Join"
+        type="submit" 
+        name="more_challenges" 
+        class="button-view-all c-buttonJoin" 
+        style="background-color: gray;"
+         > 
+        Spots Full      
+      </button>     
+      <%}%>    
+        <%if(password!='null'){%>
+        <%}%>
+      </div>    
+      <button id="tutorialDialogButton" class="buttonShdwEffect" style="margin-top:1vw;"><i class="fa fa-info" style="margin-right: 0.6vw;" aria-hidden="true"></i>   Tutorial</button>
+      <button id="passwordDialogButton" class="buttonShdwEffect" style="margin-left: 20px;display: none;" ><i class="fa fa-info" style="margin-right: 0.6vw;" aria-hidden="true"></i>Password Announced</button>
+      <button id="matchEnded" class="buttonShdwEffect" style="margin-left: 20px;display: none;" ><i class="fa fa-info" style="margin-right: 0.6vw;" aria-hidden="true"></i>Challenge Finished</button>
  </div>
 </div>
-<div style="width: 100%;height:100%;background:#121f1f;padding: 3vw;">
-  <h1  style="color:#fff; font-size:1.5vw; font-family: 'Open Sans', sans-serif;margin-bottom: 5vh;">
-    Prizes 
+<%var spots=spots.split('/');%>  
+
+  <div style="float: right;color: #FFF;margin-top: 15vh;margin-right:4vw;font-family: 'Roboto', sans-serif;">
+    <div style="text-align: right;">
+      <i class="fas fa-users" style="font-size: 1.5vw;margin-right: 1vw;"></i>
+      <h6 style="font-size: 1.5vw;color:white;padding:0;margin:0;float: right;"><strong><%=spots[0]+"/"+spots[1]%></strong></h6>  
+    </div>
+    <div >
+      <div class="meter-m" style="width: 15vw;margin-top: 1vh;">
+        <span style="width:<%=(parseInt(spots[0])/parseInt(spots[1]))*100%>%;"></span>
+      </div>
+      <div id="timeBannerPass" class="buttonStyleTimer" style="font-family: 'Lato', sans-serif;display: none; margin-top: 1vw;">
+      </div>
+      <div id="timeBannerRes" class="buttonStyleTimer" style="font-family: 'Lato', sans-serif;display: none; margin-top: 1vw;">
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="tabs" style=" ">
+ 
+  <div class="tab-2" >
+    <label for="tab2-1" style="font-family: 'Raleway', sans-serif;">Vista general</label>
+    <input id="tab2-1" name="tabs-two" type="radio" checked="checked">
+    
+    <div>
+          
+  <h1  class="c-heading ">
+
+    Premios 
     </h1>
-  <div style="display: inline-flex;">
+  <div class="c-prize-mobile" style="text-align: center;">
 
     <% for(i=0;i< prize.L.length; i++) {%>
-        <div style="background: #293535;border-radius: 10px;margin-right: 1vw;">
-          <h1  style="color:#fff; font-size:1.5vw; font-family: 'Open Sans', sans-serif;display: inline-flex;margin:1vw;margin-bottom: 0.1vw;;">
+      
+        <div class="c-prize-background"  >
+          
             <%if(i===0){%>
-            <%=1%>st
-            <%}%>   
+              <h1  class="c-prize-text"> 
+            <%=1%>ro
+            </h1>
+                      <img src="images/chest_img.png" class="c-image-prize" alt="">
+
+            <%}%>
             <%if(i===1){%>
-              <%=2%>nd
+              <h1  class="c-prize-text"> 
+              <%=2%>do
+              </h1>
+                        <img src="images/chest-low.png" class="c-image-prize" alt="">
+
               <%}%>
             <%if(i===2){%>
-            <%=3%>rd
+              <h1  class="c-prize-text"> 
+            <%=3%>ro
+            </h1>
+                      <img src="images/chest-lowest.png" class="c-image-prize" alt="">
+
             <%}%> 
             <%if(i===3){%>
-              <%=4%>th
+              <h1  class="c-prize-text"> 
+              <%=4%>ro
+              </h1>
+                        <img src="images/chest-lowest.png" class="c-image-prize" alt="">
+
               <%}%>  
               <%if(i>=4){%>
-                <%=i+1%>th
+                <h1  class="c-prize-text"> 
+                <%=i+1%>ro
+                </h1>
+                          <img src="images/chest-lowest.png" class="c-image-prize" alt="">
+
                 <%}%>    
-          </h1>
-          <img src="images/treasure_box.png" style="height:15vh;margin-top:-8vh;margin-bottom: 2vh;" alt="">
-          <div style="background:#242f2f;color:white;text-align: center;color:#fff; font-size:1.5vw;padding:1vw; font-family: 'Open Sans', sans-serif;border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;">
-            <%console.log(prize.L)%>
+          <div class="c-text-prize" style="color:white;">
             <%= prize.L[i].S%>
           </div>
         </div>
        <%}%>
   </div>
-  <h1  style="color:#fff; font-size:1.5vw; font-family: 'Open Sans', sans-serif;;margin-top: 3vw;">
-    Description
+  
+  <h1  class="c-heading" > 
+    Descripción
   </h1>
-  <div style="color: white;">
+  <div class="c-textrd">
     <%- challengeDescription %>
   </div>
-  <h1  style="color:#fff; font-size:1.5vw; font-family: 'Open Sans', sans-serif;margin-top: 3vw;">
-    Rules
+  <h1 class="c-heading" >
+    Reglas
   </h1>
-  <div style="color: white;">
-    <%- challengeDescription %>
+  <div class="c-textrd" style="margin-bottom: 6vh;">
+    <%- rules %>
+  </div>
+    </div>
+  </div>
+  <div class="tab-2" >
+    <label for="tab2-2" style="font-family: 'Raleway', sans-serif;">Jugadores</label>
+    <input id="tab2-2" name="tabs-two" type="radio">
+
+     <% if(usersData!=null && userImgObj!=null){ %>
+  <div>  
+	<div class="limiter">
+		<div class="container-table100">
+			<div class="wrap-table100">
+					<div class="table100 ver5 m-b-110">
+					<div class="table100-head">
+						<table>
+							<thead>
+								<tr class="row100 head">
+									<th class="cell100 column1" style="font-family: 'Open Sans', sans-serif;">#</th>
+									<th class="cell100 column2"  style="font-family: 'Open Sans', sans-serif;">Participante</th>
+									<th class="cell100 column3" style="font-family: 'Open Sans', sans-serif;">Victorias</th>
+									<th class="cell100 column4" style="font-family: 'Open Sans', sans-serif;">Total participado</th>
+									<th class="cell100 column5" style="font-family: 'Open Sans', sans-serif;">Total ganado</th>
+								</tr>
+							</thead>
+						</table>
+					</div>
+
+					<div class="table100-body">
+						<table>
+							<tbody>
+              <% for(i=0;i< usersData.length; i++) { %>
+                <tr class="row100 body">
+									<td class="cell100 column1" style="font-family: 'Open Sans', sans-serif;"><%=i+1%></td>
+									<td class="cell100 column2" style="font-family: 'Open Sans', sans-serif;"><%=userImgObj[i].M.score.S%></td>
+									<td class="cell100 column3" style="font-family: 'Open Sans', sans-serif;"><%=usersData[i].win_count%></td>
+									<td class="cell100 column4" style="font-family: 'Open Sans', sans-serif;"><%=usersData[i].total_count%></td>
+									<td class="cell100 column5" style="font-family: 'Open Sans', sans-serif;"><%=usersData[i].win_count=='-'?'-':(parseInt(usersData[i].win_count)/parseInt(usersData[i].total_count)*100)+'%' %> </td>
+								</tr>
+              <% } %>							
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
   </div>
 </div>
 
+  <% } %>
+  <% if(usersData==null) {%>
+    <div style="width: 80vw; height:70vh; display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;" >
+      <img src="/images/RG_6.png" style="width: 50vw;">
+      <h6 style="color: #FFF;">¡Sé el primero en unirse!</h6>
+    </div>
+  <% } %>  
+  </div>
+</div>
+
+<div style="margin-bottom: -100vh;">
+  <%- include('partials/footer_challengeList') %>
+</div>
+</div>
+
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+  aria-hidden="true">
+
+  <!-- Add .modal-dialog-centered to .modal-dialog to vertically center the modal -->
+  <div class="modal-dialog modal-dialog-centered" role="document">
+
+    <div class="modal-content"  style="background: rgba(20,20, 20, 0.6); backdrop-filter: blur(4px);text-align: center;border-radius: 0.5vw;">
+      <div class="modal-header" style="border: none;">
+        <h2 class="modal-title" id="exampleModalLongTitle" style="color: white;font-weight: bold;width: 100%;text-align: center;">
+          ingresa tu usuario ingame
+        </h2>
+      </div>
+      <div class="modal-body" style="text-align: center;" >
+        <form id='uploadForm' action='/declareResult' method='POST' encType="multipart/form-data">
+          <!-- <input style="display: none;" type="file" name="screenshot" class="custom-file-input" id="inputGroupFile02" required onchange="checkUpload();" /> -->
+          <p id="fileName" style="color: white;"></p>
+          <h4 id="timeLeft" style="color: white;display: none;">Los resultados se anunciarán en</h4>
+          <div id="input-block">
+          <label for="inputEmail3MD" class="col-form-label" style="color: white;">Escribe tu nombre de usuario en el juego</label>
+          <div class="col-sm-12">
+            <div class="md-form mt-0">
+              <input type="text" style="color:white;text-align: center;"  class="form-control" id="inputScore" placeholder="Username" required>
+            </div>
+          </div>
+        </div>
+          <button   
+          id="button_choose_image"
+          type="button"
+          name="more_challenges" 
+          class="button-view-all c-buttonJoin"
+           > 
+           Seleccionar imágen
+            <i class="fas fa-chevron-right" style="margin-left:1vw;"></i>
+        </button>       
+        </form>  
+      </div>
+      <div class="modal-footer" style="border: none;text-align: center;">
+        <a type="button" id="cancel_footer" data-dismiss="modal" style="color: white;font-size:1.5vw;"> Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>
+ 
 
 <!-- <div style="margin-top:13vh;">
 
@@ -157,7 +738,88 @@
     <% } %>
 <% } %>
 </div> -->
+<div class="modal fade" id="ytVideoParticipationTutorial" tabindex="-1" role="dialog" aria-labelledby="ytVideoParticipationTutorialTitle"
+  aria-hidden="true">
 
-<div style="margin-bottom: -100vh;">
-  <%- include('partials/footer') %>
+  <!-- Add .modal-dialog-centered to .modal-dialog to vertically center the modal -->
+  <div class="modal-dialog modal-dialog-centered" role="document">
+
+    <div class="modal-content"  style="background: rgba(20,20, 20, 0.6); backdrop-filter: blur(4px);text-align: center;border-radius: 0.5vw;">
+      <div class="modal-header" style="border: none;">
+        <h2 class="modal-title" id="exampleModalLongTitle" style="color: white;font-weight: bold;width: 100%;text-align: center;">
+          Tutorial
+        </h2>
+      </div>
+      <div class="modal-body" style="text-align: center;" >
+        <div id="modalVideoRow" class="row" style="padding:1vw">
+        
+          </div>
+      </div>
+      <div class="modal-footer" style="border: none;text-align: center;">
+        <a type="button" id="closeVideoDialog" data-dismiss="modal" style="color: white;font-size:1.5vw;"> Cancelar</button>
+      </div>
+    </div>
   </div>
+</div>
+
+
+
+  
+  <div class="modal fade" id="exampleModalCenterExpPass" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitleExp"
+  aria-hidden="true">
+
+  <div class="modal-dialog modal-dialog-centered" role="document">
+
+    <div class="modal-content"  style="background: rgba(20,20, 20, 0.6); backdrop-filter: blur(4px);text-align: center;border-radius: 0.5vw;;">
+      <div class="modal-header" style="border: none;">
+        <h2 class="modal-title" id="exampleModalLongTitle" style="color: white;font-weight: bold;width: 100%;text-align: center;">Detalles de Sala</h2>
+      </div>
+      <div class="modal-body" style="text-align: center;" >
+        <div id="modalVideo-PasswordRow" class="row" style="padding:1vw;justify-content:center;">
+        
+        </div>
+      </div>
+      <div class="modal-footer" style="border: none;text-align: center;">
+        <a type="button" id="closePasswordDialog" data-dismiss="modal" style="color: white;font-size:1.5vw;">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<%if(end_date!=null && code===false){%>
+  
+  <input type="hidden" id="expired_modal_indicator" value="true"/>
+  <div class="modal fade" id="exampleModalCenterExp" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitleExp"
+  aria-hidden="true">
+
+  <div class="modal-dialog modal-dialog-centered" role="document">
+
+    <div class="modal-content"  style="background: rgba(20,20, 20, 0.6); backdrop-filter: blur(4px);text-align: center;border-radius: 0.5vw;;">
+      <div class="modal-header" style="border: none;">
+        <h2 class="modal-title" id="exampleModalLongTitle" style="color: white;font-weight: bold;width: 100%;text-align: center;">Subscription Expired!</h2>
+      </div>
+      <div class="modal-body" style="text-align: center;" >
+        <form id='uploadForm' action='/declareResult' method='POST' encType="multipart/form-data">
+          <input style="display: none;" type="file" name="screenshot" class="custom-file-input" id="inputGroupFile02" required onchange="checkUpload();" />
+          <% var end_date_formatted =end_date.substring(0,4)+"/"+end_date.substring(4,6)+"/"+end_date.substring(6,8) %>
+          <h4 id="timeLeft" style="color: white;display: none;">Tu suscripción expiró en <%=end_date_formatted%>. Por favor renuévala para participar en este reto.</h4>
+            <a    
+              href="/subscribe"           
+              type="submit" 
+              class="button-view-all c-buttonJoin hover-color"
+              style="padding-top: 0.5vw;;"
+              >
+              Reactivar suscripción
+              <i class="fas fa-chevron-right" style="margin-left:1vw;"></i>
+          </a>   
+        </form>  
+      </div>
+      <div class="modal-footer" style="border: none;text-align: center;">
+        <a type="button" id="cancel_footer" data-dismiss="modal" style="color: white;font-size:1.5vw;">Close</button>
+      </div>
+    </div>
+  </div>
+</

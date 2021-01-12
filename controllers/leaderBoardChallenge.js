@@ -5,22 +5,19 @@ const model = require('../models/UserModel.js');
 exports.leaderboardChallenge=(req,res)=>{
   const cookie=req.cookies;
   const id=cookie.leaderBoardChallengeClickedID;
-
-  fetcher.fetchUnitResult(id,(errResult,errChallenge,dataResult,dataChallenge)=>{
-      if(errResult|| errChallenge){
-        res.send('error occured');
-      }
-      else if(dataResult && dataChallenge){
-        console.log(dataChallenge);
+  console.log(id+"**-*-*--");
+  fetcher.fetchUnitResult(id,(resultDataNew)=>{
+       
         res.render("leaderBoardChallenge",
         {
         name:typeof(cookie.username) === 'undefined' ? null : cookie.username,
         // userData:userData.data,
-        userData:JSON.parse(dataResult.Item.resultData.S.replace("'","")),
-        unitChallenge:dataChallenge.Item,
-        end_date:null
+        userData:JSON.parse(resultDataNew.Item.resultData.S.replace("'","")),
+        unitChallenge:resultDataNew.Item.unitChallenge.M.Item.M,
+        end_date:null,
+        url:resultDataNew.Item.url.S
       });
-      }
+      
   });
 };
 

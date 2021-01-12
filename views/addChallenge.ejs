@@ -1,7 +1,24 @@
-<%- include('partials/header') %>
-
+<%- include('partials/headerAddChallenge') %>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-datetimepicker/2.7.1/css/bootstrap-material-datetimepicker.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-datetimepicker/2.7.1/js/bootstrap-material-datetimepicker.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.32/moment-timezone-with-data.min.js"></script>
+    
 <script type="text/javascript">
 $(document).ready(function() {
+  $(function () {
+        $('#end_time').bootstrapMaterialDatePicker({
+            format: 'YYYY-MM-DD HH:mm:ss',
+        });
+    });
+    $('#inputGroupFile02').on('change',function(){
+                var fileName = $(this).val();
+                $(this).next('.custom-file-label').html(fileName);
+    });  
+    setInterval(()=>{
+      $('#gmtTimeNow').html('<br><i class="fas fa-clock" style="margin-right:1vw;"></i>'+moment.tz(new Date(), "GMT").utcOffset(-300).format("MM-DD-YYYY hh:mm:ss a"))
+      },1000)        
   var j=2;
   var new_cat=false;  
     $("#add_a_prize").click(function () { 
@@ -20,8 +37,10 @@ $(document).ready(function() {
           for(i=1;i<=j-1;i++){
                prizeData.push($('#list'+i).val());
           }
+          var d = new Date();
           
           if(new_cat){
+
            var category=$('#category_newId').val();
           var obj={
             "challengeName":$('#challengeName').val(),
@@ -32,8 +51,10 @@ $(document).ready(function() {
             "challengeTime":$('#end_time').val(),
             "rules": $('#rules').val(),
             "desc": $("#desc").val(),
-            "category": category,
-            "new_cat":new_cat
+            "minLevel":$('#mLevel').val(),
+            "spots":$('#spots').val(),
+            "createdAt":d.toLocaleString('en-US', { timeZone: 'America/New_York' }),
+            "ytLinkParticipation":$("#ytLinkParticipate").val()
           }
           $("#jsonData").val(JSON.stringify(obj));
           $('#uploadForm').submit();
@@ -49,13 +70,14 @@ $(document).ready(function() {
             "challengeTime":$('#end_time').val(),
             "rules": $('#rules').val(),
             "desc": $("#desc").val(),
-            "category": category,
-            "new_cat":new_cat
+            "spots":$('#spots').val(),
+            "minLevel":$('#mLevel').val(),
+            "createdAt":d.toLocaleString('en-US', { timeZone: 'America/New_York' }),
+            "ytLinkParticipation":$("#ytLinkParticipate").val()   
           }
           $("#jsonData").val(JSON.stringify(obj));
           $('#uploadForm').submit();
-          }
-         
+      }   
       });
       $("#add_category").click(function(){
           new_cat=true;  
@@ -78,15 +100,12 @@ $(document).ready(function() {
 }
 </style>
 
-
-
-
 <div class="jumbotron jumbotron-fluid" style="background-color:transparent; text-align:center;">
   <div class="container">
     <p style="color:white;" class="display-4">Crea un nuevo desafío</p>
   </div>
 </div>
-<div >
+<div>
  
 
 <div class="container">
@@ -95,6 +114,7 @@ $(document).ready(function() {
 
 
     <div style="margin :0 auto; padding:2%; padding-left:5%; padding-right:5%; width:800px; background:rgba(255,255,255,1); border-radius:15px;">
+      <h5 id='gmtTimeNow' style="color: black;"><strong></strong></h5>
 
   <div class="col-sm">
     <div style="color:#a8a8a8; font-size:1.5rem; margin-top:20px; ">
@@ -105,7 +125,7 @@ $(document).ready(function() {
     <div class="input-group mb-3" stryle="margin-top:20px;">
       <div class="custom-file">
         <form id='uploadForm' action='/addChallenge' method='POST' encType="multipart/form-data">
-          <input id="jsonData" type="hidden" name="jsonData" value="">
+          <input id="jsonData" type="hidden" name="jsonData" value=""/>
           <input type="file" name="screenshot" class="custom-file-input" id="inputGroupFile02" required />
           <label class="custom-file-label" for="inputGroupFile02">Choose file</label>
         </form>
@@ -115,11 +135,11 @@ $(document).ready(function() {
 
   <div class="form-group">
    <label for="exampleInputPassword1">Challenge Title</label>
-   <input name="challengeName" type="text" class="form-control" id="challengeName" placeholder="Call Of Duty">
+   <input name="challengeName" type="text" class="form-control" id="challengeName" placeholder="Call Of Duty"/>
  </div>
  <div class="form-group">
    <label for="exampleInputPassword1">Challenge Type</label>
-   <input name="challengeType" type="text" class="form-control" id="challengeType" placeholder="Global • 1v1 • 50 CUPOS">
+   <input name="challengeType" type="text" class="form-control" id="challengeType" placeholder="Global • 1v1 • 50 CUPOS"/>
  </div>
  
  <div class="form-group">
@@ -137,20 +157,24 @@ $(document).ready(function() {
    <label for="exampleInputPassword1">Challenge Description</label>
    <textarea name="desc" class="form-control" id="desc" rows="3"></textarea>
  </div>
-<div class="form-group">
+<!-- <div class="form-group">
   <label for="exampleInputPassword1">Start Time</label>
   <input name="startTime" type="text" class="form-control" id="start_time" placeholder="2020-09-15 23:59:00">
-</div>
+</div> -->
  <div class="form-group">
   <label for="exampleInputPassword1">End Time</label>
-  <input name="endTime" type="text" class="form-control" id="end_time" placeholder="2020-09-16 23:59:00">
+  <input name="endTime" type="text" class="form-control result" id="end_time" placeholder="YYYY-MM-DD HH:MM:SS">
 </div>
+
 <div class="form-group">
   <label for="exampleInputPassword1">Challenge Rules</label>
   <textarea name="rules" class="form-control" id="rules" rows="3"></textarea>
 </div>
-
-<% if(dataCategory  !== null && dataCategory.length >0) { %>
+<div class="form-group">
+  <label for="exampleInputPassword1">Minimum Level</label>
+  <input name="rules" class="form-control" id="mLevel" ></input>
+</div>
+<!-- <% if(dataCategory  !== null && dataCategory.length >0) { %>
   <label for="exampleInputPassword1">Category</label>
 
   <input type="hidden" id="dropdownValueId" name="dropdownValue" value="">
@@ -173,15 +197,23 @@ $(document).ready(function() {
   <input name="category" type="text" class="form-control" id="category" placeholder="Action">
 </div>
 
-<%}%>
+<%}%> -->
 
-<div class="createCategory" style="display: none;">
+<!-- <div class="createCategory" style="display: none;">
   <div class="md-form mb-5">
     <input name="category_new" id="category_newId" type="text" id="form3" class="form-control validate" placeholder="Enter a category name" value="">
   </div>
+</div> -->
 
+<div class="form-group">
+  <label for="exampleInputPassword1">Maximum Spots</label>
+  <input name="rules" class="form-control" id="spots" ></input>
 </div>
 
+<div class="form-group">
+  <label for="exampleInputPassword1">Youtube Instruction link for players participating</label>
+  <input name="ytInsLinkParticipate" class="form-control" id="ytLinkParticipate" placeholder="Paste <iframe> code here"></input>
+</div>
  <button type="submit" id="publishButton" class="btn btn-dark">Publish</button>
 </div>
 </div>

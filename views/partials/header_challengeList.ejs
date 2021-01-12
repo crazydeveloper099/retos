@@ -7,14 +7,17 @@
   <meta charset="utf-8">
   <link rel="icon" type="image/png" href="/images/RG_16x16.png"/>
   <link rel="stylesheet" type="text/css" href="css/card_style.css" />
-  <link rel="stylesheet" type="text/css" href="css/carousel_all_ch.css" />
+  <link rel="stylesheet" type="text/css" href="css/carousel.css" />
   <link rel="stylesheet" href="css/font-awesome.min.css"/>
   <link rel="stylesheet" href="css/magnific-popup.css"/>
-  <link rel="stylesheet" href="css/owl.carousel.min.css"/>
   <link rel="stylesheet" href="css/animate.css"/>
   <link rel="stylesheet" href="css/slicknav.min.css"/>
   <link rel="stylesheet" href="css/testimonial.css"/>
   <link rel="stylesheet" href="css/simple-sidebar.css" >
+  <link rel="stylesheet" href="css/tab_style.css"/>
+  <link rel="stylesheet" href="css/challenge_player_table.css"/>
+  <link rel="stylesheet" href="css/progressBar_challenge.css"/>
+
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
@@ -39,6 +42,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.theme.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.32/moment-timezone-with-data.js"></script> 
+ 
     <script src="js/jquery.rcounter.js"></script>
 <script src="https://static.landbot.io/landbot-widget/landbot-widget-1.0.0.js"></script>
 <style>
@@ -46,6 +52,56 @@
     font-size: 5vw;
 }
 </style>
+
+<% if (name!=null) { %>
+  <script src="https://www.gstatic.com/firebasejs/7.14.6/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.14.6/firebase-messaging.js"></script>
+  <script>
+      var firebaseConfig = {
+        "apiKey": "AIzaSyDgWeTlLT4qMGOtop75NPTyz8ZX4woD8hc",
+            "authDomain": "retosgamer-328be.firebaseapp.com",
+            "databaseURL": "https://retosgamer-328be.firebaseio.com",
+            "projectId": "retosgamer-328be",
+            "storageBucket": "retosgamer-328be.appspot.com",
+            "messagingSenderId": "935537268417",
+            "appId": "1:935537268417:web:69f145053c591119fce640",
+            "measurementId": "G-0XR8CZH0JP"
+      };
+      firebase.initializeApp(firebaseConfig);
+  
+      const messaging=firebase.messaging();
+  
+      messaging.onMessage(function (payload) {
+          console.log(payload);
+          const notificationOption={
+              body:payload.notification.body,
+              icon:payload.notification.icon
+          };
+  
+          if(Notification.permission==="granted"){
+              var notification=new Notification(payload.notification.title,notificationOption);
+  
+              notification.onclick=function (ev) {
+                  ev.preventDefault();
+                  window.open(payload.notification.click_action,'_blank');
+                  notification.close();
+              }
+          }
+  
+      });
+      messaging.onTokenRefresh(function () {
+        alert("yes");
+        messaging.getToken().then((refreshedToken) => {
+        console.log(refreshedToken);
+        console.log('Token refreshed.');
+        // setTokenSentToServer(false);
+        // sendTokenToServer(refreshedToken);
+      }).catch((err) => {
+        console.log('Unable to retrieve refreshed token ', err);
+      });       
+    });
+  </script>
+  <% } %>
 <nav 
 class="navbar sticky-top navbar-expand-lg navbar-dark mobile-otpimizeNav-cl" 
 style="background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(4px);  border-bottom: 0.01px solid rgba(255, 255, 255, 0.5);padding:0.5vh; ">
@@ -107,65 +163,102 @@ dropdown-menu > li > a:hover {
           <a class="nav-link"  href="#"style="font-size: 4vw;;"><%= name %></a>
         </li>
         <form method="get" action="/logout">
-          <button type="submit" class="btn btn-danger"  style="font-size: 4vw;;">cerrar sesión</button>
-      </form>
+          <button
+          id=""
+          type="submit" 
+          name="more_challenges" 
+          style="font-size: 4vw;"
+          class="button-view-all c-buttonJoin" >                    
+          cerrar sesión
+            <i class="fas fa-chevron-right" style="margin-left:1vw;"></i>           
+          </button>      </form>
         <% } %>
   </ul>
-
 </div>
-
 </nav>
 </head>
   <body style="display: flex;flex-direction: column;background: #000000;" >
+    <style>
+      .dropdown-item-color:hover{
+        background-color: #ff4c4c;;
+      }
+    </style>
+    <script>
+        $(document).ready(function() {
+      $(".c-buttonSubs").click(function(e){
+        e.preventDefault();
+        window.location.href = window.location.origin+"/subscribe";
+    });
+  });
+    </script>
 <div id="wrapper">
   <aside id="sidebar-wrapper" >
-    <div class="sidebar-brand">
-      <h2 style="font-family: 'BIGMACCA';">RETOS GAMER</h2>
-      <hr style="background-color: #333333;">
+    <div class="sidebar-brand" style="width:100%;text-align: center;">
+      <a href="/" style="font-size:1.5rem; font-family: 'BIGMACCA';color: black;">RETOS GAMER</a>
     </div>
     <ul class="sidebar-nav">
       <li class="active">
-        <a class="nav-link" href="/" ><i class='fas fa-home' style="margin-right:0.5vw;"></i>HOGAR </a>
+        <a class="" href="/" ><i class='fa fas fa-home' ></i>HOGAR </a>
       </li>
       <li>
-        <a class="nav-link" href="/leaderboard" ><i class="fa fa-trophy" style="margin-right:-1.4vw;font-size:1vw;"></i>CLASIFICACIONES</a>
+        <a class="" href="/leaderboard" ><i class="fa fa-trophy" style="font-size:1vw;"></i>CLASIFICACIONES</a>
       </li>
       <li>
-        <a class="nav-link" href="/aboutUs" ><i class="fa fa-info-circle" style="margin-right:-1.4vw;font-size:1vw;"></i>NOSOTROS</a>
+        <a class="" href="/aboutUs" ><i class="fa fa-info-circle" style="font-size:1vw;"></i>NOSOTROS</a>
       </li>
       <% if (name!=null) { %>
         <li >
-          <a class="nav-link" href="/myProfile" ><i class="fa fa-user" style="margin-right:-1.4vw;font-size:1vw;"></i>MI PERFIL</a>
+          <a class="" href="/myProfile" ><i class="fa fa-user" style="font-size:1vw;"></i>MI PERFIL</a>
         </li>
     <li >
-     <a class="nav-link dropdown-toggle"" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      <i class="fa fa-credit-card" style="margin-right:-1.4vw;font-size:1vw;"></i>CUENTA
+     <a class="dropdown-toggle"" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <i class="fa fa-credit-card" style="font-size:1vw;"></i>CUENTA
      </a>
-
+     
      <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="background-color: #0e1111 !important;">
-       <% if (end_date!=null) { %>
-       <a class="dropdown-item" href="#" style="color:white;">Expiring <%= end_date %></a>
+       <% if (end_date!=null && end_date!="") { %>
+        <% var end_date_formatted =end_date.substring(0,4)+"/"+end_date.substring(4,6)+"/"+end_date.substring(6,8) %>
+        <a class="dropdown-item dropdown-item-color" href="#" style="color:white;">Tu subscripción expira en: <br><%= end_date_formatted %></a>
        <% } %>
-       <a class="dropdown-item" style="color:white;" href="/subscription">Recharge now</a>
+       <% if (end_date==null || end_date=="") { %>  
+        <div style="padding:0.5vw;text-align: center;">
+        <p style="color: white;font-size: 1vw;">No tienes una suscripción activa</p>
+
+
+        <button
+        id=""
+        type="submit"
+        name="more_challenges"
+        class="button-view-all c-buttonSubs"
+        style="font-size: 1vw;background:red;">                    
+        <strong>Recarga tu suscripción</strong><i class="fas fa-chevron-right" style="margin-left:1vw;"></i>
+      </button>
+    </div>
+      <% } %>
+
      </div>
    </li >
+
      <% } %>
      <% if (name==null) { %>
       <li style="color:white;" >
         <form method="get" action="/login">
-          <button type="submit" class="btn btn-outline-warning"  onclick="/leaderboard">Iniciar sesión</button>
+          <button type="submit" class="btn btn-warning" >Iniciar sesión</button>
       </form>
       </li>
       <% } %>
       <% if (name!=null) { %>
-        <li style="color:white;" href="#">
-          <a class="nav-link"  href="#"><%= name %></a>
-        </li>
-        <li style="">
+        
+        <li  style="margin-top: 1.5vw;">
         <form method="get" action="/logout">
-          <button type="submit" class="btn btn-danger"  onclick="/leaderboard"><i class="fa fa-power-off"></i></i>
-            cerrar sesión</button>
-            <hr style="background-color: #333333;">
+          <button
+          id=""
+          type="submit" 
+          name="more_challenges" 
+          class="button-view-all c-buttonJoin"
+          style="font-size: 1vw;background-color: red;">                    
+          cerrar sesión<i class="fa fa-power-off" style="margin-left: 1vw;"></i>
+          </button>
       </form>
     </li>
         <% } %>
@@ -200,5 +293,5 @@ dropdown-menu > li > a:hover {
       "hide_textbox": true
     }
   });
-    }, 60000);
+}, 60000);
   </script>

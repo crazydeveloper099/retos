@@ -27,12 +27,11 @@
 
       var str = $(this).data("obj");
       var email = document.getElementById("email:" + index[1]).value;
-      var userID = document.getElementById("userID:" + index[1]).value;
+      var url = document.getElementById("url:" + index[1]).value;
 
       var arr = {
-        "user_name": str,
         "email": email,
-        "userID": userID
+        "url":url
       };
       var position = parseInt(index[1]);
       document.getElementById("del:" + index[1]).style.display = "inline";
@@ -41,15 +40,14 @@
       document.getElementById("del:" + index[1]).innerHTML = "Remove From Position " + value;
 
       playerPlaceJson.push(arr);
-
       var len = playerPlaceJson.length;
       if (indexArr.length > 0) {
         document.getElementById("del:" + indexArr.pop()).setAttribute("disabled", "disabled");
-
       }
       indexArr.push(parseInt(index[1]));
     });
-    $('.del').click(function(e) {
+    $('.del').click(function(e) 
+    {
       var button_classes, value = +$('.playersAdded').val();
       button_classes = $(e.currentTarget).prop('class');
       if (button_classes.indexOf('del') !== -1) {
@@ -60,12 +58,10 @@
       var buttonValue = value + 1;
       $("button.add").html("Place At Position " + buttonValue);
       var index = $(this).attr("id").split(":");
-
       playerPlaceJson.splice(playerPlaceJson.length - 1, 1);
       document.getElementById("del:" + index[1]).style.display = "none";
       document.getElementById("choose:" + index[1]).style.display = "inline";
       document.getElementById("del:" + index[1]).innerHTML = "Remove From Position " + value;
-
       var popped = indexArr.pop();
       document.getElementById("del:" + popped).removeAttribute("disabled");
     });
@@ -118,6 +114,12 @@
         //   processData: false
         // });
     });
+    $('.lbc-img-optimized').click(function(){
+        
+        $("#modalImg").attr("src",$(this).attr("src"));
+        $('#exampleModalCenter').modal('show');
+
+      });
   });
 </script>
 <%if(typeof(userData)  === 'undefined' || userData===null) {%>
@@ -128,7 +130,6 @@
 </div>
 <% } %>
 <%if(typeof(userData)  !== 'undefined' && userData.length >0) {%>
-
 <div>
   <div>
     <div style=" position: absolute;  z-index: 0;" id="warningAlert" class="alert alert-warning alert-dismissible fade" role="alert">
@@ -170,7 +171,6 @@
           <div class="custom-file">
             <form id='uploadForm' action='/declareResult' method='POST' encType="multipart/form-data">
               <input id="jsonData" type="hidden" name="jsonData" value="">
-
               <input type="file" name="screenshot" class="custom-file-input" id="inputGroupFile02" required />
               <label class="custom-file-label" for="inputGroupFile02">Choose file</label>
             </form>
@@ -218,35 +218,38 @@
       <thead class="thead_style" style="border:2px solid #444; ">
         <tr class="table_row">
           <th class="table_head" style="border: none;">Image</th>
-          <th class="table_head" style="border: none;">Name</th>
+          <th class="table_head" style="border: none;">Score</th>
+
           <th class="table_head" style="border: none;">Email</th>
-          <th class="table_head" style="border: none;">UserID</th>
           <th class="table_head" style="border: none;">Action</th>
         </tr>
       </thead>
-      <% userData.map((datai,i)=>{ %>
+      <% userDataNew.map((datai,i)=>{ %>
       <tbody class="thead_style" style="border:2px solid #444; " id="myTable">
         <tr style=" background-color:#222;height:20px; ">
           <td class="table_head" style="border: none;     vertical-align:middle;">
-            <img style="width:50px;" src="https://image.flaticon.com/icons/svg/847/847969.svg" alt="">
+            <div>
+            <img style="width:50px;" class="lbc-img-optimized" src='<%=datai.M.url.S%>' alt="">
+            <a href='<%=datai.M.url.S%>' download class="lbc-img-txt"><img src="https://www.flaticon.com/svg/static/icons/svg/892/892623.svg" style="height:1vw;" alt=""></a>
+          </div>  
           </td>
           <td class="table_head" style="border: none;    vertical-align:middle;">
-            <%=datai.user_name %></td>
+            <%=datai.M.score.S %>
+          </td>
           <td class="table_head" style="border: none;    vertical-align:middle;">
-            <%=datai.user_email %>
+            <%=datai.M.email.S %>
           </td>
-          <td class="table_head" style="border: none;   vertical-align:middle;">
-            <%= datai.user_id %>
-          </td>
+        
           <td class="table_head" style="border: none;     vertical-align:middle;">
             <h4></h4>
-            <button disabled="" id="<%= "del:"+i %>" value=<%= datai.user_id+":"+i%> class="btn btn-danger del" style="display:none;"><i class="fa fa-trash" aria-hidden="true"></i>
+            <button disabled="" id='<%= "del:"+i %>' value="<%= datai.user_id+":"+i%>" class="btn btn-danger del" style="display:none;"><i class="fa fa-trash" aria-hidden="true"></i>
               Remove From Position 1</button>
-            <button id="<%= "choose:"+i %>" style="2rem;" data-obj=<%=datai.user_name%> type="button" class="btn btn-success add">
+            <button id='<%= "choose:"+i %>'  data-obj='<%=datai.user_name%>' type="button" class="btn btn-success add">
               Place at position 1
             </button>
-            <input id="<%= "email:"+i %>" type="hidden" name="email" value=<%=datai.user_email %>>
-            <input id="<%= "userID:"+i %>" type="hidden" name="email" value=<%=datai.user_id %>>
+            <input id='<%= "email:"+i %>' type="hidden" name="email" value="<%=datai.M.email.S  %>">
+            <input id='<%= "url:"+i %>' type="hidden" name="urlImg" value='<%=datai.M.url.S%>'>
+
           </td>
         </tr>
       </tbody>
@@ -277,5 +280,28 @@
     </div>
   </div>
 </div>
+
+
 <% } %>
+
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+  aria-hidden="true">
+
+  <!-- Add .modal-dialog-centered to .modal-dialog to vertically center the modal -->
+  <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+
+
+    <div class="modal-content" style="background: rgba(20,20, 20, 0.6); backdrop-filter: blur(4px);text-align: center;border-radius: 0.5vw;">
+      <div class="modal-header" style="border: none;">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+       <img src="" id="modalImg" class="lbc-mobile-optimized-img" alt="">
+      </div>
+      
+    </div>
+  </div>
+</div>
 <%- include('partials/footer') %>

@@ -52,6 +52,61 @@
     <script src="js/jquery.rcounter.js"></script>
     <script src="/node_modules/owl.carousel/dist/owl.carousel.min.js"></script>
 
+    <% if (name!=null) { %>
+      <script src="https://www.gstatic.com/firebasejs/7.14.6/firebase-app.js"></script>
+      <script src="https://www.gstatic.com/firebasejs/7.14.6/firebase-messaging.js"></script>
+      <script>
+          var firebaseConfig = {
+            "apiKey": "AIzaSyDgWeTlLT4qMGOtop75NPTyz8ZX4woD8hc",
+                "authDomain": "retosgamer-328be.firebaseapp.com",
+                "databaseURL": "https://retosgamer-328be.firebaseio.com",
+                "projectId": "retosgamer-328be",
+                "storageBucket": "retosgamer-328be.appspot.com",
+                "messagingSenderId": "935537268417",
+                "appId": "1:935537268417:web:69f145053c591119fce640",
+                "measurementId": "G-0XR8CZH0JP"
+          };
+          firebase.initializeApp(firebaseConfig);
+      
+          const messaging=firebase.messaging();
+      
+          messaging.onMessage(function (payload) {
+              console.log(payload);
+              const notificationOption={
+                  body:payload.notification.body,
+                  icon:payload.notification.icon
+              };
+      
+              if(Notification.permission==="granted"){
+                  var notification=new Notification(payload.notification.title,notificationOption);
+      
+                  notification.onclick=function (ev) {
+                      ev.preventDefault();
+                      window.open(payload.notification.click_action,'_blank');
+                      notification.close();
+                  }
+              }
+      
+          });
+          messaging.onTokenRefresh(function () {
+            alert("yes");
+            messaging.getToken().then((refreshedToken) => {
+            console.log(refreshedToken);
+            console.log('Token refreshed.');
+            // setTokenSentToServer(false);
+            // sendTokenToServer(refreshedToken);
+          }).catch((err) => {
+            console.log('Unable to retrieve refreshed token ', err);
+          });       
+        });
+      
+          
+      
+         
+          
+      </script>
+      <% } %>
+
     <nav class="navbar sticky-top navbar-expand-lg navbar-dark" 
     style="background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(2px);  border-bottom: 0.01px solid rgba(255, 255, 255, 0.5); ">
 

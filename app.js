@@ -37,13 +37,15 @@ const logout = require('./controllers/logout.js');
 const aboutUs = require('./controllers/aboutUs.js');
 const getAddChallenge = require('./controllers/addChallenge.js');
 const getPosterConsole = require('./controllers/posterConsole.js');
+const notificationClickHandler= require('./controllers/fcmClickHandler.js');
+const fcmChallenge= require('./controllers/fcmClickHandler.js');
+const manageChallenge =require('./controllers/manageChallenge.js');
 
 exports.rootPath=__dirname;
 app.use(fileUpload());
 app.use(cookieParser('secret'));
 app.use(express.static(__dirname + '/public'));
 app.use(flash());
-
 app.use(bodyParser.json());
 app.use(bodyParser.json()).use(bodyParser.urlencoded());
 app.set('view engine', 'ejs');
@@ -89,6 +91,11 @@ app.get('/addChallenge',getAddChallenge.getAddChallenge);
 app.post('/addChallenge',getAddChallenge.postAddChallenges);
 app.get('/posterConsole',getPosterConsole.get);
 app.post('/posterConsole',getPosterConsole.post);
+app.post('/challenge',challenges.postChallenge12);
+app.get('/notifHandler', notificationClickHandler.challengeClicked);
+app.get('/notifLeaderboardHandler', notificationClickHandler.leaderboardClicked);
+app.get('/manageChallenge',manageChallenge.getManageScreen);
+app.post('/manageChallenge',manageChallenge.postManage);
 
 app.listen(3000, function() {
   console.log("Server started on port 3000");

@@ -23,9 +23,8 @@
     $("#message").hide();
     
     $(".anchorCard").click(function(e) {
-      var clicked_value=$(this).data("value")
-      var id=$('#id'+clicked_value).val();
-      $('#submitButton').val(id);
+      var clicked_value=$(this).data("value");
+      $('#id_store').val(clicked_value);
 
       $('#joinForm').submit();
     });
@@ -43,7 +42,7 @@
 
     function timer(id, countDownDate) {
       setInterval(function() {
-        var now = new Date().getTime();
+        var now = new Date(moment.tz(new Date(), "GMT").utcOffset(-300).format("DD-MM-YYYY hh:mm:ss a")).getTime();
         var distance = countDownDate - now;
         var days = Math.floor(distance / (1000 * 60 * 60 * 24));
         var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
@@ -55,7 +54,7 @@
           document.getElementById(id).innerHTML =  hours + "H " + minutes + "M " + seconds + "S ";
         }
         else if(days>=1){
-          document.getElementById(id).innerHTML =  "en "+days+" Days"
+          document.getElementById(id).innerHTML =  "en "+days+" Días"
         }
         else {
           $('#'+id).css("background-color", "black");
@@ -85,6 +84,7 @@
       timeString = h + timeString.substr(2, 3) + ampm;
      document.getElementById(id).innerHTML = '<i class="fa fa-calendar" aria-hidden="true" style="margin-top:2.5px; margin-right:0.5vw;"></i>'+ n.substring(0, 3) + ", " + months[new Date(time).getMonth()].substring(0, 3) + " " + new Date(time).getDate() + " " + '<i class="fa fa-clock-o" aria-hidden="true" style="margin-top:3.5px; margin-right:0.5vw;margin-left:0.5vw;"></i>'+" "+timeString;
     };
+
   });
 </script>
 
@@ -93,6 +93,7 @@
   <section id="content-wrapper" style="width: 100%;">  
     <form id="joinForm" action="/dashboard" method="post">
       <div style="width:100%; text-align: center;">
+        <input name="id" type="hidden" id="id_store" value="1234">
     </div> 
     </form> 
 
@@ -172,145 +173,80 @@
 </div> -->
 
 
-<div style="background:black;height:100%;width:100%;">
+<% var o=0; %>
+<% var k=4; %>
 
-  <!-- <div class="container" style="text-align:center;padding:40px; ">
-    <h6 style="color:#ffb327; font-size:2vw; font-family: 'BIGMACCA';">RETOS DISPONIBLES</h6>
-  </div> -->
-  <% n=3 %>
-  <div class="container-fluid  " style="z-index:3;margin-top: 2vw;">
-    <% var j=0; %>
-    <% for (i = 0; i < dataCategory.length; i++) { %>
-      <% var filteredArray=data.filter((e)=>{
-        return e.category===dataCategory[i].categoryId;
-      }); %>
-     <% if(Array.isArray(filteredArray) && filteredArray.length){ %>
-      <div class="" style="color:white;">
-        <h2 class="category-dashboard-heading" ><%= dataCategory[i].categoryId %></h2>
-        <hr style="background-color: #333333;margin-left:1vw;">
-        <% for (k = 0; k < Math.ceil(filteredArray.length/n); k+=1){ %>
-   
-      <div class="carouselNew">
-        <div class="carouselNew-row" >
-          <%if(filteredArray.length>=n){%>
-          <%t=((k*n)+n)>filteredArray.length?filteredArray.length:((k*n)+n)%>
-          <% for(l=k*n; l<t;l++){ %>
-            <div class="carouselNew-tile mobile-cl-optimize" >
-              
-  
-              <form id="scrollUpForm" action="" method="">
-                <input id="<%='id'+j%>" value="<%= filteredArray[l].challengeId %>" type="hidden" />
-                <input type="hidden" id=<%="desc"+j%> value="<%= filteredArray[l].challengeDescription %>">
-                <input type="hidden" id=<%="time"+j%> value="<%= filteredArray[l].challengeTime %>">
-                <input type="hidden" id=<%="name"+j%> value="<%=filteredArray[l].challengeName%>">
-                <input type="hidden" id=<%="prize"+j%> value="<%= filteredArray[l].challengePrize %>">
-                <input type="hidden" id=<%="src"+j%> value="<%=filteredArray[l].src%>">
-                <a  class="anchorCard" href="javascript:void(0);" data-value=<%=j%> >
-                  <div >
-                    <div class="">
-                      <div style="">
-                        <img id=<%="img"+j%> class="card_image_all_ch" src=<%=filteredArray[l].src%>>
-                      </div>
-                      <div class="card-body-cl">
-                        <div  class="textStyle heading-card-cl" id='<%="name"+j%>'>
-                          <%-filteredArray[l].challengeName%>
-                        </div>
-                        <div class="textStyle cl-card-time-style" id='<%="cal"+j%>' >
-                          <%= filteredArray[l].challengeTime %>
-                        </div>
-                        <div class="mobile_center">
-                          <div class="d-board-cardTxt2" id='<%="timeLeft"+j%>' >
-                            <%= filteredArray[l].challengeTime %>
-                          </div>
-                        </div>
-                       
-                        <div id='<%="prize"+j%>' class="textStyle cl-card-time-style"  style="font-weight:bold;color: white;float: unset;display: block;" >
-                         <i class="fa fa-trophy" aria-hidden="true" style="color:#FFFFFF;height:1vh; margin-right:0.5vw;"></i>
-                        
-                         <% if(filteredArray[l].challengePrize.length===1) { %>
-                          <%= filteredArray[l].challengePrize %>
-                        <% } %>
-                        <% if(filteredArray[l].challengePrize.length>1) { %>
-                           Multiple Prizes
-                        <% } %>
-                          
-                             
-                        </div>
-                        <input type="hidden" id=<%="desc"+j%> value=<%= filteredArray[l].challengeDescription %>>
-                        <input type="hidden" id=<%="time"+j%> value=<%= filteredArray[l].challengeTime %>>
-                      
+<div class="container-fluid" id="catalogo" style="margin-top: 0.5vw;">
+  <% var len=data.length;
+        
+  for(i = 0; i < (len)/k; i++){ %>
+  <div class="" style="color:white;">
+    <div class="carouselNew">
+      <div class="carouselNew-row ">
+        <%var t=len/k%>
+        <% var filteredArray=data.slice(i*k,(i*k)+k); %>
+        <% for(l=0; l< filteredArray.length;l++){ %>
+        <div class="carouselNew-tile mobile-cl-optimize">
+          <div style="flex-basis: 0;">
+          <form action="/dashboard" method="post">
+            <input name="id" value='<%= filteredArray[l].challengeId %>' type="hidden" />
+            <a style="max-width: 100%;" href="javascript:void(0);" onclick="$(this).closest('form').submit();">
+                  <div style="">
+                    <img class="card_image" src="<%=filteredArray[l].src%>"
+                    style="border-top-left-radius: 0.5vw;
+                    border-top-right-radius: 0.5vw;">
+                  </div>
+                  <div style="background: #040707; padding-top: 0.5vw;
+                  padding-right: 0.5vw;
+                  padding-bottom: 0.5vw;
+                  padding-left: 0.5vw;
+                  border-bottom-left-radius: 0.5vw;
+                  border-bottom-right-radius: 0.5vw;">
+                  <h1 class="challenge-heading" style="font-weight:bold;">
+                    <%- filteredArray[l].challengeName %>
+                  </h1>                 
+                    <% var edited_date=filteredArray[l].challengeTime.split(" ")[0].split("-");%>
+                    <% var edited_time=filteredArray[l].challengeTime.split(" ");%>      
+                    <div class="dashboard-card-time-style" id='<%="cal"+o%>' style="display: none;" >
+                      <%= filteredArray[l].challengeTime %>
+                    </div>
+                    <div class="mobile_center">
+                      <div class="d-board-cardTxt2" id='<%="timeLeft"+o%>'>
                       </div>
                     </div>
-                  </div>
-                </a>
-              </form>
-            </div>
-          <% j=j+1;%>
-          <% }%>
-          <% }%>
-          <%if(filteredArray.length< n){%>
-            <% for(l=0; l< filteredArray.length;l++){ %>
-              <div class="carouselNew-tile mobile-cl-optimize" >
-              
-  
-              <form id="scrollUpForm" action="" method="">
-                <input id="<%='id'+j%>" value="<%= filteredArray[l].challengeId %>" type="hidden" />
-                <input type="hidden" id=<%="desc"+j%> value="<%= filteredArray[l].challengeDescription %>">
-                <input type="hidden" id=<%="time"+j%> value="<%= filteredArray[l].challengeTime %>">
-                <input type="hidden" id=<%="name"+j%> value="<%=filteredArray[l].challengeName%>">
-                <input type="hidden" id=<%="prize"+j%> value="<%= filteredArray[l].challengePrize %>">
-                <input type="hidden" id=<%="src"+j%> value="<%=filteredArray[l].src%>">
-                <a  class="anchorCard" href="javascript:void(0);" data-value=<%=j%> >
-                  <div >
-                    <div class="">
-                      <div style="">
-                        <img id=<%="img"+j%> class="card_image_all_ch" src=<%=filteredArray[l].src%>>
+                  
+                    <div class="dashboard-card-time-style"  style="font-weight:bold;color: white;width: 100%;">
+                      <i class="fa fa-trophy" aria-hidden="true" style="color:ffb327;height:1vh;margin-right: 0.5vw;;"></i>
+                      <% if(filteredArray[l].challengePrize.length>1) {%>
+                      Multiple Prizes
+                      <% } %>
+                      <% if(filteredArray[l].challengePrize.length===1) { %>
+                        <%= filteredArray[l].challengePrize[0] %>
+                        <% } %>
+                    </div>
+                    
+                    <div>
+                      <%var spots=filteredArray[l].spots.split('/');%>  
+                      <div class="meter-m" style="width: 97%;">
+                        <span style="width:<%=(parseInt(spots[0])/parseInt(spots[1]))*100%>%"></span>
                       </div>
-                      <div class="card-body-cl">
-                        <div  class="textStyle heading-card-cl" id='<%="name"+j%>'>
-                          <%-filteredArray[l].challengeName%>
-                        </div>
-                        <div class="textStyle cl-card-time-style" id='<%="cal"+j%>' >
-                          <%= filteredArray[l].challengeTime %>
-                        </div>
-                        <div class="mobile_center">
-                          <div class="d-board-cardTxt2" id='<%="timeLeft"+j%>' >
-                            <%= filteredArray[l].challengeTime %>
-                          </div>
-                        </div>
-                       
-                        <div id='<%="prize"+j%>' class="textStyle cl-card-time-style"  style="font-weight:bold;color: white;float: unset;display: block;" >
-                         <i class="fa fa-trophy" aria-hidden="true" style="color:#FFFFFF;height:1vh; margin-right:0.5vw;"></i>
-                        
-                         <% if(filteredArray[l].challengePrize.length===1) { %>
-                          <%= filteredArray[l].challengePrize %>
-                        <% } %>
-                        <% if(filteredArray[l].challengePrize.length>1) { %>
-                           Multiple Prizes
-                        <% } %>
-                          
-                             
-                        </div>
-                        <input type="hidden" id=<%="desc"+j%> value=<%= filteredArray[l].challengeDescription %>>
-                        <input type="hidden" id=<%="time"+j%> value=<%= filteredArray[l].challengeTime %>>
-                      
+                      <div style="padding-top:0.5vw;">
+                        <p style="font-size:0.8vw;color:white;padding:0;margin:0;"><%=spots[0]+"/"+spots[1]%></p>  
                       </div>
                     </div>
-                  </div>
-                </a>
-              </form>
-            </div>
-            <% j=j+1;%>
-            <% }%>
-           <% }%>
+                    <form action="/dashboard" method="post">
+                    </form> 
+                  </div>    
+            </a>
+          </form>
         </div>
+        </div>
+        <% o++; %>
+        <% }; %>
+      </div>
     </div>
-    <% } %>
-    <% } %>
   </div>
   <% } %>
-
-</div>
 </div>
 </div>
 </section>

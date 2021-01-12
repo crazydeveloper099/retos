@@ -26,7 +26,6 @@
     $('#add_category').click(function(e) {
       $('.createCategory').show();
       document.getElementById("dropdownValueId").value=null;
-
     });
 
   });
@@ -93,7 +92,12 @@
             DELETE CHALLENGE
           </button>
         </form>
-      
+        <form id="manageChallenge" action="/adminPanel" method="post">
+          <input type="hidden" id="custId" name="manageButton" value=true>
+          <button name="manage" value=<%= datai.challengeId %> type="submit" form="manageChallenge" class="btn   btn-danger" style="background: #222; color:#FFFFFF;float:left;">
+            MANAGE CHALLENGE
+          </button>
+        </form>
         <% if(!datai.isResultPublished) {%>
           <form id="publishResult" action="/adminPanel" method="post">
             <input type="hidden" id="custId" name="publishResult" value=true />
@@ -109,7 +113,7 @@
         </form>
         <form id="editResult" action="/adminPanel" method="post">
           <input type="hidden" id="custId" name="publish" value=true>
-          <button name="resultButton" value=<%= datai.challengeId %> type="submit" form="publishResult" class="btn btn-dark-green" style="background: #222; color:#FFFFFF; ">
+          <button name="resultButton" value="<%= datai.challengeId %>" type="submit" form="editResult" class="btn btn-dark-green" style="background: #222; color:#FFFFFF; ">
             EDIT RESULT
           </button>
         </form>

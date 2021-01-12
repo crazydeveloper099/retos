@@ -25,15 +25,20 @@ exports.loginModal=(req,res)=>{
 };
 
 exports.postAdmin=(req,res)=>{
-  console.log(req.body);
   const data={
     username: req.body.username,
     password: req.body.password
   };
-  authService.Login(data,function(result){
-    console.log( result.idToken.payload.email);
+  authService.Login(data,function(err,result){
+    if(err){
+      res.send("Invalid Credentials");
+    }
+    else{
+    console.log( result);
     res.cookie('adminUser', req.body.username, { httpOnly: true });
     res.cookie('isValid', true, { httpOnly: true });
     res.redirect('/adminPanel');
+    }
   }, false);
+  
 };

@@ -1,5 +1,5 @@
 body {
-  padding-bottom: 30px;
+  padding-bottom: 3vw;
   position: relative;
   min-height: 100%;
 }
@@ -21,49 +21,49 @@ a:focus {
 #sidebar-wrapper {
   z-index: 1000;
   position: fixed;
-  left: 250px;
+  left: 17vw;
   width: 0;
   height: 100%;
-  margin-left: -250px;
+  margin-left: -17vw;
   overflow-y: auto;
   overflow-x: hidden;
-  background: rgba(10, 10, 10, 1);
+  backdrop-filter: blur(4px);
+  background-color: #000000;
+  background-image: linear-gradient(315deg, #ececec 0%, #ececec 74%);
   transition: all 0.5s ease;
 }
 
 #wrapper.toggled #sidebar-wrapper {
-  width: 250px;
+  width: 17vw;
 }
 
 .sidebar-brand {
   position: absolute;
   top: 0;
-  margin-left: 1vw;
-  text-align: center;
-  padding: 20px 0;
+  padding-top: 2vw;
 }
 .sidebar-brand h2 {
-  margin: 0;
   font-size: 1.2vw;
   color: #fff;
 }
 
 .sidebar-nav {
   position: absolute;
-  top: 75px;
-  width: 250px;
+  top: 10vh;
+  width: 17vw;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 .sidebar-nav > li {
-  text-indent: 10px;
-  line-height: 42px;
+  text-indent: 1vw;
+  line-height: 2vw;
+  padding:0.3vw;
 }
 .sidebar-nav > li a {
   display: block;
   text-decoration: none;
-  color: #757575;
+  color: #282828;
   font-weight: 600;
   font-size: 1vw;
 }
@@ -71,11 +71,12 @@ a:focus {
 .sidebar-nav > li.active > a {
   text-decoration: none;
   color: #fff;
-  background: #000;
+  background-color: #a8a8a8;
+  
 }
 .sidebar-nav > li > a i.fa {
-  font-size: 24px;
-  width: 60px;
+  font-size: 1vw;
+  width: 3vw;
 }
 
 #navbar-wrapper {
@@ -85,17 +86,17 @@ a:focus {
 }
 #wrapper.toggled #navbar-wrapper {
     position: absolute;
-    margin-right: -250px;
+    margin-right: -17vw;
 }
 #navbar-wrapper .navbar {
   border-width: 0 0 0 0;
   background-color: #eee;
-  font-size: 24px;
+  font-size: 24;
   margin-bottom: 0;
   border-radius: 0;
 }
 #navbar-wrapper .navbar a {
-  color: #757575;
+  color: #000;
 }
 #navbar-wrapper .navbar a:hover {
   color: #F8BE12;
@@ -104,17 +105,17 @@ a:focus {
 #content-wrapper {
   width: 100%;
   position: absolute;
-  padding: 15px;
-  top: 100px;
+  padding: 1.5vw;
+  top: 5vw;;
 }
 #wrapper.toggled #content-wrapper {
   position: absolute;
-  margin-right: -250px;
+  margin-right: -17vw;
 }
 
 @media (min-width: 992px) {
   #wrapper {
-    padding-left: 250px;
+    padding-left: 17vw;
   }
   
   #wrapper.toggled {
@@ -122,7 +123,7 @@ a:focus {
   }
 
   #sidebar-wrapper {
-    width: 250px;
+    width: 17vw;
   }
   
   #wrapper.toggled #sidebar-wrapper {
@@ -131,12 +132,12 @@ a:focus {
   
   #wrapper.toggled #navbar-wrapper {
     position: absolute;
-    margin-right: -250px;
+    margin-right: -17vw;
 }
   
   #wrapper.toggled #content-wrapper {
     position: absolute;
-    margin-right: -250px;
+    margin-right: -17vw;
   }
 
   #navbar-wrapper {
@@ -170,12 +171,12 @@ a:focus {
   
 #wrapper.toggled #navbar-wrapper {
     position: absolute;
-    margin-right: -250px;
+    margin-right: -17vw;
 }
   
   #wrapper.toggled #content-wrapper {
     position: absolute;
-    margin-right: -250px;
+    margin-right: -17vw;
   }
 
   #navbar-wrapper {
@@ -183,7 +184,7 @@ a:focus {
   }
 
   #wrapper.toggled {
-    padding-left: 250px;
+    padding-left: 17vw;
   }
 
   #content-wrapper {
@@ -194,7 +195,7 @@ a:focus {
   #wrapper.toggled #navbar-wrapper,
   #wrapper.toggled #content-wrapper {
     position: relative;
-    margin-right: 250px;
+    margin-right: 17vw;
   }
 }
 
@@ -208,16 +209,16 @@ a:focus {
   }
 
   #wrapper.toggled #sidebar-wrapper {
-    width: 250px;
+    width: 17vw;
   }
   #wrapper.toggled #navbar-wrapper {
     position: absolute;
-    margin-right: -250px;
+    margin-right: -17vw;
   }
 
   #wrapper.toggled #content-wrapper {
     position: absolute;
-    margin-right: -250px;
+    margin-right: -17vw;
   }
 
   #navbar-wrapper {
@@ -225,7 +226,7 @@ a:focus {
   }
 
   #wrapper.toggled {
-    padding-left: 250px;
+    padding-left: 17vw;
   }
 
   #content-wrapper {
@@ -236,6 +237,6 @@ a:focus {
   #wrapper.toggled #navbar-wrapper,
   #wrapper.toggled #content-wrapper {
     position: relative;
-    margin-right: 250px;
+    margin-right: 17vw;
   }
 }

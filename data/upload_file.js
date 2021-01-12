@@ -36,6 +36,7 @@ exports.uploadFile = (fileName, uid, loc, callback) => {
     // Uploading files to the bucket
     s3.upload(params, function(err, data) {
         if (err) {
+          console.log(err);
             throw err;
         }
         console.log(data.Location);

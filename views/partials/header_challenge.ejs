@@ -33,7 +33,63 @@
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 <script src="https://static.landbot.io/landbot-widget/landbot-widget-1.0.0.js"></script>
-    <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark" style="background-color: #000 !important; ">
+
+<% if (name!=null) { %>
+  <script src="https://www.gstatic.com/firebasejs/7.14.6/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.14.6/firebase-messaging.js"></script>
+  <script>
+      var firebaseConfig = {
+        "apiKey": "AIzaSyDgWeTlLT4qMGOtop75NPTyz8ZX4woD8hc",
+            "authDomain": "retosgamer-328be.firebaseapp.com",
+            "databaseURL": "https://retosgamer-328be.firebaseio.com",
+            "projectId": "retosgamer-328be",
+            "storageBucket": "retosgamer-328be.appspot.com",
+            "messagingSenderId": "935537268417",
+            "appId": "1:935537268417:web:69f145053c591119fce640",
+            "measurementId": "G-0XR8CZH0JP"
+      };
+      firebase.initializeApp(firebaseConfig);
+  
+      const messaging=firebase.messaging();
+  
+      messaging.onMessage(function (payload) {
+          console.log(payload);
+          const notificationOption={
+              body:payload.notification.body,
+              icon:payload.notification.icon
+          };
+  
+          if(Notification.permission==="granted"){
+              var notification=new Notification(payload.notification.title,notificationOption);
+  
+              notification.onclick=function (ev) {
+                  ev.preventDefault();
+                  window.open(payload.notification.click_action,'_blank');
+                  notification.close();
+              }
+          }
+  
+      });
+      messaging.onTokenRefresh(function () {
+        alert("yes");
+        messaging.getToken().then((refreshedToken) => {
+        console.log(refreshedToken);
+        console.log('Token refreshed.');
+        // setTokenSentToServer(false);
+        // sendTokenToServer(refreshedToken);
+      }).catch((err) => {
+        console.log('Unable to retrieve refreshed token ', err);
+      });       
+    });
+  
+      
+  
+     
+      
+  </script>
+  <% } %>
+
+<nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark" style="background-color: #000 !important; ">
 
     <img class="navbar-brand" src="/images/RG 5.png" height="50vh" alt="logo">
     <button class="navbar-toggler" type="button" data-toggle="collapse"
@@ -89,7 +145,7 @@
               <a class="nav-link"  href="#"><%= name %></a>
             </li>
             <form method="get" action="/logout">
-              <button type="submit" class="btn btn-danger"  onclick="/leaderboard">cerrar sesión</button>
+              <button type="submit" class="btn btn-danger" style="background-color: #FF0000;"  onclick="/leaderboard">cerrar sesión</button>
           </form>
             <% } %>
       </ul>

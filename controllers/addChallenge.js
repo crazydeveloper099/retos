@@ -3,6 +3,7 @@ const dataFile = require('../data/dashboard_data.js');
 const data = require('../data/upload_file.js');
 const rootPath=require('../app.js');
 const fs = require('fs');
+const fb=require('./firebase_admin.js');
 
 exports.getAddChallenge=(req,res)=>{
   dataFile.getCategory((errCategory, dataCategory) => {
@@ -21,68 +22,49 @@ exports.postAddChallenges=(req,res)=>{
       fs.unlinkSync(rootPath.rootPath+"/"+fname+'.jpg');
       const challengeName=jData.challengeName;
       const challengeType= jData.challengeType;
-      const start_time=jData.start_time;
       const end_time=jData.end_time;
       const image=url;
       const id=fname;
       const description=jData.desc;
       const rules=jData.rules;
       const challengePrize=jData.prize;
-      const category=jData.category;
-      const cat_new=jData.new_cat;
-      if(cat_new){
-        dataFile.createCategory(category, (errFile, dataCatego) => {
-          dataFile.createChallenge(
-            id,
-            image,
-            start_time,
-            end_time,
-            description,
-            rules,
-            challengeName,
-            challengePrize,
-            challengeType,
-            category,
-            (err,data)=>{
-            if(err)
-            {
-              res.render(err);
-            }
-            else if(data){
-              res.cookie('publishSuccess', true, {
-                httpOnly: true
-              });
-              res.redirect('/adminPanel');
-            }
-          });
-      
-      });
-    }
-    else{
+      const spots=jData.spots;
+      const minLevel=jData.minLevel;
+      const createdAt=jData.createdAt;
+      const ytLinkParticipation=jData.ytLinkParticipation;
        dataFile.createChallenge(
             id,
             image,
-            start_time,
             end_time,
             description,
             rules,
             challengeName,
             challengePrize,
             challengeType,
-            category,
+            spots,
+            minLevel,
+            createdAt,
+            ytLinkParticipation,
+            "null",
             (err,data)=>{
             if(err)
             {
               res.render(err);
             }
             else if(data){
-              res.cookie('publishSuccess', true, {
-                httpOnly: true
-              });
-              res.redirect('/adminPanel');
+              fb.sendToTopic(challengeName,id, (errFcm, resFcm)=>{
+                if(errFcm){
+                  res.send(errFcm);
+                }
+                else{
+                  res.cookie('publishSuccess', true, {
+                    httpOnly: true
+                  });
+                  res.redirect('/adminPanel');  
+                }
+             });   
             }
           });
-    }
   });
 });
 };

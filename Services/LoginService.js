@@ -12,13 +12,16 @@ const AmazonCognitoIdentity = require('amazon-cognito-identity-js');
 
 exports.Login = function (body, callback, user) {
 let poolData=null;
+console.log("*--*--*-*-**--**-*-*-*-*-*-*-*-*--**-*--**-*-----------------------------------------------------------------");
 if(user){
+   console.log("this working  Usert");
     poolData = {
        UserPoolId: process.env.UserPoolId,
        ClientId:  process.env.ClientId
     };
   }
   else{
+     console.log("this working");
   poolData = {
      UserPoolId: process.env.AdminPoolId,
      ClientId: process.env.AdminClientId
@@ -26,9 +29,6 @@ if(user){
 }
 const pool_region = "us-east-2";
 const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
-
-
-
    const userName = body.username;
    const password = body.password;
    const authenticationDetails = new AmazonCognitoIdentity.AuthenticationDetails({
@@ -42,12 +42,14 @@ const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
     const cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
     cognitoUser.authenticateUser(authenticationDetails, {
         onSuccess: function (result) {
-          console.log(result);
-           callback(result);
+           console.log("yes");
+           console.log(result);
+           callback(false,result);
         },
         onFailure: (function (err) {
-          console.log(err);
-           //callback(err);
+         console.log("no");
+         console.log(err);
+          callback(err,false);
        })
    });
 };

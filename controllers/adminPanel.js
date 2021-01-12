@@ -9,7 +9,7 @@ exports.getAdminPanel = (req, res) => {
   const publishSuccess = req.cookies.publishSuccess;
   const deleteChallenge = req.cookies.deleteChallenge;
   const resultPublish = req.cookies.resultPublished;
-
+  const updateChallenge = req.cookies.updatedChallenge;
   let shouldShow = false;
   let showMessage;
   if (typeof(cookie.publishSuccess) !== 'undefined') {
@@ -40,11 +40,20 @@ exports.getAdminPanel = (req, res) => {
     showMessage = "Result Deleted Successfully!";
     shouldShow = true;
   }
+  if (typeof(cookie.updateChallenge) !== 'undefined') {
+    res.clearCookie("updatedChallenge", {
+      httpOnly: true
+    });
+    showMessage = "Challenge Updated Successfully!";
+    shouldShow = true;
+  }
   if (isValidLogin && typeof(cookie.adminUser) !== 'undefined') {
-    const challengeData = dataFile.challengeFetcher((err, data) => {
+    const challengeData = dataFile.challengeFetcher(async(err, data) => {
           if (err) {
             res.send(err);
           } else if (data) {
+            await data.Items.sort(custom_sort);
+            console.log(data.Items);
             dataMemory = data.Items;
             res.render('adminPanel', {
               name: typeof(cookie.adminUser) === 'undefined' ? null : cookie.adminUser,
@@ -101,61 +110,67 @@ exports.postAdminPanel = (req, res) => {
   const cookie = req.cookies;
   const data = cookie.dataAdminPanel;
   const id = req.body.id;
+  console.log(req.body);
+
   const del = req.body.deleteButton;
+  const manage= req.body.manageButton;
   const result = req.body.publishResult;
+  const resultUpdate = req.body.publish;
   const deleteResult = req.body.deleteResult;
   const new_category = req.body.category_new;
   const dropdownValue = req.body.dropdownValue;
-  if (req.body.publish === 'true') {
-    dataMemory.map((datai, i) => {
-      if (datai.competition_id === id) {
-        if (new_category) {
-          dataFile.createCategory(new_category, (errFile, dataFile) => {
-            if (errFile) {
-              res.send(errFile);
-            } else if (dataFile) {
-              addChallenge.postAddChallenge(datai, req.body.prize, new_category, (err, data) => {
-                if (err) {
-                  res.send(err);
-                } else {
-                  if (err1) {
-                    res.send(err1);
-                  } else {
-                    datai.challengePrize = req.body.prize;
-                    dataMemory.splice(i, 1, datai);
-                    res.cookie('publishSuccess', true, {
-                      httpOnly: true
-                    });
-                    res.redirect('/adminPanel');
-                  }
-                }
-              });
-            }
-          });
-        } else if (dropdownValue) {
-          addChallenge.postAddChallenge(datai, req.body.prize, dropdownValue, (err, data) => {
-            if (err) {
-              res.send(err);
-            } else {
-              datai.challengePrize = req.body.prize;
-              dataMemory.splice(i, 1, datai);
-              res.cookie('publishSuccess', true, {
-                httpOnly: true
-              });
-              res.redirect('/adminPanel');
-            }
-          });
-        }
-      }
+  // if (req.body.publish === 'true') {
+  //   dataMemory.map((datai, i) => {
+  //     if (datai.competition_id === id) {
+  //       if (new_category) {
+  //         dataFile.createCategory(new_category, (errFile, dataFile) => {
+  //           if (errFile) {
+  //             res.send(errFile);
+  //           } else if (dataFile) {
+  //             addChallenge.postAddChallenge(datai, req.body.prize, new_category, (err, data) => {
+  //               if (err) {
+  //                 res.send(err);
+  //               } else {
+  //                 if (err1) {
+  //                   res.send(err1);
+  //                 } else {
+  //                   datai.challengePrize = req.body.prize;
+  //                   dataMemory.splice(i, 1, datai);
+  //                   res.cookie('publishSuccess', true, {
+  //                     httpOnly: true
+  //                   });
+  //                   res.redirect('/adminPanel');
+  //                 }
+  //               }
+  //             });
+  //           }
+  //         });
+  //       } else if (dropdownValue) {
+  //         addChallenge.postAddChallenge(datai, req.body.prize, dropdownValue, (err, data) => {
+  //           if (err) {
+  //             res.send(err);
+  //           } else {
+  //             datai.challengePrize = req.body.prize;
+  //             dataMemory.splice(i, 1, datai);
+  //             res.cookie('publishSuccess', true, {
+  //               httpOnly: true
+  //             });
+  //             res.redirect('/adminPanel');
+  //           }
+  //         });
+  //       }
+  //     }
 
-    });
+  //   });
 
-  } else if (del === 'true') {
-    
+  // } 
+  if (del === 'true') {
     dataMemory.map(datai => {
       
       if (datai.challengeId === req.body.delete) {
+        console.log(datai.challengeId);
         dataFile.deleteChallenge("challenges", req.body.delete, function(err, data) {
+           
           if (err) {
 
             res.cookie('deleteChallenge', false, {
@@ -171,7 +186,7 @@ exports.postAdminPanel = (req, res) => {
         });
       }
     });
-  } else if (result === 'true') {
+  } else if (result === 'true' ) {
     dataMemory.map(datai => {
       if (datai.challengeId === req.body.resultButton) {
         res.cookie('resultPublish', datai.challengeId, {
@@ -180,8 +195,23 @@ exports.postAdminPanel = (req, res) => {
         res.redirect('/declareResult');
       }
     });
-  } else if (deleteResult === 'true') {
+  } 
+  else if (resultUpdate === 'true') {
+    console.log("yes");
+    dataMemory.map(datai => {
+
+      if (datai.challengeId === req.body.resultButton) {
+        res.cookie('resultPublish', datai.challengeId, {
+          httpOnly: true
+        });
+        res.redirect('/declareResult');
+      }
+    });
+  } 
+  else if (deleteResult === 'true') {
     dataFile.deleteChallenge("results", req.body.deleteResultId, function(err, data) {
+      dataFile.updateResultPublished(req.body.deleteResultId, false,(errUpdate, dataUpdate)=>{
+
       if (err) {
         res.cookie('deleteResult', false, {
           httpOnly: true
@@ -194,5 +224,20 @@ exports.postAdminPanel = (req, res) => {
         res.redirect('/adminPanel');
       }
     });
+  });
+  }
+  else if(manage ==='true'){
+    dataMemory.map(datai => {
+      if (datai.challengeId === req.body.manage) {
+        res.cookie('manageChallenge', datai.challengeId, {
+          httpOnly: true
+        });
+        res.redirect('/manageChallenge');
+      }
+    });
   }
 };
+
+function custom_sort(a, b) {
+  return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+}

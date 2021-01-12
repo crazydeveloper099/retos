@@ -3,10 +3,10 @@
 
     --carouselNew-tile-spacing: 0.2vw;
 
-    --carouselNew-tile-width:   16vw;
-    --carouselNew-tile-height:  9vw;
+    --carouselNew-tile-width:   20vw;
+    --carouselNew-tile-height:  7.82vw;
 
-    --carouselNew-growth-factor: 1.3;
+    --carouselNew-growth-factor: 1.1;
 
     --carouselNew-fade-opacity:   0.25;
     --carouselNew-normal-opacity: 1;

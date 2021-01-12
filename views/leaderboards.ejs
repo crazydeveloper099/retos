@@ -4,16 +4,16 @@
  
 
 
-
-  <div class="lb-heading-container">
+  <% var k=4; %>
+  <div class="lb-heading-container" >
     <h1  class="lb-heading-mobile" >¡GANADORES!</h1>
   </div>
     <div >
-    <% for (i = 0; i < ((data.length-5)/5)+1; i++) { %>
+    <% for (i = 0; i < ((data.length-k)/k)+1; i++) { %>
       <div class="container-fluid" >
         <div class="carouselNew">
-         <div class="carouselNew-row" style="margin-bottom:8vw;">
-        <% data.slice(5*i,(5*i)+5).map(datai =>{ %>
+         <div class="carouselNew-row" style="margin-bottom:3vw;">
+        <% data.slice(k*i,(k*i)+k).map(datai =>{ %>
             <div class="carouselNew-tile mobile-cl-optimize"  >
               <form   action="/leaderboard" method="post">
               <input name="id" value=<%= datai.unitChallenge.Item.challengeId.S %> type="hidden" />
@@ -21,15 +21,19 @@
               <% var userData=datai.resultData.replace("'","");
               userData=JSON.parse(userData); %>
               <div style="padding-bottom:2vh;border-radius:0.5vw;padding-top:2vh;">
-             
-                <img class="card_image_all_ch" src=<%= datai.unitChallenge.Item.src.S %> style="" >
+              <img class="card_image_all_ch" src=<%= datai.unitChallenge.Item.src.S %> style="" >
               <div class="" >
                 <h1 class=" heading-card-cl" >
                   <%- datai.unitChallenge.Item.challengeName.S %>
                 </h1>
                 <h1 class=" heading-card-cl" style="color: #ffff89;">
                   <i class="fa fa-trophy" aria-hidden="true" style="color:ffb327;height:1vh;margin-right:0.5vw;"></i>
-                  <%- datai.unitChallenge.Item.challengePrize.S %>
+                  <% if( datai.unitChallenge.Item.challengePrize.L.length>1) {%>
+                    Multiple Prizes
+                    <% } %>
+                    <% if(datai.unitChallenge.Item.challengePrize.L.length===1) { %>
+                      <%= datai.unitChallenge.Item.challengePrize.L[0].S %>
+                      <% } %>
                 </h1>
 
               <!-- <div style="width:100%;text-align:center;  margin: 0;margin-top:-1vh;">
@@ -43,11 +47,10 @@
           </a>
         </form>
           </div>
-      <% }) %>
+      <% }); %>
       </div>
      </div>
     </div>
     <% } %>
   </div>
-
-<%- include('partials/footer') %>
+  <%- include('partials/footer') %>

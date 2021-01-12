@@ -10,14 +10,14 @@ exports.getNewPassword = function(req, res){
 exports.postNewPassword=(req,res)=>{
   const cookie = req.cookies;
   const email =cookie.tempEmail;
-
+  console.log(req.body.code)
     authService.confirmPassword(email, req.body.code, req.body.password ,(err, data)=>{
       if(err){
-        res.send(err);
+        res.send("error");
       }
       else if(data){
         res.clearCookie('tempEmail');
-        res.redirect('/login');
+        res.send("success");
       }
     });
 };

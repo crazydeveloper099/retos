@@ -24,9 +24,65 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="background-color: #0e1111 !important;">
+    <% if (name!=null) { %>
+      <script src="https://www.gstatic.com/firebasejs/7.14.6/firebase-app.js"></script>
+      <script src="https://www.gstatic.com/firebasejs/7.14.6/firebase-messaging.js"></script>
+      <script>
+          var firebaseConfig = {
+            "apiKey": "AIzaSyDgWeTlLT4qMGOtop75NPTyz8ZX4woD8hc",
+                "authDomain": "retosgamer-328be.firebaseapp.com",
+                "databaseURL": "https://retosgamer-328be.firebaseio.com",
+                "projectId": "retosgamer-328be",
+                "storageBucket": "retosgamer-328be.appspot.com",
+                "messagingSenderId": "935537268417",
+                "appId": "1:935537268417:web:69f145053c591119fce640",
+                "measurementId": "G-0XR8CZH0JP"
+          };
+          firebase.initializeApp(firebaseConfig);
+      
+          const messaging=firebase.messaging();
+      
+          messaging.onMessage(function (payload) {
+              console.log(payload);
+              const notificationOption={
+                  body:payload.notification.body,
+                  icon:payload.notification.icon
+              };
+      
+              if(Notification.permission==="granted"){
+                  var notification=new Notification(payload.notification.title,notificationOption);
+      
+                  notification.onclick=function (ev) {
+                      ev.preventDefault();
+                      window.open(payload.notification.click_action,'_blank');
+                      notification.close();
+                  }
+              }
+      
+          });
+          messaging.onTokenRefresh(function () {
+            alert("yes");
+            messaging.getToken().then((refreshedToken) => {
+            console.log(refreshedToken);
+            console.log('Token refreshed.');
+            // setTokenSentToServer(false);
+            // sendTokenToServer(refreshedToken);
+          }).catch((err) => {
+            console.log('Unable to retrieve refreshed token ', err);
+          });       
+        });
+      
+          
+      
+         
+          
+      </script>
+      <% } %>
 
-    <img class="navbar-brand" src="/images/RG 5.png" height="80px" alt="logo">
+    <nav 
+    class="navbar sticky-top navbar-expand-lg navbar-dark" 
+    style="background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(2px);  border-bottom: 0.01px solid rgba(255, 255, 255, 0.5); ">
+    <a href="/dashboard"><img class="navbar-brand" src="/images/RG 5.png" height="50vh" alt="logo"></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -39,29 +95,30 @@
     <div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown">
       <ul class="navbar-nav">
         <li class="nav-item px-2">
-          <a class="nav-link" href="/" > HOGAR </a>
+          <a class="nav-link" href="/" > <strong>INICIO</strong> </a>
         </li>
         <li class="nav-item px-2">
-          <a class="nav-link" href="/leaderboard" > CLASIFICACIONES</a>
+          <a class="nav-link" href="/leaderboard" > <strong>CLASIFICACIONES</strong></a>
         </li>
         <li class="nav-item px-2">
-          <a class="nav-link" href="/aboutUs" > NOSOTROS</a>
+          <a class="nav-link" href="/aboutUs" > <strong>NOSOTROS</strong></a>
         </li>
           <% if (name!=null) { %>
             <li class="nav-item px-2">
-              <a class="nav-link" href="/myProfile" > MI PERFIL</a>
+              <a class="nav-link" href="/myProfile" > <strong>MI PERFIL</strong></a>
             </li>
         <li class="nav-item dropdown px-2">
          <a class="nav-link dropdown-toggle"  href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        CUENTA
+        <strong>CUENTA</strong>
          </a>
 
-         <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="background-color: #0e1111 !important;">
-           <% if (end_date!=null) { %>
-           <a class="dropdown-item" href="#" style="color:white;">Expiring <%= end_date.S %></a>
-           <% } %>
-           <a class="dropdown-item" style="color:white;" href="/subscription">Recharge now</a>
-         </div>
+         <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="background-color: #000 !important;">
+          <% if (end_date!=null && end_date.S!=null && end_date.S!="") { %>
+           <% var end_date_formatted =end_date.S.substring(0,4)+"/"+end_date.S.substring(4,6)+"/"+end_date.S.substring(6,8) %>
+          <a class="dropdown-item" href="#" style="color:white;"><strong>Tu subscripción expira en: <br><%= end_date_formatted %></strong></a>
+          <% } %>
+        </div>
+        
        </li class="nav-item px-2">
          <% } %>
         <% if (name==null) { %>
