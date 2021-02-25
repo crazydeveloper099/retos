@@ -4,101 +4,94 @@
 	<script src="https://www.gstatic.com/firebasejs/7.14.6/firebase-messaging.js"></script>
 	<script>
 		  $(document).ready(function() {
-						$('.buttonVerify').click((e)=>{
-							e.preventDefault();
 
-							var otp=$('#user').val();
-							if(otp.length!==6 || !$.isNumeric(otp)) { 
-								$('#otpError').html("<br/>Código de verificación inválido");
-								$("#user").addClass('errorInput');
-							}
-							else{
-							var firebaseConfig = {
-					"apiKey": "AIzaSyDgWeTlLT4qMGOtop75NPTyz8ZX4woD8hc",
-						"authDomain": "retosgamer-328be.firebaseapp.com",
-						"databaseURL": "https://retosgamer-328be.firebaseio.com",
-						"projectId": "retosgamer-328be",
-						"storageBucket": "retosgamer-328be.appspot.com",
-						"messagingSenderId": "935537268417",
-						"appId": "1:935537268417:web:69f145053c591119fce640",
-						"measurementId": "G-0XR8CZH0JP"
-					};
-					firebase.initializeApp(firebaseConfig);
-					const messaging=firebase.messaging();
-					var formData = new FormData();
-					formData.append('verificationCode', $('#user').val());
-					$(".buttonVerify").css("display","none");
-				   $("#SignupSubmitButtonProgress").css("display","block");
-					function IntitalizeFireBaseMessaging() {
-						messaging
-							.requestPermission()
-							.then(function () {
+			const disableUI=()=>{
+				$(".buttonVerify").css("display","none");
+				$("#SignupSubmitButtonProgress").css("display","block");
+			}
+			const enableUI=()=>{
+				$("#SignupSubmitButtonProgress").css("display","none");
+				$(".buttonVerify").css("display","block");
+				$("#user").prop('disabled', false);
+				$("#emailS").prop('disabled', false);
+			}
+			const showError=()=>{
+				$('#otpError').html("<br/>Código de verificación inválido");
+				$("#user").addClass('errorInput');
+				$("#SignupSubmitButtonProgress").css("display","none");
+				$(".buttonVerify").css("display","block");
+			}
 
-								return messaging.getToken();
-							})
-							.then(function (token) {
 
-								formData.append('token', token.toString());
-								$.ajax({
-									url: window.location.origin+'/verifyUser',  
-									type: 'POST',
-									data: formData,
-									success:function(data){
-										if(data==="success"){
-											location.href = window.location.origin+'/dashboard';
-										}
-										else{
-											$("#SignupSubmitButtonProgress").css("display","none");
-											$(".buttonVerify").css("display","block");
-											$("#user").prop('disabled', false);
-											$("#emailS").prop('disabled', false);
-										
-											$('#otpError').html("<br/>Código de verificación inválido");
-											$("#user").addClass('errorInput');
-											$("#SignupSubmitButtonProgress").css("display","none");
-				   							$(".buttonVerify").css("display","block");
-											   
-										}
-									},
-									cache: false,
-									contentType: false,
-									processData: false
-							});
-							})
-							.catch(function (reason) {
-								$.ajax({
-									url: window.location.origin+'/verifyUser',  
-									type: 'POST',
-									data: formData,
-									success:function(data){
-										if(data==="success"){
-											location.href = window.location.origin+'/dashboard';
-										}
-										else{
-											$("#SignupSubmitButtonProgress").css("display","none");
-											$(".buttonVerify").css("display","block");
-											$("#user").prop('disabled', false);
-											$("#emailS").prop('disabled', false);
-										
-											$('#otpError').html("<br/>Código de verificación inválido");
-											$("#user").addClass('errorInput');
-											$("#SignupSubmitButtonProgress").css("display","none");
-				   							$(".buttonVerify").css("display","block");
-											
-										}
-									},
-									cache: false,
-									contentType: false,
-									processData: false
-							});
-							});
-
-							
-					}
-					IntitalizeFireBaseMessaging();
-				}
+			const submitDetails=(token)=>{
+				var formData = new FormData();
+				formData.append('verificationCode', $('#user').val());
+				formData.append('token', token.toString());
+				$.ajax({
+					url: window.location.origin+'/verifyUser',  
+					type: 'POST',
+					data: formData,
+					success:function(data){
+						if(data==="success"){
+							location.href = window.location.origin+'/dashboard';
+						}
+						else{
+							enableUI();
+							showError();		   
+						}
+					},
+					cache: false,
+					contentType: false,
+					processData: false
 				});
+			}
+			
+			const IntitalizeFireBaseMessaging=()=>{
+				var firebaseConfig = {
+				"apiKey": "AIzaSyDgWeTlLT4qMGOtop75NPTyz8ZX4woD8hc",
+				"authDomain": "retosgamer-328be.firebaseapp.com",
+				"databaseURL": "https://retosgamer-328be.firebaseio.com",
+				"projectId": "retosgamer-328be",
+				"storageBucket": "retosgamer-328be.appspot.com",
+				"messagingSenderId": "935537268417",
+				"appId": "1:935537268417:web:69f145053c591119fce640",
+				"measurementId": "G-0XR8CZH0JP"
+			};
+			firebase.initializeApp(firebaseConfig);
+			const messaging=firebase.messaging();
+			messaging
+				.requestPermission()
+				.then(function () {
+					return messaging.getToken();
+				})
+				.then(function (token) {
+					submitDetails(token);
+								
+				})
+				.catch(function (reason) {
+					submitDetails(null);
+				});
+			}
+
+			$('.buttonVerify').click((e)=>{
+				e.preventDefault();
+				var otp=$('#user').val();
+				if(otp.length!==6 || !$.isNumeric(otp)) { 
+					$('#otpError').html("<br/>Código de verificación inválido");
+					$("#user").addClass('errorInput');
+				}
+				else{
+					disableUI();
+					if(firebase.messaging.isSupported()){
+						IntitalizeFireBaseMessaging();
+					}
+					else{
+						submitDetails(null);
+					}
+				
+			    }
 			});
+		});
 		
 	</script>
 

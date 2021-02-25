@@ -27,12 +27,16 @@
 
       var str = $(this).data("obj");
       var email = document.getElementById("email:" + index[1]).value;
-      var url = document.getElementById("url:" + index[1]).value;
 
-      var arr = {
-        "email": email,
-        "url":url
-      };
+      //to encode email with *
+      var email_enc=email.split('@')[0].substring(0, 2)+
+            new Array(email.split('@')[0].substring(2, email.split('@')[0].length-2).length + 1).join( '*' )+
+            email.split('@')[0].substring(email.split('@')[0].length-2)+
+            '@'+email.split('@')[1]
+      
+      var url = document.getElementById("url:" + index[1]).value;
+      var username = document.getElementById("username:" + index[1]).value;
+      var arr = {email,url,username,email_enc};
       var position = parseInt(index[1]);
       document.getElementById("del:" + index[1]).style.display = "inline";
       document.getElementById("del:" + index[1]).removeAttribute("disabled");
@@ -217,8 +221,7 @@
     <table class="table table-bordered table-striped" style="border:2px solid #444; ">
       <thead class="thead_style" style="border:2px solid #444; ">
         <tr class="table_row">
-          <th class="table_head" style="border: none;">Image</th>
-          <th class="table_head" style="border: none;">Score</th>
+          <th class="table_head" style="border: none;">Username</th>
 
           <th class="table_head" style="border: none;">Email</th>
           <th class="table_head" style="border: none;">Action</th>
@@ -227,12 +230,12 @@
       <% userDataNew.map((datai,i)=>{ %>
       <tbody class="thead_style" style="border:2px solid #444; " id="myTable">
         <tr style=" background-color:#222;height:20px; ">
-          <td class="table_head" style="border: none;     vertical-align:middle;">
+          <!-- <td class="table_head" style="border: none;     vertical-align:middle;">
             <div>
             <img style="width:50px;" class="lbc-img-optimized" src='<%=datai.M.url.S%>' alt="">
             <a href='<%=datai.M.url.S%>' download class="lbc-img-txt"><img src="https://www.flaticon.com/svg/static/icons/svg/892/892623.svg" style="height:1vw;" alt=""></a>
           </div>  
-          </td>
+          </td> -->
           <td class="table_head" style="border: none;    vertical-align:middle;">
             <%=datai.M.score.S %>
           </td>
@@ -249,6 +252,7 @@
             </button>
             <input id='<%= "email:"+i %>' type="hidden" name="email" value="<%=datai.M.email.S  %>">
             <input id='<%= "url:"+i %>' type="hidden" name="urlImg" value='<%=datai.M.url.S%>'>
+            <input id='<%= "username:"+i %>' type="hidden" name="username" value='<%=datai.M.score.S%>'>
 
           </td>
         </tr>
@@ -305,3 +309,6 @@
   </div>
 </div>
 <%- include('partials/footer') %>
+
+
+

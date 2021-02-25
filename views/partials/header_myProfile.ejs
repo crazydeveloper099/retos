@@ -104,9 +104,9 @@
           <a class="nav-link" href="/aboutUs" > <strong>NOSOTROS</strong></a>
         </li>
           <% if (name!=null) { %>
-            <li class="nav-item px-2">
+            <!-- <li class="nav-item px-2">
               <a class="nav-link" href="/myProfile" > <strong>MI PERFIL</strong></a>
-            </li>
+            </li> -->
         <li class="nav-item dropdown px-2">
          <a class="nav-link dropdown-toggle"  href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <strong>CUENTA</strong>
@@ -124,7 +124,7 @@
         <% if (name==null) { %>
           <li class="d-inline-block align-top" style="color:white;" >
             <form method="get" action="/login">
-              <button type="submit" class="btn btn-outline-warning" style="font-family: 'BIGMACCA';" onclick="/leaderboard">Iniciar sesión</button>
+              <button type="submit" class="btn btn-outline-warning" style="font-family: 'BIGMACCA';" onclick="/leaderboard">INICIAR SESIÓN</button>
           </form>
           </li>
           <% } %>
@@ -133,7 +133,7 @@
               <a class="nav-link" style="font-family: 'BIGMACCA';" href="#"><%= name %></a>
             </li>
             <form method="get" action="/logout">
-              <button type="submit" class="btn btn-danger"  onclick="/leaderboard">cerrar sesión</button>
+              <button type="submit" class="btn btn-danger"  onclick="/leaderboard">CERRAR SESIÓN</button>
           </form>
             <% } %>
       </ul>

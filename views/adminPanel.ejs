@@ -58,14 +58,17 @@
 <div class="list-group" id="list-tab" role="tablist">
   <div>
     <div style="float:left;">
-    <a href="/userConsole" class="btn btn-primary" style="width:10vw;margin-left:250px;">User Console</a>
+    <a href="/userConsole" class="btn btn-black" style="width:10vw;margin-left:250px;">User Console</a>
     </div>
     <div style="float:left;">
-      <a href="/addChallenge" class="btn btn-dark" style="width:10vw;">ADD CHALLENGE</a>
+      <a href="/addChallenge" class="btn btn-black" style="width:10vw;">ADD CHALLENGE</a>
       </div>
       <div style="float:left;">
-        <a href="/posterConsole" class="btn btn-dark" style="width:10vw;">MANAGE POSTERS</a>
+        <a href="/posterConsole" class="btn btn-black" style="width:10vw;">MANAGE POSTERS</a>
         </div>
+        <a href="/payoutWinners"    class="btn btn-black" style="background: #222; color:#FFFFFF ">
+          <strong>PAYOUT WINNERS</strong>
+        </a>
       </div>
     </div>
    
@@ -88,35 +91,41 @@
       
         <form id="deleteChallenge" action="/adminPanel" method="post">
           <input type="hidden" id="custId" name="deleteButton" value=true>
-          <button name="delete" value=<%= datai.challengeId %> type="submit" form="deleteChallenge" class="btn   btn-danger" style="background: #222; color:#FFFFFF;float:left;">
+          <button name="delete" value=<%= datai.challengeId %> type="submit" form="deleteChallenge" class="btn   btn-black" style="background: #222; color:#FFFFFF;float:left;">
             DELETE CHALLENGE
           </button>
         </form>
         <form id="manageChallenge" action="/adminPanel" method="post">
           <input type="hidden" id="custId" name="manageButton" value=true>
-          <button name="manage" value=<%= datai.challengeId %> type="submit" form="manageChallenge" class="btn   btn-danger" style="background: #222; color:#FFFFFF;float:left;">
+          <button name="manage" value=<%= datai.challengeId %> type="submit" form="manageChallenge" class="btn   btn-black" style="background: #222; color:#FFFFFF;float:left;">
             MANAGE CHALLENGE
           </button>
         </form>
+        <!-- <a href="/chats?id=<%= datai.challengeId %>" name="resultButton" value="<%= datai.challengeId %>" type="submit" form="editResult" class="btn btn-black" style="background: #222; color:#FFFFFF ">
+          <strong>CHAT</strong>
+        </a> -->
         <% if(!datai.isResultPublished) {%>
           <form id="publishResult" action="/adminPanel" method="post">
             <input type="hidden" id="custId" name="publishResult" value=true />
-            <button type="submit" form="publishResult" class="btn btn-success" name="resultButton" value=<%= datai.challengeId %> style="background: #222;color:#FFFFFF;">PUBLISH RESULT</button>
+            <button type="submit" form="publishResult" class="btn btn-black" name="resultButton" value=<%= datai.challengeId %> style="background: #222;color:#FFFFFF;">PUBLISH RESULT</button>
           </form>
           <% } %>
         <% if(datai.isResultPublished) {%>
         <form id="deleteResult" action="/adminPanel" method="post">
           <input type="hidden" id="custId" name="deleteResult" value=true>
-          <button name="deleteResultId" value=<%= datai.challengeId %> type="submit" form="deleteResult" class="btn btn-deep-purple button_adminPanel" style="background: #222; color:#FFFFFF; float:left; ">
+          <button name="deleteResultId" value="<%= datai.challengeId %>" type="submit" form="deleteResult" class="btn btn-black " style="background: #222; color:#FFFFFF; ">
             Delete Result
           </button>
         </form>
         <form id="editResult" action="/adminPanel" method="post">
           <input type="hidden" id="custId" name="publish" value=true>
-          <button name="resultButton" value="<%= datai.challengeId %>" type="submit" form="editResult" class="btn btn-dark-green" style="background: #222; color:#FFFFFF; ">
+          <button name="resultButton" value="<%= datai.challengeId %>" type="submit" form="editResult" class="btn btn-black" style="background: #222; color:#FFFFFF">
             EDIT RESULT
           </button>
+          
+          
         </form>
+        
         <% } %>
 
       </div>

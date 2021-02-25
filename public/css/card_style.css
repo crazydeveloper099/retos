@@ -1,3 +1,7 @@
+
+
+
+
 .h1-dashboard-heading{
   font-size:3.9vw;
       display:block;
@@ -12,9 +16,113 @@
   margin-right:1vw;
   font-size:1vw;
  }
+ .coinToCOPHint{
+  font-family: Arial, Helvetica, sans-serif; 
+  color: #fff;
+  font-size: 0.8vw;
+}
+ .hr-mobile{
+   display: none;
+ }
+ .cardBodyContainer{}
+
+ .spotsCounterDashboard{
+  padding-top:0.5vw;
+  flex-grow: 1;
+  margin: auto auto auto 0;
+}
+ .footerMobileFontSize{
+   color: white;
+   font-size:1.5vw;
+  }
+  .modalHeading{
+    margin:auto;
+    color: white;
+    font-size: 1.5vw;
+  }
+ .mobiletimeBannerContainer-Container2{}
+
+ .challengeTopParentContainer{
+  height: 40vh;
+  width: 100%;
+}
+.fontSizeOptimizer{
+  font-size:10vw;
+}
+.imageHeadingShareDialog
+{
+  width: 31vw;
+}
+.mobileOnlyJoinButton{
+  display: none;
+}
+.pcOnlyJoinButton{
+  display: block;
+}
+.spotsContainer2{
+  font-size: 1.5vw;
+  color:white;
+  padding:0;
+  margin:0;
+  float: right;
+}
+.childContent2{
+  text-align: right;
+}
+.buttonShdwEffect {
+  
+  padding-left: 1vw;
+  padding-right: 1vw;
+  font-family: 'Roboto', sans-serif;
+  font-size: 1vw;
+  font-weight: 500;
+  color: #fff;
+  border: 3px solid rgb(94, 89, 89);
+  background-color: rgba(94, 89, 89,0.8);
+  border-radius: 45px;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease 0s;
+  cursor: pointer;
+  outline: none;
+  }
+  .chat-disabled-info{
+    margin: 20px;
+    background-color:rgba(20,20, 20, 0.6);
+    margin:auto;
+    color:white;
+    padding: 1vw 1vw;
+    border-radius: 2vw;
+  }
+.progressBarStyleMobile{width: 15vw;margin-top: 1vh;}
+
+ .challengeTopContainer{
+   padding: 3vw; 
+  height:40vh;
+  display: inline-block;}
+ .containerDashboardHeading{
+  display: inline-grid;
+  justify-items: center;
+  align-items: center;
+  
+}
+.iconSpotsStyle{
+  font-size: 1.5vw;margin-right: 1vw;
+}
+.challengeTopContainer2{
+  float: right;
+ color: #FFF;
+ margin-top: 15vh;
+ margin-right:4vw;
+ font-family: 'Roboto', sans-serif;}
  .width-100-m{
   float: left;
 }
+.cardContainerSize{
+  border-bottom-left-radius: 0.2vw;
+  border-bottom-right-radius: 0.2vw;
+};
+
+.spotsFontSize{font-size:0.8vw;}
 .sub-heading{
   color:#e2e2e2;margin-bottom:5vw;
 }
@@ -24,6 +132,8 @@
   font-family: 'PT Sans', sans-serif;
   font-size: 1.5vw;
 }
+.cardFooter{display: flex;}
+
 .lbc-img-txt{
   color:#FFFFFF;
   font-size:1vw; 
@@ -43,6 +153,10 @@
   width:16vw; 
   height:9vw; 
   border-radius:0.5vw;
+}
+.imageBorder{
+  border-top-left-radius: 0.2vw;
+  border-top-right-radius: 0.2vw;
 }
  .c-prize-mobile{
   display: inline-flex;
@@ -77,6 +191,18 @@
   display: inline-flex;
   margin:1vw;
   margin-bottom: 0.1vw;
+}
+.timeLabelStyle{
+  display: inline-block;
+   border:0.1vw solid #4CA1AF;
+  text-align:center;
+  color: #fff;
+  padding: 0.1vw;
+  border-radius: 0.2vw;
+  font-size: 0.7vw;
+}
+.pulseStyleMobile{
+
 }
 .c-text-prize{
   background:#090f0f;
@@ -120,14 +246,24 @@
   display: inline-block; margin-right:2vw;
 }
 .mobile-otpimizeNav-cl{
+  
   display: none;
   max-height: 0px;
+}
+.participateButton{
+  font-size: 1vw;
+  background-color:rgba(0, 0, 0, 0);
+    margin: auto 0 auto auto;
+  padding: 0.5vw;
+  color: #fff;
+  border-radius: 0.2vw;
+  border: 0.1vw solid  #7A7D87;
 }
 .lbc-img-optimized{
   width:2vw;
 }
 .lbc-mobile-optimized-img{
-  
+  width:70vw;
 }
 .bck{
   background: #FFEFBA;  /* fallback for old browsers */
@@ -171,6 +307,8 @@ background: linear-gradient(to right, #f7b733, #fc4a1a); /* W3C, IE 10+/ Edge, F
    /* margin-top: 0.8vh;  */
   font-size:0.8vw;
   margin: 0;
+  margin-top: 0.3vw;
+  border:0.1vw 0.5vw 0.1vw 0.5vw;
   /* border-radius: 10px; */
   /* display: inline-flex; */
   /* padding:2px; */
@@ -203,7 +341,7 @@ background: linear-gradient(to right, #f7b733, #fc4a1a); /* W3C, IE 10+/ Edge, F
   
 }
 .img-mobile-cl{
-  
+  height: 70vh;
 }
 .mobile-optimize-navbar{
   display: none;
@@ -216,6 +354,15 @@ background: linear-gradient(to right, #f7b733, #fc4a1a); /* W3C, IE 10+/ Edge, F
 .dashboard-card-time-style{
   color:#999999;  
   font-size:0.85vw;
+  font-weight: bold;
+  display: inline-block;
+  padding:2px;
+  padding-right:0.8vw;
+  margin-top: 1vw;
+}
+.dashboard-card-prize-style{
+  color:white;  
+  font-size:1.2vw;
   font-weight: bold;
   display: inline-block;
   padding:2px;
@@ -255,10 +402,10 @@ background: linear-gradient(to right, #f7b733, #fc4a1a); /* W3C, IE 10+/ Edge, F
   margin-bottom:1vh;
 }
 .c-buttonJoin{
-  background-image: linear-gradient(to right,#ff0000, #ff0000);
+  background:rgba(0, 0, 0, 0.8);
   color:#fff; 
   font-size:1.5vw; 
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'BIGMACCA';
  }
 .carousel-button-custom{
   font-size: 1.5vw;
@@ -274,7 +421,6 @@ background: linear-gradient(to right, #f7b733, #fc4a1a); /* W3C, IE 10+/ Edge, F
   font-size: 2.5vw;
 }
 .category-dashboard-heading{
-  margin-left:2.5vw; 
   font-family: 'PT Sans', sans-serif;
   font-size:2vw;
 }
@@ -282,7 +428,7 @@ background: linear-gradient(to right, #f7b733, #fc4a1a); /* W3C, IE 10+/ Edge, F
   height:3vw;
   border:0; 
   font-size:1.3vw;
-  background:#FF0000;
+  background:rgba(0, 0, 0, 0.8);
   color:#ffffff;
   padding-left: 1vw;
   padding-right: 1vw;
@@ -320,9 +466,19 @@ background: linear-gradient(to right, #f7b733, #fc4a1a); /* W3C, IE 10+/ Edge, F
 }
 .challenge-heading{
   color:#fff; 
-  font-size:1vw; 
+  font-size:0.85vw; 
   margin-top: 0.3vh;
   margin: 0;
+  height: 2vw;
+}
+.challengeBaseLableStyle{
+  display: inline-block;
+  border:0.1vw solid #dc281e;
+  text-align:center;
+  color: #fff;
+  padding: 0.1vw;
+  border-radius: 0.2vw;
+  font-size: 0.7vw;
 }
 .challenge-text-custom{
   color:#cccccc;   
@@ -397,8 +553,8 @@ background: linear-gradient(to right, #f7b733, #fc4a1a); /* W3C, IE 10+/ Edge, F
   
 }
 .card_image{
-  height:9vw;
-  width:16vw;
+  height:12vw;
+  width:25vw;
 }
 .card_image_all_ch{
   height:10.68vw;
@@ -579,10 +735,7 @@ background-size:cover;
 filter: blur(4px);
 }
 .imageCarousel{
-  background-size: cover;
-  object-fit: cover;
-  background-position: center center;
-background-repeat: no-repeat;
+  
 }
 .pagination > li > a
 {
@@ -958,26 +1111,26 @@ background-repeat: no-repeat;
     font-size: 4vw;
   }
   .category-dashboard-heading{
-    width: 100%;
-    text-align:center;
+    
     font-family: 'PT Sans', sans-serif;
     font-size:6vw;
-    margin-top:100vh;
   }
   .carousel-margin-custom{
     margin-bottom:10px;
   }
   .card_image{
-    height:33.75vw;
+    height:45vw;
     margin-left: auto;
     margin-right: auto;
-    width:60vw;
+    width:80vw;
   }
   .challenge-heading{
     color:#fff;   
     margin-top: 0.5vh; 
     margin: 0;
-    font-size:4.5vw;
+    font-size:4vw;
+    height: 5vw;
+    word-wrap: break-word;   
    }
   .challenge-text-custom{
     color:#cccccc;   
@@ -999,7 +1152,8 @@ background-repeat: no-repeat;
     height:10vw;
      border:0; 
      font-size:6vw;
-    background:#FF0000;
+     background:rgba(0, 0, 0, 0.8);
+
     color:#ffffff;
     padding-left: 2vw;
     padding-right: 2vw;
@@ -1050,6 +1204,17 @@ background-repeat: no-repeat;
     padding-right:2vw;
     width: 100%;
   }
+  .dashboard-card-prize-style{
+    color:white;  
+    margin-top: 0.3vh; 
+    font-size:4vw;
+    border-radius: 10px;
+    font-weight: bold;
+    display:block;
+    padding:2px;
+    padding-right:2vw;
+    width: 100%;
+  }
   .cl-card-time-style{
     color:#999999;  
     margin-top: 1vh; 
@@ -1065,9 +1230,10 @@ background-repeat: no-repeat;
     color:white;
     /* background-color: #F51100; */
     /* margin-top: 0.8vh;  */
-    font-size:3vw;
+    font-size:3.5vw;
     font-weight: bold;
     margin: 0;
+    padding: 0.5vw 2vw;
     /* border-radius: 10px; */
     /* display:inline-block; */
     /* padding:2px; */
@@ -1078,10 +1244,10 @@ background-repeat: no-repeat;
      */
   }
   .mobile_center{
-    width: 100%;
-    display: block;
+    width: unset;
+    display: unset;
     text-align: center;
-    clear: left;
+    clear: unset;
   }
   .mobile-optimize-navbar{
     display: block;
@@ -1182,10 +1348,10 @@ background-repeat: no-repeat;
     margin-top: 1vh;
    }
    .c-buttonJoin{
-    background-image: linear-gradient(to right,#ff0000, #ff0000);
+    background: rgba(0, 0, 0, 0.8);
     color:#fff; 
     font-size:4.5vw; 
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'BIGMACCA';
    }
    .c-buttonCenter{
     width: 100%;
@@ -1196,7 +1362,7 @@ background-repeat: no-repeat;
    }
    .c-heading{
     color:#fff;
-     font-size:6vw;
+     font-size:4vw;
      text-align: center;
      font-family: 'Open Sans', sans-serif;
      margin-bottom: 3vw;
@@ -1208,44 +1374,20 @@ background-repeat: no-repeat;
      color: white;
      padding-left: 8vw;
      padding-right: 8vw;
+     text-align: center;
      
    }
-   .c-prize-mobile{
-    display: block;
-   }
-  .c-prize-text{
-    color:#fff;
-    font-size:4.5vw; 
-    font-family: 'Open Sans', sans-serif;
-    display: inline-flex;
-    margin:1vw;
-    margin-bottom: 0.1vw;
-  }
-  .c-prize-background{
-    max-width: 50vw;
-    
-    background: #111;
-    border-radius: 3px;
-    margin-right: 1vw;
-    margin: 0 auto;
-    margin-top: 5vh;
-  }
-  .c-image-prize{
-    height:15vh;
-    margin-top:0vh;
-    margin-bottom: 2vh;
-  }
-  .c-text-prize{
-    background:#090f0f;
-    color:white;
-    text-align: center;
-    color:#fff;
-     font-size:4.5vw;
-    padding:1vw; 
-    font-family: 'Open Sans', sans-serif;
-    border-bottom-left-radius: 3px;
-    border-bottom-right-radius: 3px;
-  }
+   .spotsFontSize{font-size: 4vw;margin: 1vw;}
+   .cardContainerSize{
+     width:80vw;
+     border-bottom-left-radius: 2vw;
+     border-bottom-right-radius: 2vw;
+    };
+  
+  
+ 
+  
+  
  .title {
     border-bottom: 1px solid #dedede;
     margin-bottom: 20px;
@@ -1356,4 +1498,183 @@ width:50vw;
 .lbc-mobile-optimized-img{
   width:90%;
 }
+.imageBorder{
+  border-top-left-radius: 2vw;
+  border-top-right-radius: 2vw;
+}
+.pulseStyleMobile{
+  display: none;
+}
+.containerDashboardHeading{
+  display: inline-grid;
+  justify-items: center;
+  align-items: center;
+}
+.challengeTopContainer{
+  padding: 6vw; 
+ height:30vh;
+ display: block;}
+ .challengeTopContainer2{
+  color: #FFF;
+  float: none;
+  display: block;
+  font-family: 'Roboto', sans-serif;
+  margin-top: 8vh;
+  text-align: center;
+}
+.challengeTopParentContainer{
+  height: 70vh;
+  width: 100%;
+}
+.childContent2{
+  text-align: center;
+}
+.spotsContainer2{
+  font-size: 5vw;color:white;float: unset;
+}
+.iconSpotsStyle{
+  font-size: 4vw;
+}
+.progressBarStyleMobile{width: 50%;margin-top: 1vh;margin: auto;}
+.mobiletimeBannerContainer-Container2{margin: auto;display: block;}
+.centerElement{text-align: center;}
+.buttonShdwEffect {
+  padding-left: 4vw;
+  padding-right: 4vw;
+  font-family: 'Roboto', sans-serif;
+  font-size: 4vw;
+  font-weight: 500;
+  color: #fff;
+  border: 3px solid rgb(94, 89, 89);
+  background-color: rgba(94, 89, 89,0.8);
+  
+  margin: auto;
+  margin-top:1.5vw;
+  margin-bottom: 1.5vw;
+  border-radius: 45px;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease 0s;
+  cursor: pointer;
+  outline: none;
+  }
+  .c-prize-mobile{
+    text-align: center;
+    display: block;
+   }
+
+
+  .c-prize-background{
+    background: #111;
+    border-radius: 3px;
+    margin-right: 1vw;
+    margin: 0 auto;
+    margin-top: 5vh;
+    width: 50vw;
+    display: block;
+  }
+  .c-prize-text{
+    color:#fff;
+    font-size:4vw; 
+    font-family: 'Open Sans', sans-serif;
+    display: inline-flex;
+    margin:1vw;
+    margin-bottom: 0.1vw;
+  }
+  .c-image-prize{
+    height:15vh;
+    margin-top:0vh;
+    margin-bottom: 2vh;
+  }
+  .c-text-prize{
+    background:#090f0f;
+    color:white;
+    text-align: center;
+    color:#fff;
+     font-size:5vw;
+    padding:1vw; 
+    font-family: 'Open Sans', sans-serif;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+  }
+  .fontSizeOptimizer{
+    font-size: 10vw;
+  }
+  .footerMobileFontSize{
+    color: white;
+    font-size:4.5vw;}
+  .modalHeading{
+      margin:auto;
+      color: white;
+      font-size: 4vw;
+  }
+  .mobileOnlyJoinButton{
+    padding: 1vh;
+    display: block;
+    text-align: center;
+  }
+  .pcOnlyJoinButton{
+    display: none;
+  }
+  .imageHeadingShareDialog
+  {
+    width: 50vh;
+  }
+  .challengeBaseLableStyle{
+    display: inline-block;
+    border:0.1vw solid #dc281e;
+    text-align:center;
+    color: #fff;
+    padding:0vw 2vw 0vw 2vw;
+    border-radius: 10vw;
+    font-size: 3vw;
+  }
+  .timeLabelStyle{
+    display: inline-block;
+     border:0.1vw solid #4CA1AF;
+    text-align:center;
+    color: #fff;
+    padding: 0.1vw;
+    border-radius: 0.2vw;
+    font-size: 3vw;
+  }
+  .participateButton{
+    font-size: 5vw;
+    background-color:rgba(0, 0, 0, 0);
+      margin: auto;
+      margin-top: 2vw;
+      margin-bottom: 2vw;
+    padding: 0.5vw 2vw;
+    color: #fff;
+    border-radius: 2vw;
+    border: 0.1vw solid  #7A7D87;
+  }
+  .spotsCounterDashboard{
+    padding-top:0.5vw;
+    flex-grow: unset;
+    font-size: 3vw;
+    margin: auto;
+  }
+  
+  .cardFooter{display: block;}
+  .cardBodyContainer{
+    display: inline-block;
+    margin-top: 1vw;
+  }
+  .hr-mobile{
+    display: block;
+  }
+  .coinToCOPHint{
+    font-family: Arial, Helvetica, sans-serif; 
+    color: #fff;
+    font-size: 3vw;
+  }
+  .chat-disabled-info{
+    margin: 20px;
+    background-color:rgba(20,20, 20, 0.6);
+    width:100%;
+    margin:auto;
+    color:white;
+    padding: 4vw 0;
+    border-radius: 2vw;
+  }
 }

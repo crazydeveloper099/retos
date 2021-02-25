@@ -6,12 +6,14 @@ const fs = require('fs');
 const axios = require('axios');dotenv.config();
 const delay = require('delay');
 const { split } = require("lodash");
+const nodemailer = require('nodemailer');
 let awsConfig = {
   "region": process.env.region,
   "endpoint": "http://dynamodb.us-east-2.amazonaws.com",
   "accessKeyId": process.env.accessKeyId,
   "secretAccessKey": process.env.secretAccessKey
 };
+//AWS
 const s3 = new AWS.S3({
   accessKeyId: process.env.accessKeyId,
   secretAccessKey: process.env.secretAccessKey
@@ -22,7 +24,45 @@ let db = new AWS.DynamoDB();
 const firebaseFile=require('../controllers/firebase_admin');
 const table = "challenges";
 
-exports.createChallenge = (id, image, end_time, description, rules, challengeName, prize, type, spots, minLevel, createdAt,ytLinkParticipationInfo,ytLinkLobbyTutorial,callback) => {
+//mongoDB
+const  mongoose  = require("mongoose");
+mongoose.Promise  = require("bluebird");
+const  url  =  process.env.mongoURL;
+
+const  connect  =  mongoose.connect(url, { useNewUrlParser: true  });
+const Schema = mongoose.Schema;
+const moment_tz = require('moment-timezone');
+moment_tz().toString();
+const transactionSchema = new Schema({
+    email: {type: String},
+    timeStamp:{type:String},
+    value:{type:String},
+    status:{type:String},
+    action:{type:String},
+    transactionID:{type:String},
+  },
+  {timestamps: true});
+
+const withdrawRequestSchema = new Schema({
+    email: {type: String},
+    name: {type: String},
+    amount:{type:String},
+    colID:{type:String},
+    city:{type:String},
+    dayName:{type:String},
+    dateNumber:{type:String},
+    month:{type:String},
+    year:{type:String},
+    phone:{type:String},
+    newestChallengeDate:{type:String},
+    status:{type:String},
+    associatedTxnID:{type:String},
+
+  },
+  {timestamps: true});  
+
+
+exports.createChallenge = (id, image, end_time, description, rules, challengeName, prize, type, spots, minLevel, createdAt,ytLinkParticipationInfo,ytLinkLobbyTutorial,challengeBase,callback) => {
   const params = {
     TableName: table,
     Item: {
@@ -44,7 +84,8 @@ exports.createChallenge = (id, image, end_time, description, rules, challengeNam
       ytLinkParticipationInfo,
       ytLinkLobbyTutorial:'null',
       resultTimer:'null',
-      isMatchEnded:'null'
+      isMatchEnded:'null',
+      challengeBase
     }
   };
   docClient.put(params, function(err, data) {
@@ -59,6 +100,7 @@ exports.createChallenge = (id, image, end_time, description, rules, challengeNam
 };
 
 exports.createResult = (id, resultData, unitChallenge, url,callback) => {
+  let createdAt=new Date().toLocaleString('en-US', { timeZone: 'America/New_York' });
   const params = {
 
     TableName: "results",
@@ -66,7 +108,8 @@ exports.createResult = (id, resultData, unitChallenge, url,callback) => {
       "challengeId": id,
       "url":url,
       "resultData": resultData,
-      "unitChallenge": unitChallenge
+      "unitChallenge": unitChallenge,
+      createdAt
     }
   };
   
@@ -84,7 +127,7 @@ exports.createResult = (id, resultData, unitChallenge, url,callback) => {
 exports.fetchResult = (callback) => {
   const params = {
     TableName: "results",
-    ProjectionExpression: "challengeId, resultData, unitChallenge"
+    ProjectionExpression: "challengeId, resultData, unitChallenge, createdAt"
   };
   docClient.scan(params, (err, data) => {
     if (err) {
@@ -103,7 +146,7 @@ exports.fetchResult = (callback) => {
 exports.dbChallengeFetcher = (callback) => {
   const params = {
     TableName: "challenges",
-    ProjectionExpression: "challengeId, challengeName, challengePrize,challengeType,challengeTime, src, challengeDescription, challengeRules,isResultPublished, spots, minLevel, createdAt,ytLinkParticipationInfo,ytLinkLobbyTutorial,resultTimer,isMatchEnded"
+    ProjectionExpression: "challengeId, challengeName, challengePrize,challengeType,challengeTime, src, challengeDescription, challengeRules,isResultPublished, spots, minLevel, createdAt,ytLinkParticipationInfo,ytLinkLobbyTutorial,resultTimer,isMatchEnded,passwordTimer,challengeBase"
   };
   docClient.scan(params, (err, data) => {
     if (err) {
@@ -123,7 +166,7 @@ exports.dbChallengeFetcher = (callback) => {
 exports.challengeFetcher = (callback) =>{
   const params = {
     TableName: "challenges",
-    ProjectionExpression: "challengeId, category, challengeDescription, challengeName, challengePrize, challengeRules, src, challengeType, end_time, start_time,isResultPublished,  createdAt,ytLinkParticipationInfo,ytLinkLobbyTutorial,resultTimer,isMatchEnded"
+    ProjectionExpression: "challengeId, category, challengeDescription, challengeName, challengePrize, challengeRules, src, challengeType, end_time, start_time,isResultPublished,  createdAt,ytLinkParticipationInfo,ytLinkLobbyTutorial,resultTimer,isMatchEnded,passwordTimer,challengeBase"
   };
   docClient.scan(params, (err, data) => {
     if (err) {
@@ -193,6 +236,9 @@ exports.fetchUnitResult = (id, callback) => {
   db.getItem(params, function(errResult, dataResult) {
     if (dataResult) {
       callback(dataResult);
+    }
+    else{
+      callback('error');
     }
   });
 };
@@ -344,7 +390,10 @@ exports.writeUser = (email, name, phone, isBlocked,token, callback) => {
       "isBlocked": isBlocked,
       "fcmToken":token,
       "phone":phone,
-      "name":name
+      "name":name,
+      "wallet_amount":'0',
+      "total_participated":'0',
+      "total_challenges_won":'0',
     }
   };
   docClient.put(params, function(err, data) {
@@ -476,7 +525,6 @@ exports.deletePoster = (id, callback) => {
     TableName: "challenge_banner",
   };
 
-  console.log("Attempting a conditional delete...");
   docClient.delete(fileItem, function(err, data) {
     callback(err,data);
   });
@@ -555,15 +603,15 @@ exports.participate=(email,id,url,score,userData,callback)=>{
         "ytLinkParticipationInfo":dataChallenge.Item.ytLinkParticipationInfo.S,
         "ytLinkLobbyTutorial":dataChallenge.Item.ytLinkLobbyTutorial.S,
         'resultTimer':dataChallenge.Item.resultTimer.S,
-        'isMatchEnded':dataChallenge.Item.isMatchEnded.S
+        'isMatchEnded':dataChallenge.Item.isMatchEnded.S,
+        'challengeBase':dataChallenge.Item.challengeBase.S
       }
     }
+   
     docClient.put(params, function(err, data) {
       if (err) {
-        console.log(err);
         callback(err, data);
       } else {
-        console.log(data);
         callback(err, data,dataChallenge);
       }
     });
@@ -596,16 +644,17 @@ docClient.update(params, function(err, data) {
 }
 
 
-exports.updateUsersChallenges=(email,challenges, callback)=>{
+exports.updateUsersChallenges=(email,challenges, total_participated,callback)=>{
 var table = "users";
 var params = {
     TableName:table,
     Key:{
         "email": email,
     },
-    UpdateExpression: "set challenges = :r",
+    UpdateExpression: "set challenges = :c, total_participated= :tp",
     ExpressionAttributeValues:{
-        ":r":challenges,
+        ":c":challenges,
+        ":tp":(parseInt(total_participated)+1).toString(),
     },
     ReturnValues:"UPDATED_NEW"
 };
@@ -614,21 +663,45 @@ docClient.update(params, function(err, data) {
 });
 }
 
-exports.updateUsersChallengesWon=(email,challengesWon, callback)=>{
+exports.updateUsersChallengesWon=(email,challengesWon,wallet_amount,differenceAmount, total_challenges_won,callback)=>{
   var table = "users";
   var params = {
       TableName:table,
       Key:{
           "email": email,
       },
-      UpdateExpression: "set challengesWon = :r",
+      UpdateExpression: "set challengesWon = :cw, wallet_amount= :wa, total_challenges_won = :tcw ",
       ExpressionAttributeValues:{
-          ":r":challengesWon,
+          ":cw":challengesWon,
+          ":wa":wallet_amount,
+          ":tcw":(parseInt(total_challenges_won)+1).toString()
       },
       ReturnValues:"UPDATED_NEW"
   };
   docClient.update(params, function(err, data) {
-     callback(err,data);
+    if(data ){
+      if(parseInt(differenceAmount)>0){
+        let Transaction = mongoose.model('userWalletTransactions', transactionSchema);
+        connect.then(db  =>  {
+          new Transaction({ email, 
+                            value:'+'+differenceAmount,
+                            status:'successful',
+                            timeStamp:new Date (moment_tz.tz(new Date(), "GMT").utcOffset(-300).format("MM/DD/YYYY hh:mm:ss a")),
+                            action:'acreditado',
+                            transactionID:'#'+(Math.floor(Math.random() * 1000000000)).toString(),
+        }).save((err, doc)=> {
+            if (err) callback(err,null);
+            else callback(null,data);
+          });     
+       });
+      }
+      else{
+        callback(null,data);
+      }
+    }
+    else{
+      callback(err,null);
+    }
   });
 }
   exports.updateChallenge=(dataChallenge,tokenArr,action,callback)=>{
@@ -662,7 +735,6 @@ exports.updateUsersChallengesWon=(email,challengesWon, callback)=>{
           userDataArr=JSON.parse(dataChallenge.usersData.S);
         }
         
-        console.log(dataChallenge)
         const params = {
         TableName: "challenges",
         Item: {
@@ -686,12 +758,12 @@ exports.updateUsersChallengesWon=(email,challengesWon, callback)=>{
           "ytLinkParticipationInfo":dataChallenge.ytLinkParticipationInfo.S,
           "ytLinkLobbyTutorial":dataChallenge.ytLinkLobbyTutorial.S,
           'resultTimer':dataChallenge.resultTimer.S,
-          'isMatchEnded':dataChallenge.isMatchEnded.S
+          'isMatchEnded':dataChallenge.isMatchEnded.S,
+          'challengeBase':dataChallenge.challengeBase.S
         }
       }
       docClient.put(params, function(err, data) {
         if (err) {
-          console.log(err);
           callback(err, data);
         } else {
 
@@ -700,9 +772,271 @@ exports.updateUsersChallengesWon=(email,challengesWon, callback)=>{
             console.log(resp);
           }
         })
-        console.log(data);
         callback(err, data);
+
         }
       });
   });
 };
+
+exports.checkParticipation=(challengeId,email,userName,callback)=>{
+  var paramsUnitChallenge = {
+    Key: {
+      "challengeId": {
+        S: challengeId
+      },
+    },
+    TableName: 'challenges'
+  };
+  db.getItem(paramsUnitChallenge, (errFetching, response)=> {
+    if(errFetching){
+      return callback(null,null)
+    }
+    else{
+      if("users" in (response.Item) && "userImg" in (response.Item) && response.Item.users.L.length>0 && response.Item.userImg.L.length>0){
+        for(i=0; i<response.Item.users.L.length;i++ ){
+          if(i<response.Item.users.L.length-1 && email===response.Item.users.L[i].S || response.Item.userImg.L[i].M.score.S.trim().toUpperCase()===userName.toUpperCase()){
+            return callback(true,response.Item.spots.S)
+          }
+          else if(i===response.Item.users.L.length-1 ){
+            if(email!==response.Item.users.L[i].S && response.Item.userImg.L[i].M.score.S.trim().toUpperCase()!==userName.toUpperCase()){
+              return callback(false,response.Item.spots.S)
+            }
+            else{
+              return callback(true,response.Item.spots.S)
+            }
+          }
+        }
+      }
+      else{
+        return callback(false,response.Item.spots.S)
+      }
+    }
+  });
+}
+
+exports.fetchVideoPresetsData = ( callback) => {
+  const params = {
+    TableName: 'tutorial_presets',
+    ProjectionExpression: "video_id,iframeCode"
+  };
+  docClient.scan(params, (err, data) => {
+    if (err) {
+      console.error("Unable to scan the table. Error JSON:", JSON.stringify(err, null, 2));
+      callback(err, data);
+    } else {
+      data.Items.forEach(function(challenges) {});
+      callback(err, data);
+      if (typeof data.LastEvaluatedKey != "undefined") {
+        params.ExclusiveStartKey = data.LastEvaluatedKey;
+        docClient.scan(params, onScan);
+      }
+    }
+  });
+};
+exports.updateUserFBToken=(email, token, callback)=>{
+  var table = "users";
+  var params = {
+      TableName:table,
+      Key:{
+          "email": email,
+      },
+      UpdateExpression: "set fcmToken = :tk",
+      ExpressionAttributeValues:{
+          ":tk":token,
+      },
+      ReturnValues:"UPDATED_NEW"
+  };
+  docClient.update(params, function(err, data) {
+    console.log(err);
+    console.log(data);
+    callback();
+  });
+}
+
+
+
+
+exports.createWithdrawRequest=(payload,callback)=>{
+  
+    var table = "users";
+  
+  var params = {
+      TableName:table,
+      Key:{
+          "email": payload.email,
+      },
+      UpdateExpression: "set wallet_amount = :wa",
+      ExpressionAttributeValues:{
+          ":wa":(parseInt(payload.oldWalletAmt)-parseInt(payload.amount)).toString(),
+      },
+      ReturnValues:"UPDATED_NEW"
+  };
+  
+  docClient.update(params, function(err, data) {
+    if (err) callback(null);
+    else{
+      let WithdrawRequest = mongoose.model('withdrawRequests', withdrawRequestSchema);
+      let transcationID='#'+(Math.floor(Math.random() * 1000000000)).toString();
+      connect.then(db  =>  {
+        new WithdrawRequest({
+          email:payload.email,
+          name: payload.name ,
+          amount:payload.amount,
+          colID:payload.colID,
+          city:payload.city,
+          dayName:payload.dayName,
+          dateNumber:payload.dateNumber,
+          month:payload.month,
+          year: payload.year,
+          phone:payload.phone,
+          newestChallengeDate:payload.newestChallengeDate,
+          status:'pending',
+          associatedTxnID:transcationID   
+          }).save((err, doc)=> {
+            if (err) callback(null);
+            else {
+              let Transaction = mongoose.model('userWalletTransactions', transactionSchema);
+              connect.then(db  =>  {
+              new Transaction({ email:payload.email, 
+                          value:'-'+payload.amount,
+                          status:'pending',
+                          timeStamp:payload.timeStamp,
+                          action:'debit',
+                          transactionID:transcationID,
+              }).save((err, doc)=> {
+                callback(transcationID)
+              });     
+          });
+          }
+        });     
+      });
+
+
+    }
+  });
+}
+
+exports.getWithdrawalRequests=(callback)=>{
+
+  let WithdrawRequest = mongoose.model('withdrawrequests', withdrawRequestSchema);
+  connect.then(db  =>  {
+    WithdrawRequest.find({status:"pending"}).then(WithdrawRequests  =>  {
+      console.log(WithdrawRequests);
+      callback(WithdrawRequests)
+    });
+  });
+}
+
+exports.updateMultipleWithdrawalReq=(idArr, emailArr,callback)=>{
+  let WithdrawRequest = mongoose.model('withdrawRequests', withdrawRequestSchema);
+  let Transaction = mongoose.model('userWalletTransactions', transactionSchema);
+  Transaction.updateMany({transactionID: {$in: idArr}}, {$set: {status:'successful'}},  
+  async(errUpdate, result)=> {
+    if (errUpdate) callback(errUpdate); 
+    else {
+      await WithdrawRequest.deleteMany({ associatedTxnID: { $in: idArr}}, async (errDelete)=> {
+        if(errDelete) callback(errDelete);
+        else{
+          sendStatusSuccMail(emailArr,()=>{
+            callback(null);
+          });
+        } 
+      })
+    }
+  });
+}
+
+
+
+
+const sendStatusSuccMail=(emailArr, cb)=>{
+  let transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'test.retos2@gmail.com',
+      pass: 'retos.test'
+    }
+  });
+
+let promises = [];
+for (let i = 0; i < emailArr.length; i++) {
+
+  let mailOptions = {
+    from: 'test.retos2@gmail.com',
+    to: emailArr[i].email,
+    subject: 'Tu retiro en Retosgamer ha sido completado',
+    text: 'We are happy to inform that your withdrawal request is completed agains your transaction id '+
+          emailArr[i].txnID+
+          ' for amount '+emailArr[i].amt+' is successful.'
+  };
+
+    promises.push(new Promise(function(resolve, reject) {
+      transporter.sendMail(mailOptions, (err, info)=> {
+            if (err) {
+                reject(err)
+            } else {
+                resolve(info)
+            }
+        });
+    }));
+}
+Promise.all(promises).then((infos)=> { cb(null, infos) }, (err)=> {console.log(err); cb(err) });
+}
+
+
+exports.sendWithdrawalMailTo3DM=(pdfName, withdrawalID, mailBody,callback)=>{
+  const path = require('path');
+  let filePath=path.join(require('../app.js').rootPath, pdfName);
+  let transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'test.retos2@gmail.com',
+      pass: 'retos.test'
+    }
+  });
+  let mailOptions = {
+    from: 'test.retos2@gmail.com',
+    to: 'mehrotraanubhav6@gmail.com',
+    subject: `Nueva solicitud de retiro de fondos (ID: ${withdrawalID}) - Retos Gamer `,
+    text:mailBody,
+    attachments: [
+      {
+          filename: pdfName, 
+          path: filePath, 
+          contentType: 'application/pdf'
+      }]
+  };
+  transporter.sendMail(mailOptions, (err, succ)=> {
+    if (err) {console.log(err);callback(err);}
+    else {
+      try {
+        fs.unlinkSync(filePath);
+        callback(null);
+      } catch(err) {
+        console.error(errDeletion);
+        callback(errDeletion);
+      }
+    }
+  });
+}
+
+exports.sendWithdrawalMailToUser=(amount,withdrawalID,timestamp, email,callback)=>{
+  let transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'test.retos2@gmail.com',
+      pass: 'retos.test'
+    }
+  });
+  let mailOptions = {
+    from: 'test.retos2@gmail.com',
+    to: email,
+    subject: `Nueva solicitud de retiro de fondos (ID: ${withdrawalID}) - Retos Gamer `,
+    html:require('./utility.js').getHtmlEmailText(amount,withdrawalID,timestamp),
+  };
+  transporter.sendMail(mailOptions, (err, succ)=> {
+    if (err) {console.log(err);callback(err);}
+    else  callback(null);
+  });
+}

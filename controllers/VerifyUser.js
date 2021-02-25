@@ -12,6 +12,7 @@ exports.getVerifyUser = function(req, res){
 exports.resendCode= (req,res)=>{
   const cookie = req.cookies;
   const email =cookie.unConfirmedemail;
+  console.log(email);
    authService.verifyUserFunction(email,null,true, (err, result)=>{
      res.render('verifyUser',{name:null});
    });
@@ -41,8 +42,6 @@ exports.postVerifyUser = function(req, res){
           if(errVer){
              res.send("Error");
           }
-          console.log( cookie.unConfirmedphone+"2222");
-          console.log("done");
           res.cookie('username', cookie.unConfirmedUsername,{ httpOnly: true,  overwrite: true});
           res.cookie('email', cookie.unConfirmedemail,{ httpOnly: true,  overwrite: true});
           res.cookie('phone', cookie.unConfirmedphone,{ httpOnly: true,  overwrite: true});
@@ -55,13 +54,10 @@ exports.postVerifyUser = function(req, res){
       });
      }
      else{
-      console.log("**-*-*-*-*-*---*******************************-------------------3")  
       functionFile.writeUser(cookie.unConfirmedemail, cookie.unConfirmedUsername, cookie.unConfirmedphone,false,"",(errVer,dataVer)=>{
         if(errVer){
           res.send("Error");
         }
-        console.log( cookie.unConfirmedphone+"2222");
-        console.log("done");
         res.cookie('username', cookie.unConfirmedUsername,{ httpOnly: true,  overwrite: true});
         res.cookie('email', cookie.unConfirmedemail,{ httpOnly: true,  overwrite: true});
         res.cookie('phone', cookie.unConfirmedphone,{ httpOnly: true,  overwrite: true});

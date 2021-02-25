@@ -7,8 +7,9 @@ const fb=require('./firebase_admin.js');
 
 exports.getAddChallenge=(req,res)=>{
   dataFile.getCategory((errCategory, dataCategory) => {
-    console.log(dataCategory);
-  res.render('addChallenge',{name:null,end_date:null, dataCategory:dataCategory.Items});
+    dataFile.fetchVideoPresetsData((errFetching, videoPresetsData) => {
+      res.render('addChallenge',{name:null,end_date:null, dataCategory:dataCategory.Items, videoPresetsData});
+    });
   });
 };
 
@@ -32,6 +33,8 @@ exports.postAddChallenges=(req,res)=>{
       const minLevel=jData.minLevel;
       const createdAt=jData.createdAt;
       const ytLinkParticipation=jData.ytLinkParticipation;
+      const challengeBase=jData.challengeBase;
+      console.log(challengeBase);
        dataFile.createChallenge(
             id,
             image,
@@ -46,6 +49,7 @@ exports.postAddChallenges=(req,res)=>{
             createdAt,
             ytLinkParticipation,
             "null",
+            challengeBase,
             (err,data)=>{
             if(err)
             {

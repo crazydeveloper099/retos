@@ -1,15 +1,16 @@
 //jshint esversion:8
 const model = require('../models/UserModel.js');
 const fetcher=require('../data/dashboard_data.js');
-exports.leaderboard=(req,res)=>{
+exports.leaderboard= (req,res)=>{
   const cookie=req.cookies;
   console.log(cookie.name);
-  fetcher.fetchResult((err,data)=>{
+  fetcher.fetchResult(async(err,data)=>{
+    await data.Items.sort(custom_sort);
+
       if(err){
 
       }
       else if(data){
-        console.log("-------");
         console.log(data);
         res.render("leaderboards",
         {name:typeof(cookie.username) === 'undefined' ? null : cookie.username,
@@ -23,7 +24,9 @@ exports.leaderboard=(req,res)=>{
 };
 
 exports.postLeaderBoard=(req,res)=>{
-  console.log(req.body.id);
-  res.cookie("leaderBoardChallengeClickedID", req.body.id,{ httpOnly: true, secure: false, overwrite: true});
-    res.redirect('/leaderBoardChallenge');
+    res.redirect('/leaderBoardChallenge?id='+req.body.id);
 };
+
+function custom_sort(a, b) {
+  return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+}

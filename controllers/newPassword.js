@@ -21,3 +21,12 @@ exports.postNewPassword=(req,res)=>{
       }
     });
 };
+
+exports.getNewCode=(req,res)=>{
+  const email = req.cookies.tempEmail;
+  authService.forgetPassword(email,(err, data)=>{
+    
+    if(err && err.code==='LimitExceededException') res.send('LIMIT_REACHED');
+    else res.send('SUCC')
+  });
+}

@@ -24,5 +24,5 @@ messaging.setBackgroundMessageHandler(function (payload) {
         body:notification.body,
         icon:"images/cod_mobile.jpg"
     };
-    return self.registration.showNotification(payload.notification.title,notificationOption);
+    return self.registration.showNotification(payload.notification.title,notificationOption); 
 });

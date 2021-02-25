@@ -8,25 +8,21 @@ exports.getChallengeList =  (req, res) => {
   const phone = cookie.phone;
   const subscription_data = cookie.subscriptionData;
   data.dbChallengeFetcher(function (err, dataFetched) {
-    
-    console.log(new Date(dataFetched.Items[0].createdAt).getTime())
     data.getCategory((errCategory, dataCategory) => {
       data.getPosterData(async(errPoster, dataPoster) => {
         if (err || errCategory || errPoster) {
           res.send("error");
         } else if (dataFetched && dataCategory) {
         
-
           await dataFetched.Items.sort(custom_sort);
-          
           res.render("ChallengeList", {
             name:
               typeof cookie.username === "undefined" ? null : cookie.username,
-            data: dataFetched.Items,
-            end_date: model.end_date,
-            tandc: typeof cookie.tandc === "undefined" ? null : cookie.tandc,
-            dataCategory: dataCategory.Items,
-            dataPoster: dataPoster.Items
+              data: dataFetched.Items,
+              end_date: model.end_date,
+              tandc: typeof cookie.tandc === "undefined" ? null : cookie.tandc,
+              dataCategory: dataCategory.Items,
+              dataPoster: dataPoster.Items,
           });
         }
       });
@@ -36,4 +32,9 @@ exports.getChallengeList =  (req, res) => {
 
 function custom_sort(a, b) {
   return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+}
+exports.getResultStatus=(req,res) =>{
+  data.fetchResult((err, resultData)=> {
+    res.send(resultData);
+  });
 }

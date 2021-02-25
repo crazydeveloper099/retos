@@ -9,18 +9,22 @@ const cookieParser = require('cookie-parser');
 const fileUpload = require('express-fileupload');
 const flash = require('express-flash-messages');
 const functionFile=require('./data/dashboard_data.js');
-require('dotenv').config();
 
 const app=express();
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
+exports.io=io;
 
 
-
+require('dotenv').config();
 const login = require('./controllers/login.js');
 const signup = require('./controllers/Signup.js');
 const dashboard = require('./controllers/dashboard.js');
 const leaderboard = require('./controllers/leaderboard.js');
 const subscription = require('./controllers/subscription.js');
 const admin = require('./controllers/admin.js');
+const adminChat = require('./controllers/adminChat.js');
+
 const challenges = require('./controllers/Challenges.js');
 const adminPanel = require('./controllers/adminPanel.js');
 const declareResult =require('./controllers/declareResult.js');
@@ -40,16 +44,17 @@ const getPosterConsole = require('./controllers/posterConsole.js');
 const notificationClickHandler= require('./controllers/fcmClickHandler.js');
 const fcmChallenge= require('./controllers/fcmClickHandler.js');
 const manageChallenge =require('./controllers/manageChallenge.js');
+const payoutWinnersRoute =require('./controllers/payoutWinners.js');
+const userWallet=require('./controllers/userWallet');
 
 exports.rootPath=__dirname;
 app.use(fileUpload());
 app.use(cookieParser('secret'));
 app.use(express.static(__dirname + '/public'));
 app.use(flash());
-app.use(bodyParser.json());
-app.use(bodyParser.json()).use(bodyParser.urlencoded());
+app.use(bodyParser.json({ limit:'50MB'}));
+app.use(bodyParser.json({ limit:'50MB'})).use(bodyParser.urlencoded());
 app.set('view engine', 'ejs');
-
 
 
 app.get('/',function(req, res) {
@@ -75,6 +80,12 @@ app.post('/declareResult',declareResult.uploadMiddleWare);
 app.get('/challengeList', challengeList.getChallengeList);
 app.get('/getCategories',getCategories.getCaregoriesApi);
 app.get('/userConsole',adminUserOperations.getUserConsole);
+app.get('/payoutWinners',payoutWinnersRoute.renderPayoutWinners);
+app.get('/chats',adminChat.getLayout)
+app.get('/wallet',userWallet.showWallet)
+app.get('/fetchTransactions',userWallet.fetchTransactions)
+app.get('/fetchResultsStatus',challengeList.getResultStatus);
+
 app.post('/userConsole',adminUserOperations.postUserConsole);
 app.get('/blockedUser', blockedUser.getBlockedUser);
 app.get('/verifyUser', verifyUser.getVerifyUser);
@@ -96,7 +107,15 @@ app.get('/notifHandler', notificationClickHandler.challengeClicked);
 app.get('/notifLeaderboardHandler', notificationClickHandler.leaderboardClicked);
 app.get('/manageChallenge',manageChallenge.getManageScreen);
 app.post('/manageChallenge',manageChallenge.postManage);
+app.post('/loadChat',challenges.loadChat);
+app.post('/checkIfBlocked',challenges.checkIfBlocked);
+app.post('/processWithdraw',userWallet.processWithdraw)
+app.post('/payoutWinners',payoutWinnersRoute.changeStatusOfWithdrawal)
+app.get('/resendFgtPsswdCode',newPassword.getNewCode);
 
-app.listen(3000, function() {
+io.on('connection',challenges.socketFunctions);
+
+http.listen(3000, function() {
   console.log("Server started on port 3000");
 });
+

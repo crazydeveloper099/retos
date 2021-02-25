@@ -7,6 +7,16 @@
     
 <script type="text/javascript">
 $(document).ready(function() {
+
+  $('.btn-plus, .btn-minus').on('click', function(e) {
+  const isNegative = $(e.target).closest('.btn-minus').is('.btn-minus');
+  const input = $(e.target).closest('.input-group').find('input');
+  if (input.is('input')) {
+    input[0][isNegative ? 'stepDown' : 'stepUp']()
+  }
+})
+
+
   $(function () {
         $('#end_time').bootstrapMaterialDatePicker({
             format: 'YYYY-MM-DD HH:mm:ss',
@@ -17,8 +27,25 @@ $(document).ready(function() {
                 $(this).next('.custom-file-label').html(fileName);
     });  
     setInterval(()=>{
-      $('#gmtTimeNow').html('<br><i class="fas fa-clock" style="margin-right:1vw;"></i>'+moment.tz(new Date(), "GMT").utcOffset(-300).format("MM-DD-YYYY hh:mm:ss a"))
-      },1000)        
+      $('#gmtTimeNow').html('<br><i class="fas fa-clock" style="margin-right:1vw;"></i>'+moment.tz(new Date(), "GMT").utcOffset(-300).format("MM/DD/YYYY hh:mm:ss a"))
+      },1000)
+    var timeNow=moment.tz(new Date(), "GMT").utcOffset(-300).format("MM/DD/YYYY hh:mm:ss a");     
+    $('#In-YYYY').val(timeNow.split(' ')[0].split('/')[2]);
+    $('#In-MM').val(timeNow.split(' ')[0].split('/')[0]);
+    $('#In-DD').val(timeNow.split(' ')[0].split('/')[1]);
+    $('#In-hh').val(timeNow.split(' ')[1].split(':')[0]);
+    $('#In-mm').val(timeNow.split(' ')[1].split(':')[1]);
+    $('#In-ss').val(timeNow.split(' ')[1].split(':')[2]);
+
+    $('#am').click((e)=>{
+      e.preventDefault();
+      $('#am-pm').html('am');
+    })
+    $('#pm').click((e)=>{
+      e.preventDefault();
+      $('#am-pm').html('pm');
+    })
+
   var j=2;
   var new_cat=false;  
     $("#add_a_prize").click(function () { 
@@ -33,12 +60,17 @@ $(document).ready(function() {
         $('#label'+j).remove();
       });  
       $('#publishButton').click(function(){
+          if($('#am-pm').html().trim()=='am / pm'){
+            alert('Please select am / pm')
+          }
+          else{
+          var timeSelected=$('#In-MM').val()+'/'+$('#In-DD').val()+'/'+$('#In-YYYY').val()+' '+$('#In-hh').val()+':'+$('#In-mm').val()+':'+$('#In-ss').val()+' '+$('#am-pm').html().trim()
+          $('#end_time').val(timeSelected.trim())
           var prizeData=[];
           for(i=1;i<=j-1;i++){
                prizeData.push($('#list'+i).val());
           }
           var d = new Date();
-          
           if(new_cat){
 
            var category=$('#category_newId').val();
@@ -54,7 +86,8 @@ $(document).ready(function() {
             "minLevel":$('#mLevel').val(),
             "spots":$('#spots').val(),
             "createdAt":d.toLocaleString('en-US', { timeZone: 'America/New_York' }),
-            "ytLinkParticipation":$("#ytLinkParticipate").val()
+            "ytLinkParticipation":$('#ytLinkParticipate').find(":selected").val(),
+            "challengeBase":$('#challengeBase').is(":checked").toString()
           }
           $("#jsonData").val(JSON.stringify(obj));
           $('#uploadForm').submit();
@@ -73,11 +106,13 @@ $(document).ready(function() {
             "spots":$('#spots').val(),
             "minLevel":$('#mLevel').val(),
             "createdAt":d.toLocaleString('en-US', { timeZone: 'America/New_York' }),
-            "ytLinkParticipation":$("#ytLinkParticipate").val()   
+            "ytLinkParticipation":$('#ytLinkParticipate').find(":selected").val(),
+            "challengeBase":$('#challengeBase').is(":checked").toString()   
           }
           $("#jsonData").val(JSON.stringify(obj));
           $('#uploadForm').submit();
-      }   
+      }  
+    }
       });
       $("#add_category").click(function(){
           new_cat=true;  
@@ -98,6 +133,101 @@ $(document).ready(function() {
   ul {
   list-style-type: none;
 }
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 300px;
+  height: 75px;
+
+}
+
+.switch input {display:none;}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ca2222;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 65px;
+  width: 65px;
+  left: 7px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2ab934;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(222px);
+  -ms-transform: translateX(222px);
+  transform: translateX(222px);
+}
+
+/*------ ADDED CSS ---------*/
+.on
+{
+  display: none;
+}
+
+.on, .off
+{
+  color: white;
+  position: absolute;
+  transform: translate(-50%,-50%);
+  top: 50%;
+  left: 50%;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+input:checked+ .slider .on
+{display: block;}
+
+input:checked + .slider .off
+{display: none;}
+
+/*--------- END --------*/
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 80px;
+}
+
+.slider.round:before {
+  border-radius: 50%;}
+
+  .inline-group {
+  max-width: 12rem;
+  padding: .5rem;
+}
+
+.inline-group .form-control {
+  text-align: center;
+}
+
+.form-control[type="number"]::-webkit-inner-spin-button,
+.form-control[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
 </style>
 
 <div class="jumbotron jumbotron-fluid" style="background-color:transparent; text-align:center;">
@@ -114,7 +244,6 @@ $(document).ready(function() {
 
 
     <div style="margin :0 auto; padding:2%; padding-left:5%; padding-right:5%; width:800px; background:rgba(255,255,255,1); border-radius:15px;">
-      <h5 id='gmtTimeNow' style="color: black;"><strong></strong></h5>
 
   <div class="col-sm">
     <div style="color:#a8a8a8; font-size:1.5rem; margin-top:20px; ">
@@ -157,13 +286,115 @@ $(document).ready(function() {
    <label for="exampleInputPassword1">Challenge Description</label>
    <textarea name="desc" class="form-control" id="desc" rows="3"></textarea>
  </div>
-<!-- <div class="form-group">
-  <label for="exampleInputPassword1">Start Time</label>
-  <input name="startTime" type="text" class="form-control" id="start_time" placeholder="2020-09-15 23:59:00">
-</div> -->
- <div class="form-group">
-  <label for="exampleInputPassword1">End Time</label>
-  <input name="endTime" type="text" class="form-control result" id="end_time" placeholder="YYYY-MM-DD HH:MM:SS">
+ <h5 id='gmtTimeNow' style="color: black;"><strong></strong></h5>
+ <div class="form-group" style="display: inline-block;">
+
+  <input style="display: none;" name="endTime" type="text" class="form-control result" id="end_time" placeholder="YYYY-MM-DD HH:MM:SS">
+  
+  <div > 
+    <label for="quantity">YYYY</label>
+    <div class="input-group inline-group">
+
+    <div class="input-group-prepend">
+      <button class="btn btn-outline-secondary btn-minus">
+        <i class="fa fa-minus"></i>
+      </button>
+    </div>
+    <input id='In-YYYY' class="form-control quantity" min="2021" max="2030" name="quantity" value="1" type="number">
+    <div class="input-group-append">
+      <button class="btn btn-outline-secondary btn-plus">
+        <i class="fa fa-plus"></i>
+      </button>
+    </div>
+  </div>
+  <label for="quantity">MM</label>
+  <div class="input-group inline-group">
+
+    <div class="input-group-prepend">
+      <button class="btn btn-outline-secondary btn-minus">
+        <i class="fa fa-minus"></i>
+      </button>
+    </div>
+    <input id="In-MM" class="form-control quantity" min="1" max="12" name="quantity" value="1" type="number">
+    <div class="input-group-append">
+      <button class="btn btn-outline-secondary btn-plus">
+        <i class="fa fa-plus"></i>
+      </button>
+    </div>
+  </div>
+  <label for="quantity">DD</label>
+  <div class="input-group inline-group">
+
+  <div class="input-group-prepend">
+      <button class="btn btn-outline-secondary btn-minus">
+        <i class="fa fa-minus"></i>
+      </button>
+    </div>
+    <input id="In-DD" class="form-control quantity" min="1" max="31" name="quantity" value="1" type="number">
+    <div class="input-group-append">
+      <button class="btn btn-outline-secondary btn-plus">
+        <i class="fa fa-plus"></i>
+      </button>
+    </div>
+  </div>
+  <label for="quantity">hh</label>
+  <div class="input-group inline-group">
+    <div class="input-group-prepend">
+      <button class="btn btn-outline-secondary btn-minus">
+        <i class="fa fa-minus"></i>
+      </button>
+    </div>
+    <input id="In-hh" class="form-control quantity" min="00" max="12" name="quantity" value="1" type="number">
+    <div class="input-group-append">
+      <button class="btn btn-outline-secondary btn-plus">
+        <i class="fa fa-plus"></i>
+      </button>
+    </div>
+  </div>
+  <label for="quantity">mm</label>
+  <div class="input-group inline-group">
+    <div class="input-group-prepend">
+      <button class="btn btn-outline-secondary btn-minus">
+        <i class="fa fa-minus"></i>
+      </button>
+    </div>
+    <input id="In-mm" class="form-control quantity" min="00" max="59" name="quantity" value="1" type="number">
+    <div class="input-group-append">
+      <button class="btn btn-outline-secondary btn-plus">
+        <i class="fa fa-plus"></i>
+      </button>
+    </div>
+  </div>
+  <label for="quantity">ss</label>
+  <div class="input-group inline-group">
+    <div class="input-group-prepend">
+      <button class="btn btn-outline-secondary btn-minus">
+        <i class="fa fa-minus"></i>
+      </button>
+    </div>
+    <input id="In-ss" class="form-control quantity" min="00" max="59" name="quantity" value="1" type="number">
+    <div class="input-group-append">
+      <button class="btn btn-outline-secondary btn-plus">
+        <i class="fa fa-plus"></i>
+      </button>
+    </div>
+  </div>
+  <div>
+    <div class="dropdown">
+      <button class="btn btn-secondary dropdown-toggle" type="button" id="am-pm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        am / pm
+      </button>
+      <div class="dropdown-menu" aria-labelledby="am-pm">
+        <a id="am" class="dropdown-item" href="">am</a>
+        <a id="pm" class="dropdown-item" href="">pm</a>
+      </div>
+    </div>
+  </div>
+  </div>
+
+
+
+
 </div>
 
 <div class="form-group">
@@ -212,8 +443,26 @@ $(document).ready(function() {
 
 <div class="form-group">
   <label for="exampleInputPassword1">Youtube Instruction link for players participating</label>
-  <input name="ytInsLinkParticipate" class="form-control" id="ytLinkParticipate" placeholder="Paste <iframe> code here"></input>
+  <div class="input-group mb-3">
+    <select name="ytInsLinkParticipate" class="custom-select" id="ytLinkParticipate">
+      <option selected>Choose...</option>
+      <%videoPresetsData.Items.map(iframeCode=>{ %>
+        <option value="<%=iframeCode.iframeCode%>"><%=iframeCode.video_id%></option>
+    <%})%>
+      
+    </select>
+  </div>
 </div>
+
+<div class="form-group">
+  <label class="switch">
+    <input type="checkbox" id="challengeBase">
+    <div class="slider round">
+     <span class="on">CUSTOM LOBBY</span>
+     <span class="off">CHALLENGE</span>
+    </div>
+   </label></div>
+
  <button type="submit" id="publishButton" class="btn btn-dark">Publish</button>
 </div>
 </div>

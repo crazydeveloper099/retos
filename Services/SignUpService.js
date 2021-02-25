@@ -86,7 +86,6 @@ exports.forgetPassword=(email, callback)=>{
   let cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
   cognitoUser.forgotPassword({
     onSuccess: function(data) {
-        console.log('CodeDeliveryData from forgotPassword: ' + data);
         callback(null,data);
     },
     onFailure: function(err) {
@@ -94,15 +93,7 @@ exports.forgetPassword=(email, callback)=>{
       callback(err,null);
     },
     inputVerificationCode: function(data) {
-        console.log('Code sent to: ' + data);
-        callback(null,data);
-        cognitoUser.confirmPassword(code,password, {
-            onSuccess() {
-
-            },
-            onFailure(err) {
-            },
-        });
+        callback(null,data);        
     },
 });
 };

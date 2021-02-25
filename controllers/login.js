@@ -62,10 +62,10 @@ const subscriptionFetcher = (phone,res , callback) => {
 
 
 exports.Login = function(req, res){
-
   const data={
     username: req.body.email,
-    password: req.body.password
+    password: req.body.password,
+    token: req.body.token
   };
   authService.Login(data,function(err,result){
 
@@ -74,6 +74,10 @@ exports.Login = function(req, res){
     dashboardData.fetchSingleUser( result.idToken.payload.email,(errFetch, sucFetch)=>{
     if(errFetch){res.send(errFetch);}
     else{
+      dashboardData.updateUserFBToken(result.idToken.payload.email,req.body.token,()=>{
+
+     
+      console.log(sucFetch);
     subscriptionFetcher(sucFetch.Item.phone.S,res, ()=>{
       console.log(model.end_date);
       console.log(sucFetch.Item.phone.S);
@@ -91,6 +95,7 @@ exports.Login = function(req, res){
       }
    
   })
+})
   }
       })  
     }

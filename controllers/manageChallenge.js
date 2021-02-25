@@ -20,26 +20,27 @@ exports.getManageScreen=(req,res)=>{
     const isValidLogin = req.cookies.isValid;
     if (isValidLogin) {
       unitChallenge = cookie.manageChallenge;
-      
+      data.fetchVideoPresetsData((errFetching, videoPresetsData) => {
         data.fetchSingleChallenge(unitChallenge, (err, userData) => {   
           if (userData) {  
             global.challengeData=userData.Item;  
-            console.log(userData.Item)         
               res.render('manageChallenge', {
                 name: typeof(cookie.adminUser) === 'undefined' ? null : cookie.adminUser,
                 unitChallenge: userData.Item,
                 userDataNew: userData,
                 end_date: null,
-                isPasswordPublished:userData.Item.passwordTimer.S!='null'?true:false
+                isPasswordPublished:userData.Item.passwordTimer.S!='null'?true:false,
+                videoPresetsData
             });
           } else res.send(err);
         });
+      });
   } else res.redirect('/admin');    
 }
 
 exports.postManage=(req,res)=>{
-  let postData=JSON.parse(req.body.jsonData);
 
+  let postData=JSON.parse(req.body.jsonData);
   let challengeData1=global.challengeData;
 
 
@@ -55,10 +56,8 @@ exports.postManage=(req,res)=>{
   
   if(postData[6].length>0){
     challengeData1.password=JSON.stringify(postData[6])
-    let d1 = new Date (moment.tz(new Date(), "GMT").utcOffset(-300).format("MM-DD-YYYY hh:mm:ss a"));
-    let d2 = new Date ( d1 );
-    d2.setMinutes ( d1.getMinutes() + 10 );
-    challengeData1.passwordTimer=String(d2);
+    let d1 = moment(moment.tz(new Date(), "GMT").utcOffset(-300).format("MM/DD/YYYY hh:mm:ss a"),'MM/DD/YYYY hh:mm:ss a').add(10, 'minutes');
+    challengeData1.passwordTimer=String(d1);
     if("usersData" in challengeData1){
       for(i=0;i<JSON.parse(challengeData1.usersData.S).length;i++){
         if(JSON.parse(challengeData1.usersData.S)[i].fcmToken!=='null'){
@@ -67,8 +66,6 @@ exports.postManage=(req,res)=>{
       }
     }
     action="PASSWORD_ANNOUNCED"
-   
-    
   }
   else if(challengeData1.passwordTimer.S=='null'){
       challengeData1.password='[]';
@@ -84,11 +81,9 @@ exports.postManage=(req,res)=>{
     challengeData1.isMatchEnded={S:'true'}
   }
  
-  if(postData[7]!=null){
-    console.log(true)
-    challengeData1.ytLinkLobbyTutorial={S:postData[7]}
-  }
-  data.updateChallenge(challengeData1,tokenArr,action,(err,resp)=>{
+  if(postData[7]!=='Choose'){ challengeData1.ytLinkLobbyTutorial={S:postData[7]}}
+ 
+  data.updateChallenge( challengeData1,tokenArr,action,(err,resp)=>{
     if(resp){
         res.cookie('updatedChallenge', true, {
             httpOnly: true

@@ -1,24 +1,33 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-
 <head>
+  <%if(typeof(isChallengeHeader)!=='undefined' && isChallengeHeader){%>
+  <meta property="og:image" content="<%=src%>" />
+  <meta property="og:description" content='¡Ven y participa conmigo en el reto <%- challengeName %>, de Retos Gamer! ¡Únete a Retos Gamer y participa por grandes PREMIOS!' />
+  <meta property="og:title" content="Retos Gamer" />
+  <%}%>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no">
+  
   <title>Retos Gamer</title>
-  <meta charset="utf-8">
   <link rel="icon" type="image/png" href="/images/RG_16x16.png"/>
-  <link rel="stylesheet" type="text/css" href="css/card_style.css" />
-  <link rel="stylesheet" type="text/css" href="css/carousel.css" />
-  <link rel="stylesheet" href="css/font-awesome.min.css"/>
-  <link rel="stylesheet" href="css/magnific-popup.css"/>
-  <link rel="stylesheet" href="css/animate.css"/>
-  <link rel="stylesheet" href="css/slicknav.min.css"/>
-  <link rel="stylesheet" href="css/testimonial.css"/>
-  <link rel="stylesheet" href="css/simple-sidebar.css" >
-  <link rel="stylesheet" href="css/tab_style.css"/>
-  <link rel="stylesheet" href="css/challenge_player_table.css"/>
-  <link rel="stylesheet" href="css/progressBar_challenge.css"/>
+  <link rel="stylesheet" type="text/css" href="/css/card_style.css" />
+  <link rel="stylesheet" type="text/css" href="/css/carousel.css" />
+  <link rel="stylesheet" href="/css/font-awesome.min.css"/>
+  <link rel="stylesheet" href="/css/magnific-popup.css"/>
+  <link rel="stylesheet" href="/css/animate.css"/>
+  <link rel="stylesheet" href="/css/slicknav.min.css"/>
+  <link rel="stylesheet" href="/css/testimonial.css"/>
+  <link rel="stylesheet" href="/css/simple-sidebar.css" >
+  <link rel="stylesheet" href="/css/tab_style.css"/>
+  <link rel="stylesheet" href="/css/challenge_player_table.css"/>
+  <link rel="stylesheet" href="/css/progressBar_challenge.css"/>
+  <link rel="stylesheet" href="/css/chatStyle.css"/>
+  <link rel="stylesheet" href="/css/progressBar_challenge.css"/>
+  <link rel="stylesheet" href="/css/emoji_keyboard.css" />
 
-
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Monoton&display=swap" rel="stylesheet">
@@ -26,26 +35,32 @@
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.1/css/mdb.min.css" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=PT+Sans:wght@700&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Rowdies:wght@700&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Public+Sans&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@800&display=swap" rel="stylesheet">
-
+  <link href="https://fonts.googleapis.com/css2?family=PT+Sans:wght@700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Rowdies:wght@700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@800&display=swap" rel="stylesheet">
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.1/js/mdb.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/jquery.waypoints.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.theme.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.32/moment-timezone-with-data.js"></script> 
- 
-    <script src="js/jquery.rcounter.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/jquery.waypoints.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.theme.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.32/moment-timezone-with-data.js"></script> 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.4.6/fuse.min.js" integrity="sha512-FwWaT/y9ajd/+J06KL9Fko1jELonJNHMUTR4nGP9MSIq4ZdU2w9/OiLxn16p/zEOZkryHi3wKYsnWPuADD328Q==" crossorigin="anonymous"></script>
+  <script src="/js/emoji_keyboard.js"></script>
+  <script id=client_script src="/js/chatLogic.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.70/pdfmake.min.js" integrity="sha512-HLbtvcctT6uyv5bExN/qekjQvFIl46bwjEq6PBvFogNfZ0YGVE+N3w6L+hGaJsGPWnMcAQ2qK8Itt43mGzGy8Q==" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js" integrity="sha512-s/XK4vYVXTGeUSv4bRPOuxSDmDlTedEpMEcAQk0t/FMd9V6ft8iXdwSBxV0eD60c6w/tjotSlKu9J2AAW1ckTA==" crossorigin="anonymous"></script>
+  
+  <script src="/js/jquery.rcounter.js"></script>
+  <script src="/js/shareModal.js"></script>
+
 <script src="https://static.landbot.io/landbot-widget/landbot-widget-1.0.0.js"></script>
 <style>
   .navbar-toggler-icon{
@@ -96,14 +111,14 @@
         console.log('Token refreshed.');
         // setTokenSentToServer(false);
         // sendTokenToServer(refreshedToken);
-      }).catch((err) => {
+       }).catch((err) => {
         console.log('Unable to retrieve refreshed token ', err);
       });       
     });
   </script>
   <% } %>
 <nav 
-class="navbar sticky-top navbar-expand-lg navbar-dark mobile-otpimizeNav-cl" 
+class="navbar sticky-top navbar-expand-lg navbar-dark mobile-otpimizeNav-cl " 
 style="background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(4px);  border-bottom: 0.01px solid rgba(255, 255, 255, 0.5);padding:0.5vh; ">
 
 <a href="/dashboard"><img class="navbar-brand" src="/images/RG 5.png" style="height: 6vh;" alt="logo"></a>
@@ -125,20 +140,23 @@ dropdown-menu > li > a:hover {
 <div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown">
   <ul class="navbar-nav">
     <li class="nav-item px-2">
-      <a class="nav-link" href="/" style="font-size: 4vw;;"> INICIO </a>
+      <a class="nav-link" href="/" style="font-size: 4vw;"> INICIO </a>
     </li>
     <li class="nav-item px-2">
-      <a class="nav-link" href="/leaderboard" style="font-size: 4vw;;"> CLASIFICACIONES</a>
+      <a class="nav-link" href="/leaderboard" style="font-size: 4vw;"> CLASIFICACIONES</a>
     </li>
     <li class="nav-item px-2">
-      <a class="nav-link" href="/aboutUs" style="font-size: 4vw;;"> NOSOTROS</a>
+      <a class="nav-link" href="/aboutUs" style="font-size: 4vw;"> NOSOTROS</a>
     </li>
       <% if (name!=null) { %>
+        <!-- <li class="nav-item px-2">
+          <a class="nav-link" href="/myProfile" style="font-size: 4vw;"> MI PERFIL</a>
+        </li> -->
         <li class="nav-item px-2">
-          <a class="nav-link" href="/myProfile" style="font-size: 4vw;;"> MI PERFIL</a>
+          <a class="nav-link nav-txt-clr a1" style="color:white;" href="/wallet" > MI BILLETERA</a>
         </li>
     <li class="nav-item dropdown px-2">
-     <a class="nav-link dropdown-toggle"" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"style="font-size: 4vw;;">
+     <a class="nav-link dropdown-toggle"" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"style="font-size: 4vw;">
     CUENTA
      </a>
 
@@ -154,7 +172,7 @@ dropdown-menu > li > a:hover {
     <% if (name==null) { %>
       <li class="d-inline-block align-top" style="color:white;" >
         <form method="get" action="/login">
-          <button type="submit" class="btn btn-outline-warning" style="font-size: 4vw;;">Iniciar sesión</button>
+          <button type="submit" class="btn btn-outline-warning" style="font-size: 4vw;;">INICIAR SESIÓN</button>
       </form>
       </li>
       <% } %>
@@ -169,7 +187,7 @@ dropdown-menu > li > a:hover {
           name="more_challenges" 
           style="font-size: 4vw;"
           class="button-view-all c-buttonJoin" >                    
-          cerrar sesión
+          CERRAR SESIÓN
             <i class="fas fa-chevron-right" style="margin-left:1vw;"></i>           
           </button>      </form>
         <% } %>
@@ -193,74 +211,42 @@ dropdown-menu > li > a:hover {
     </script>
 <div id="wrapper">
   <aside id="sidebar-wrapper" >
-    <div class="sidebar-brand" style="width:100%;text-align: center;">
-      <a href="/" style="font-size:1.5rem; font-family: 'BIGMACCA';color: black;">RETOS GAMER</a>
-    </div>
+    <!-- <div class="sidebar-brand" style="width:100%;text-align: center;">
+      <a href="/" style="font-size:2vw; font-family: 'BIGMACCA';color: white ;">RG</a>
+    </div> -->
     <ul class="sidebar-nav">
+      <li>
+        <a class="" href="/"style="font-size:2.2vw; font-family: 'BIGMACCA';color: white ;">RG</a>
+      </li>
       <li class="active">
-        <a class="" href="/" ><i class='fa fas fa-home' ></i>HOGAR </a>
+        <a class="" href="/" ><i class="fas fa-home" style="font-size:2.2vw;color:#a8a8a8;"></i><br/>INICIO </a>
       </li>
       <li>
-        <a class="" href="/leaderboard" ><i class="fa fa-trophy" style="font-size:1vw;"></i>CLASIFICACIONES</a>
+        <a class="" href="/leaderboard" ><i class="fa fa-trophy" style="font-size:2.2vw;color:#a8a8a8;"></i><br/>CLASIFICACIONES</a>
       </li>
       <li>
-        <a class="" href="/aboutUs" ><i class="fa fa-info-circle" style="font-size:1vw;"></i>NOSOTROS</a>
+        <a class="" href="/aboutUs" ><i class="fa fa-info-circle" style="font-size:2.2vw;color:#a8a8a8;"></i><br/>NOSOTROS</a>
       </li>
       <% if (name!=null) { %>
-        <li >
-          <a class="" href="/myProfile" ><i class="fa fa-user" style="font-size:1vw;"></i>MI PERFIL</a>
+        <!-- <li >
+          <a class="" href="/myProfile" ><i class="fa fa-user" style="font-size:2.2vw;color:#a8a8a8;"></i><br/>MI PERFIL</a>
+        </li> -->
+        <li>
+          <a class=""  href="/wallet" > <i class="fas fa-wallet" style="font-size:2.2vw;color:#a8a8a8;"></i><br/>MI BILLETERA</a>
         </li>
-    <li >
-     <a class="dropdown-toggle"" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      <i class="fa fa-credit-card" style="font-size:1vw;"></i>CUENTA
-     </a>
-     
-     <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="background-color: #0e1111 !important;">
-       <% if (end_date!=null && end_date!="") { %>
-        <% var end_date_formatted =end_date.substring(0,4)+"/"+end_date.substring(4,6)+"/"+end_date.substring(6,8) %>
-        <a class="dropdown-item dropdown-item-color" href="#" style="color:white;">Tu subscripción expira en: <br><%= end_date_formatted %></a>
-       <% } %>
-       <% if (end_date==null || end_date=="") { %>  
-        <div style="padding:0.5vw;text-align: center;">
-        <p style="color: white;font-size: 1vw;">No tienes una suscripción activa</p>
-
-
-        <button
-        id=""
-        type="submit"
-        name="more_challenges"
-        class="button-view-all c-buttonSubs"
-        style="font-size: 1vw;background:red;">                    
-        <strong>Recarga tu suscripción</strong><i class="fas fa-chevron-right" style="margin-left:1vw;"></i>
-      </button>
-    </div>
-      <% } %>
-
-     </div>
-   </li >
+      
 
      <% } %>
      <% if (name==null) { %>
-      <li style="color:white;" >
-        <form method="get" action="/login">
-          <button type="submit" class="btn btn-warning" >Iniciar sesión</button>
-      </form>
+      <li  >
+        <a href="/login" style="font-size: 0.7vw;"><i class="fas fa-sign-in-alt" style="font-size:2.2vw;color:#a8a8a8;"></i><br/>INICIAR SESIÓN</a>
       </li>
       <% } %>
       <% if (name!=null) { %>
         
-        <li  style="margin-top: 1.5vw;">
-        <form method="get" action="/logout">
-          <button
-          id=""
-          type="submit" 
-          name="more_challenges" 
-          class="button-view-all c-buttonJoin"
-          style="font-size: 1vw;background-color: red;">                    
-          cerrar sesión<i class="fa fa-power-off" style="margin-left: 1vw;"></i>
-          </button>
-      </form>
-    </li>
+        <li >
+          <a href="/logout" style="font-size: 0.7vw;"><i class="fas fa-sign-out-alt" style="font-size:2.2vw;color:#a8a8a8;"></i><br/>CERRAR SESIÓN</a>
+      </li>
         <% } %>
     </ul>
   </aside>

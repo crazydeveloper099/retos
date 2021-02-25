@@ -4,6 +4,8 @@ const pathToServiceAccount=path.resolve('./controllers/fb_admin_sdk.json');
 const serviceAccount = require(pathToServiceAccount);
 const fetch = require('node-fetch');
 const dotenv = require('dotenv');
+const moment = require('moment-timezone');
+moment().toString();
 dotenv.config();
 
 
@@ -49,9 +51,9 @@ exports.sendToTopic=(challengeName,challengeId,callback)=>{
     webpush: {
       notification:{
         title:challengeName+" Challenge añadido",
-        body:"Check prizes now!",
+        body:"¡Únete y entra a la sala para ganar!",
         icon: 'https://retos-bucket.s3.us-east-2.amazonaws.com//retos/rg.png',
-        click_action: 'https://retosgamer.com/notifHandler?chid='+challengeId
+        click_action: 'https://retosgamer.com/challenge?id='+challengeId  
     },
   },
     topic: 'all'
@@ -68,31 +70,6 @@ admin.messaging().send(message)
   });
 }
 
-exports.sendToTopicResults=(challengeName,challengeId,callback)=>{
-
-  const message = {
-    
-  webpush: {
-    notification:{
-      title:challengeName+" Results Declared!",
-      body:"Check your winnings now!",
-      icon: 'https://retos-bucket.s3.us-east-2.amazonaws.com//retos/rg.png',
-      click_action: 'https://retosgamer.com/notifLeaderboardHandler?chid='+challengeId
-  },
-},
-  topic: 'all'
-};
-
-admin.messaging().send(message)
-  .then((response) => {
-    console.log('Successfully sent message:', response);
-    callback(null,response);
-  })
-  .catch((error) => {
-    console.log('Error sending message:', error);
-    callback(error,null);
-  });
-}
 
 
 exports.sendToTopicResults=(challengeName,challengeId,callback)=>{
@@ -101,36 +78,10 @@ exports.sendToTopicResults=(challengeName,challengeId,callback)=>{
     
   webpush: {
     notification:{
-      title:challengeName+" Results Declared!",
-      body:"Check your winnings now!",
+      title:challengeName+" resultados anunciados",
+      body:"Check standings now!",
       icon: 'https://retos-bucket.s3.us-east-2.amazonaws.com//retos/rg.png',
-      click_action: 'https://retosgamer.com/notifLeaderboardHandler?chid='+challengeId
-  },
-},
-  topic: 'all'
-};
-
-admin.messaging().send(message)
-  .then((response) => {
-    console.log('Successfully sent message:', response);
-    callback(null,response);
-  })
-  .catch((error) => {
-    console.log('Error sending message:', error);
-    callback(error,null);
-  });
-}
-
-exports.sendToTopicResults=(challengeName,challengeId,callback)=>{
-
-  const message = {
-    
-  webpush: {
-    notification:{
-      title:challengeName+" Results Declared!",
-      body:"Se ha añadido una nueva sala",
-      icon: 'https://retos-bucket.s3.us-east-2.amazonaws.com//retos/rg.png',
-      click_action: 'https://retosgamer.com/notifLeaderboardHandler?chid='+challengeId
+      click_action: 'https://retosgamer.com/leaderBoardChallenge?id='+challengeId
   },
 },
   topic: 'all'
@@ -148,9 +99,8 @@ admin.messaging().send(message)
 }
 
 exports.challengeNotification=(action,resultTime,challengeId,challengeName,callback)=>{
-  console.log("-----------------");
-  console.log(action)
-  console.log("-----------------");
+  
+
 
     const message = {webpush: {},topic: 'all'};
     
@@ -159,23 +109,50 @@ exports.challengeNotification=(action,resultTime,challengeId,challengeName,callb
         {title:challengeName+" El código de la sala ha sido anunciado",
         body:"¡Únete y entra a la sala para ganar!",
         icon: 'https://retos-bucket.s3.us-east-2.amazonaws.com//retos/rg.png',
-        click_action: 'https://retosgamer.com/notifLeaderboardHandler?chid='+challengeId}  
+        click_action: 'https://retosgamer.com/challenge?id='+challengeId}  
     } 
     else if(action==='DETAILS_UPDATED'){
       message.webpush.notification=
       {title:'Se ha modificado el evento '+challengeName,
       body:"Mira los cambios ahora.",
       icon: 'https://retos-bucket.s3.us-east-2.amazonaws.com//retos/rg.png',
-      click_action: 'https://retosgamer.com/notifLeaderboardHandler?chid='+challengeId}  
+      click_action: 'https://retosgamer.com/challenge?id='+challengeId}  
       } 
+
     else if(action==='MATCH_ENDED'){
+
       message.webpush.notification=
       {title:challengeName+" encima",
-      body:"El resultado se anunciará en "+resultTime,
+      body:"",
       icon: 'https://retos-bucket.s3.us-east-2.amazonaws.com//retos/rg.png',
-      click_action: 'https://retosgamer.com/notifLeaderboardHandler?chid='+challengeId}  
+      click_action: 'https://retosgamer.com/challenge?id='+challengeId}  
+    
+
+
+      var now = moment(moment.tz(new Date(), "GMT")
+                .utcOffset(-300).format("MM/DD/YYYY hh:mm:ss a"),'MM/DD/YYYY hh:mm:ss a')
+                .valueOf()
+      var distance = new Date(resultTime.S).getTime() - now;
+      var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    if(days<1){
+      if(hours>0){
+        message.webpush.notification.body="El resultado se anunciará en "+hours+" horas y "+minutes + " minutos";  
+      }
+      else{
+        message.webpush.notification.body="El resultado se anunciará en "+minutes + "minutos ";
+      }
+    }
+     
+    else{
+      message.webpush.notification.body="El resultado se anunciará en "+days+" day(s)";  
     }  
-  
+  }
+     
+  console.log('*-------------------------------------------------------------*');
+console.log(message);
+console.log('*-------------------------------------------------------------*');
   
   admin.messaging().send(message)
     .then((response) => {

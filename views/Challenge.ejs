@@ -1,8 +1,11 @@
 <%- include('partials/header_challengeList') %>
 
+<script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+<link rel="stylesheet" href="/style/pulseAnimation.css">
+
 <script type="text/javascript">
   $(document).ready(function() {
-   
+
   $(".meter-m > span").each(function() {
 	    $(this)
 	  	.data("origWidth", $(this).width())
@@ -11,32 +14,65 @@
 			  width: $(this).data("origWidth")
 		  }, 1200);
   });
- 
   
+    $('.loginButtonForClick').click(()=>{
+      $.cookie("redirectCookie", JSON.stringify({action:"FOWD_CHG",id:$('#challengeID').val()}));
+      window.location.href = window.location.origin+"/login";
+    })
+    $('#btn-share').click(()=>{
+      $('#exampleModalCenterExpShare').modal('show');            
+    })
+
+    document.getElementById("copyButton").addEventListener("click", copy_password);
+    function copy_password(e) {
+        e.preventDefault()
+
+        navigator.clipboard.writeText('https://retosgamer.com/challenge?id='+$('#challengeID').val()).then(function () {
+          $("#copyButton").html('Link Copied!')
+        });
+    }
 
     var iframeHTML=$(($('#ytLinkTutorial').val())).prop( 'id','iframeTut');
     $('#modalVideoRow').html(iframeHTML);
-    $('#button_Join').show();;
+   
+
     var isParticipated=$('#isParticipated').val();
     var password=$('#password').val();
     var endDateChallenge=$('#endTimeChallenge').val();
     var passwordTimer=$('#passwordTimer').val();
     if(isParticipated==='true'){
       $('#button_Join').prop('disabled', true);
+      $('#button_Join_mobile').prop('disabled', true);
+      $('#message_form_input').attr("placeholder", "Chatting publically as "+$('#userGameName').val());
     }
     if(endDateChallenge){
         $('#exampleModalCenterExp').modal('show');      
     }
+    if(passwordTimer!='null' ){
+      $('#passwordDialogButton').html('Ver contraseña de sala<i class="fa fa-info" style="margin-left: 0.6vw;" aria-hidden="true" ></i>');
+    }
+
     if(password!='null' ){
-        $('#passwordDialogButton').show()
+      $('#passwordDialogButton').attr('disabled' , false);
         for(var i=0;i<JSON.parse(password).length;i++) {
           $('#modalVideo-PasswordRow').append('<h4 style="color: white;padding-bottom:1vw ;">'+JSON.parse(password)[i].key+': <strong>'+
-            JSON.parse(password)[i].value+'</strong></h4>')
+          JSON.parse(password)[i].value+'</strong></h4>')
         }
         var iframeLobbyVideoHTML=$(($('#ytLinkLobbyTutorial').val())).prop('id','iframeLobbyTut');
         $('#modalVideo-PasswordRow').append(iframeLobbyVideoHTML)
-        $('#exampleModalCenterExpPass').modal('show');
+        if(typeof $.cookie("passwordDialogShown:"+$('#challengeID').val())   === 'undefined'){
+          $.cookie('passwordDialogShown:'+$('#challengeID').val(), 'true',{ expires: 1 });
+          $('#exampleModalCenterExpPass').modal('show');
+        }         
     }
+
+    $('#closeFeedbackDialog').click(()=>{
+      $.cookie('feedbackDialogShown:'+$('#challengeID').val(), 'true',{ expires: 1 });
+    })
+    $('#feedbackModalButton').click(()=>{
+      $('#exampleModalCenterExpFeedback').modal('toggle');
+      $.cookie('feedbackDialogShown:'+$('#challengeID').val(), 'true',{ expires: 1 });
+    })
 
     $('#tutorialDialogButton').click(()=>{
       $('#ytVideoParticipationTutorial').modal('show');
@@ -58,95 +94,169 @@
       $('#iframeLobbyTut').attr('src', url);
     })
 
+    
+   
+    if(passwordTimer=='null' && $('#isMathEnded').val()!='true'){
+    var time12=$('#challengeTime').val();
+      var countDownDate1= new Date(time12).getTime()
+
+      var now = new Date(moment.tz(new Date(), "GMT").utcOffset(-300).format("MM/DD/YYYY hh:mm:ss a")).getTime();
+
+      var distance = countDownDate1 - now;
+      var challengeTimeInterval=setInterval(function() {
+      var timer="";
+      var now = new Date(moment.tz(new Date(), "GMT").utcOffset(-300).format("MM/DD/YYYY hh:mm:ss a")).getTime();
+      var distance = countDownDate1 - now;
+      var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      if(days===0 && ($('#button_Join').html()!='Finalizado' || $('#button_Join_mobile').html()!='Finalizado')){
+        document.getElementById('timeBanner').innerHTML =   '<i class="fa fa-clock-o" style="margin-right:0.5vw" aria-hidden="true"></i>'+hours + "hr " + minutes + "min "+ seconds+"sec ";  
+      }
+      else if(days>=1 && ($('#button_Join').html()!='Finalizado' || $('#button_Join_mobile').html()!='Finalizado')){ 
+        document.getElementById('timeBanner').innerHTML = 'Starts en: '+days+" day(s)"
+      }
+      else {
+
+        document.getElementById('timeBanner').innerHTML = 'Contraseña por anunciarse';
+        $('#button_Join').prop('disabled', true);
+          $('#button_Join').css('background-color', 'gray');
+          $('#button_Join').html('por empezar');
+
+          $('#button_Join_mobile').prop('disabled', true);
+          $('#button_Join_mobile').css('background-color', 'gray');
+          $('#button_Join_mobile').html('por empezar');
+          clearInterval(challengeTimeInterval);
+
+      }
+    },1000)
+  }
+
+
+
     if(passwordTimer!='null' && $('#isMathEnded').val()!='true'){
-      var now = moment(moment.tz(new Date(), "GMT").utcOffset(-300).format("MM-DD-YYYY hh:mm:ss a"),'MM-DD-YYYY hh:mm:ss a').valueOf()
-      var distance = new Date(passwordTimer).getTime() - now;
-      setInterval(function() {
-        var timer="";
-        var now = moment(moment.tz(new Date(), "GMT").utcOffset(-300).format("MM-DD-YYYY hh:mm:ss a"),'MM-DD-YYYY hh:mm:ss a').valueOf()
-        var distance = new Date(passwordTimer).getTime() - now;
+      
+      
+      var passwordTimerInterval=setInterval(function() {
+        var now = moment(moment.tz(new Date(), "GMT").utcOffset(-300).format("MM/DD/YYYY hh:mm:ss a"),'MM/DD/YYYY hh:mm:ss a').valueOf()
+        var distance = moment(moment.tz(passwordTimer, "GMT").format("MM/DD/YYYY hh:mm:ss a"),'MM/DD/YYYY hh:mm:ss a').valueOf() - now;
         var days = Math.floor(distance / (1000 * 60 * 60 * 24));
         var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
         var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-        if(days===0){
-          
-          document.getElementById('timeBannerPass').style.display='table';
-          // document.getElementById('timeBannerPass').css('width','fit-content');
-          document.getElementById('timeBannerPass').innerHTML =   'Starts In: '+minutes + "M " + seconds + "S ";  
-        }
+
         if(distance<0){
-          document.getElementById('timeBannerPass').style.display='table';
-          document.getElementById('timeBannerPass').innerHTML ="La sala ha comenzado"
-        $('#button_Join').prop('disabled', true);
-        $('#button_Join').css('background-color', 'gray');
-        $('#button_Join').html('Expired');
-      }
+          document.getElementById('timeBanner').innerHTML ="La sala ha comenzado"
+          $('#button_Join').prop('disabled', true);
+          $('#button_Join').css('background-color', 'black');
+          $('#button_Join').css({"border-color": "red", "border-width":"1px", "border-style":"solid",});
+          $('#button_Join').html('Sala en progreso');
+
+          $('#button_Join_mobile').prop('disabled', true);
+          $('#button_Join_mobile').css('background-color', 'black');
+          $('#button_Join_mobile').css({"border-color": "red", "border-width":"1px", "border-style":"solid"});
+          $('#button_Join_mobile').html('Sala en progreso');
+          clearInterval(passwordTimerInterval)
+        }
+        else if(days==0){
+          if(minutes>=8){
+            document.getElementById('timeBanner').innerHTML =   'Last : '+(parseInt(minutes)-8).toString() + "min "+ seconds+"sec ";  
+          }
+          else{
+            document.getElementById('timeBanner').innerHTML = 'Join the lobby Match will be started soon';  
+            $('#button_Join').prop('disabled', true);
+            $('#button_Join').css('background-color', 'black');
+            $('#button_Join').css({"border-color": "red", "border-width":"1px", "border-style":"solid",});
+            $('#button_Join').html('Comienza en: '+minutes + "min "+ seconds+"sec");
+
+            $('#button_Join_mobile').prop('disabled', true);
+            $('#button_Join_mobile').css('background-color', 'black');
+            $('#button_Join_mobile').css({"border-color": "red", "border-width":"1px", "border-style":"solid"});
+            $('#button_Join_mobile').html('Comienza en: '+minutes + "min "+ seconds+"sec");
+          }
+        }
+       
       else{
-        document.getElementById('timeBannerPass').style.display='table';
-        document.getElementById('timeBannerPass').innerHTML =   'Starts en: '+days+" day(s)";  
+
+        document.getElementById('timeBanner').innerHTML =   'Starts en: '+days+" day(s)";  
       }
       },1000)
     }
 
+
     if($('#isMathEnded').val()=='true'){
-    $('#matchEnded').show()
-    document.getElementById('timeBannerPass').style.display='none';
+
+      $('#passwordDialogButton').hide()
+      $('#matchEnded').show()
+      
+      $('#time').hide()
+
+      $('#button_Join').prop('disabled', true);
+      $('#button_Join_mobile').prop('disabled', true);
+
     if($('#resultTimer').val()!='null'){
-      var now = new Date(moment.tz(new Date(), "GMT").utcOffset(-300).format("MM-DD-YYYY hh:mm:ss a")).getTime();
+      var now = new Date(moment.tz(new Date(), "GMT").utcOffset(-300).format("MM/DD/YYYY hh:mm:ss a")).getTime();
       var distance = new Date(($('#resultTimer').val())).getTime() - now;
-      setInterval(function() {
+      var resultTimerInterval=setInterval(function() {
         var timer="";
-        var now = new Date(moment.tz(new Date(), "GMT").utcOffset(-300).format("MM-DD-YYYY hh:mm:ss a")).getTime();
+        var now = new Date(moment.tz(new Date(), "GMT").utcOffset(-300).format("MM/DD/YYYY hh:mm:ss a")).getTime();
         var distance = new Date(($('#resultTimer').val())).getTime() - now;
         var days = Math.floor(distance / (1000 * 60 * 60 * 24));
         var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
         var seconds = Math.floor((distance % (1000 * 60)) / 1000);
         if(days===0){
-          document.getElementById('timeBannerRes').style.display='table';
-          document.getElementById('timeBannerRes').innerHTML =   'Results In: '+minutes + "M " + seconds + "S ";  
+          document.getElementById('timeBanner').innerHTML =minutes==0? 'Resultados se anuncian en: '+seconds + "sec ":  'Resultados se anuncian en: '+minutes + "min "+ seconds+"sec ";  
+          $('#button_Join').css('background-color', 'black');
+          $('#button_Join').css({"border-color": "gray", 
+                                  "border-width":"1px", 
+                                  "border-style":"solid",
+                                  });
+          $('#button_Join').html('Finalizado');
+
+          $('#button_Join_mobile').css('background-color', 'black');
+          $('#button_Join_mobile').css({"border-color": "gray", 
+             "border-width":"1px", 
+             "border-style":"solid"});
+          $('#button_Join_mobile').html('Finalizado');
         }
         if(distance<0){
-          document.getElementById('timeBannerRes').style.display='table';
-          document.getElementById('timeBannerRes').innerHTML ="Results Announced"
-        $('#button_Join').prop('disabled', true);
-        $('#button_Join').css('background-color', 'gray');
-        $('#button_Join').html('Expired');
-      }
+          $('#button_Join').css('background-color', 'gray');
+          $('#button_Join').html('Finalizado');
+
+          $('#button_Join_mobile').css('background-color', 'gray');
+          $('#button_Join_mobile').html('Finalizado');   
+          $('.loginButtonForClick').html('Finalizado'); 
+          $('.loginButtonForClick').prop('disabled', true);
+          $('.loginButtonForClick').css('background-color', 'gray');
+          if($('#resultData').val()!='null'){
+            $('#feedbackButton').show()            
+            if(!$('#exampleModalCenterExpFeedback').hasClass('show') && typeof $.cookie("feedbackDialogShown:"+$('#challengeID').val()) === 'undefined'){
+              $('#exampleModalCenterExpFeedback').modal('toggle');
+            }
+            $('.winnersName').show()
+            document.getElementById('timeBanner').innerHTML ="Resultados anunciados"
+            $('#matchEnded').prop('disabled', false);
+            $('#matchEnded').html('partida finalizada <i class="fas fa-external-link-alt"style="margin-left: 0.6vw;" ></i>')
+            $('#matchEnded').click(()=>{
+              window.open(window.location.origin+'/leaderBoardChallenge?id='+$('#challengeID').val(), "_blank") 
+            })
+          }
+          else{
+            document.getElementById('timeBanner').innerHTML ="En unos instantes anunciamos resultados"
+          }
+          clearInterval(resultTimerInterval);
+        }
       },1000)
-    
-  }
+    }
   }
     $('#passwordDialogButton').click(()=>{
       $('#exampleModalCenterExpPass').modal('toggle');
     })
 
-      var time12=$('#challengeTime').val();
-
-      var countDownDate1= new Date(time12).getTime()
-      setInterval(function() {
-      var timer="";
-      var now = new Date(moment.tz(new Date(), "GMT").utcOffset(-300).format("MM-DD-YYYY hh:mm:ss a")).getTime();
-      var distance = countDownDate1 - now;
-      alert(distance)
-      var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-      var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-      var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-      if(days===0 && $('#button_Join').html()!='Expired'){
-        document.getElementById('timeBanner').innerHTML =   '<i class="fa fa-clock-o" aria-hidden="true"></i> '+hours + "H " + minutes + "M " + seconds + "S ";  
-      }
-      else if(days>=1 && $('#button_Join').html()!='Expired'){ 
-        document.getElementById('timeBanner').innerHTML = '<i class="fa fa-clock-o" aria-hidden="true"></i> '+ "en "+days+" Días"
-      }
-      else {
-
-        document.getElementById('timeBanner').innerHTML = '<i class="fa fa-clock-o" aria-hidden="true"></i> '+"EXPIRED";
-      }
-    },1000)
-
+     
     var j=0;
     $('#button_choose_image').click(function(){
       j=1;
@@ -164,33 +274,71 @@
           var formData = new FormData();
           // formData.append('file', $('#inputGroupFile02')[0].files[0]);
           formData.append('data', $('#inputScore').val());
+          formData.append('data', $('#challengeID').val());
           $.ajax({
             url: window.location.origin+'/challenge',  
             type: 'POST',
             data: formData,
-            success:function(data){
-                if(data.status==="success"){
+            success:function(data){ 
+                if(data.status==="success" || data==='success'){
+                  location.reload();
                   $('#fileName').css("display","none");
                   $('#input-block').css("display","none"); 
                   $('#timeLeft').css("display","block");
-                  $('#exampleModalLongTitle').html("¡Participación exitosa!")
-                  $('#button_choose_image').html("Success");
-                  $('#button_choose_image').prop('disabled', true);
-                  $('#button_Join').html('<i class="fa fa-check" aria-hidden="true" style="margin-right:0.5vw"></i>Estás participando');
+                  $('#exampleModalLongTitle').html("¡Participacion exitosa!")
+                  $('#button_choose_image').hide()
+                  $('#modalBodyParticipate').empty()
+                  $('#modalBodyParticipate').html('<div style="color:white;">Un admin anunciará la contraseña de sala pronto.Recibirás un mensaje de Whatsapp y notificacion en la página este reto.Para revisar el tiempo restante al anuncio, revisa el tiempo de countdown en la página de este reto.A su vez, si tienes dudas sobre como ingresar tu contraseña de sala, revisa el tutorial en la misma página.</div>')
+                  $('#button_Join').html('Estas participando');
                   $('#button_Join').prop('disabled', true);
+                  $('#button_Join_mobile').html('Estas participando');
+                  $('#button_Join_mobile').prop('disabled', true);
                   $('#cancel_footer').html("Hecho");
-                  $('#passwordDialogButton').show()
+
+                  var spots=$('#spotsCount').val().split('/');
+                  spots[0]=(parseInt(spots[0])+1).toString();
+                $('.spotsContainer2').html('<strong>'+spots[0]+"/"+spots[1]+'</strong>')
+                $('.progressBarStyleMobile').html('<span style="width:'+parseInt(spots[0])/parseInt(spots[1])*100+'%;"></span>');
+        
+
+                  if($('#passwordTimer').val()!='null'){
+                    $('#passwordDialogButton').html('<i class="fa fa-info" style="margin-right: 0.6vw;" aria-hidden="true" disabled></i>Ver contraseña de sala');
+
+                    $('#passwordDialogButton').attr('disabled' , false);
                   $('#modalVideo-PasswordRow').empty()
+                  $('#modalVideo-PasswordRow').append('<p class="modalHeading">Contraseña</p>')
                   for(var i=0;i<JSON.parse(data.result).length;i++) {
                     $('#modalVideo-PasswordRow').append('<h4 style="color: white;padding-bottom:1vw ;">'+JSON.parse(data.result)[i].key+': <strong>'+
-                                                                                                         JSON.parse(data.result)[i].value+'</strong></h4>');
+                                                                                                        JSON.parse(data.result)[i].value+'</strong></h4>');
                   }        
                   var iframeLobbyVideoHTML=$(($('#ytLinkLobbyTutorial').val())).prop('id','iframeLobbyTut');
+                  $('#modalVideo-PasswordRow').append('<p class="modalHeading">Como ingresar a la sala:</p>')
                   $('#modalVideo-PasswordRow').append(iframeLobbyVideoHTML)
-                  alert($('#modalVideo-PasswordRow').html())
                   $('#passwordDialogButton').click(()=>{
                     $('#exampleModalCenterExpPass').modal('toggle');
                   })
+                }
+                $('#message_form_input').prop('disabled', false);
+                $('#userGameName').val($('#inputScore').val())
+                $('#message_form_input').attr("placeholder", "Chatting publically as "+$('#inputScore').val());
+                $('#emojiBut').removeClass("removeClickEvent");
+                $('#emojiBut').prop('disabled', false);
+                
+                }
+                
+                else if(data.status==="PARTICIPATED"){
+                  $('#button_choose_image').html('participar <i class="fas fa-chevron-right" style="margin-left:1vw;"></i>');
+                  $('#userAlreadyParticipatedMsg').show()
+                  window.setTimeout(()=>{
+                    $('#userAlreadyParticipatedMsg').hide()
+                  },8000)
+                }
+                else if(data.status==="SPOTS_FULL"){
+                  $('#button_choose_image').html('Cupos llenos');
+                  $('#spotsFullMessage').show()
+                  window.setTimeout(()=>{
+                    $('#spotsFullMessage').hide()
+                  },8000)
                 }
             },
             cache: false,
@@ -201,8 +349,33 @@
       
     // }); 
     setTimeout(()=>{
-      $('#button_Join').show();
+      
+      if(parseInt($('#isFull').val())>=1 && isParticipated!=='true'){
+
+        $('#button_Join').css('background-color', 'gray');
+        $('#button_Join_mobile').css('background-color', 'gray');
+        $('#button_Join').html('Cupos llenos')
+        $('#button_Join_mobile').html('Cupos llenos')
+        $('#button_Join').prop('disabled', true);
+        $('#button_Join_mobile').prop('disabled', true);
+      }
+      else{
+        $('#button_Join').show();
+        $('#button_Join_mobile').show();
+      }
     },1000)
+    
+    var emojiKeyboard =new EmojiKeyboard;
+    emojiKeyboard.instantiate(document.getElementById("emojiBut"));
+    const output = document.getElementById("message_form_input");
+    emojiKeyboard.callback = (emoji, closed) => {
+      console.info(emoji, closed)
+      output.value += emoji.emoji;
+    };
+    emojiKeyboard.resizable =true;
+    emojiKeyboard.auto_reconstruction =true;
+    emojiKeyboard.default_placeholder ="Search Emoji...";
+    
 });
 </script>
 <style media="screen">
@@ -296,22 +469,7 @@
 	transition: all 0.3s ease;
 }
 
-.buttonShdwEffect {
-  
-  padding-left: 1vw;
-  padding-right: 1vw;
-  font-family: 'Roboto', sans-serif;
-  font-size: 1vw;
-  font-weight: 500;
-  color: #000;
-  background-color: #fff;
-  border: none;
-  border-radius: 45px;
-  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease 0s;
-  cursor: pointer;
-  outline: none;
-  }
+
 
 
 button:focus {
@@ -338,7 +496,32 @@ button:focus {
 	-o-transition: all 0.3s ease;
 	transition: all 0.3s ease;
 }
-
+.shareLi {
+		margin-bottom: 15px;
+		color: #fff;
+    position: relative;
+    left: -10px;
+	}
+  .shareA {
+			text-transform: uppercase;
+			color: #fff;
+			font-weight: 700;
+			width: 100%;
+			max-width: 300px;
+		}
+		.shareA.btn-facebook {
+			background: #3b5998;
+		}
+		.shareA.btn-twitter {
+			background: #00acee;
+		}
+		.shareA.btn-linkedin {
+			background: #0e76a8;
+		}
+		.shareA.btn-email {
+			background: #ddd;
+			color: #444;
+		}
 </style>
 <input id="endTimeChallenge" type="hidden" value="<%=end_date%>">
 <input id="challengeTime" type="hidden" value="<%=challengeTime%>">
@@ -349,6 +532,9 @@ button:focus {
 <input id="ytLinkLobbyTutorial" type="hidden" value="<%=ytLobbyTutorial%>">
 <input id="isMathEnded" type="hidden" value="<%=isEnded%>">
 <input id="resultTimer" type="hidden" value="<%=resultTimer%>">
+<input id="challengeID" type="hidden" value="<%=challengeId%>">
+<input id="resultData" type="hidden" value="<%=resultData%>">
+<input id="isFull" type="hidden" value="<%=isFull%>">
 
 
 <div style="height:100vh;
@@ -356,17 +542,16 @@ background-image: url('<%=src%>');
  background-position: center;
  background-repeat: repeat-y;
  background-size: cover;
- box-shadow: inset 0 0 0 1000px rgba(0,0,0,0.3);">
-<div style="height: 40vh;width: 100%;font-family: 'Raleway', sans-serif;">
-  <div style="padding: 3vw; height:40vh;display: inline-block;">
-<div>
+ box-shadow: inset 0 0 0 1000px rgba(0,0,0,0.8);">
+<div style="font-family: 'Raleway', sans-serif;" class='challengeTopParentContainer'>
+  <div class="challengeTopContainer">
+<div class='centerElement'>
 <h1 id="nameBanner" class="c-challenge-name">
-  <%- challengeName %>
+  <strong><%- challengeName %></strong>
 </h1>
 
 <div class="c-div-mobile">
-  <div id="timeBanner" class="c-callengeTime" style="font-family: 'Lato', sans-serif;">
-   </div>
+  
   <% if(data.challengeType) {%>  
     <p class="c-challengePrize">
       <%=data.challengeType.S%>
@@ -384,21 +569,21 @@ background-image: url('<%=src%>');
       </p>
     </div>
 </div>
-  <div class="c-buttonCenter">
+  <div class="c-buttonCenter pcOnlyJoinButton">
         <%if(!isLogged){%>
-          <form action="/login" method="get">
+          <!-- <form action="/login" method="get"> -->
             <button
             id=""
             type="submit" 
             name="more_challenges" 
             
-            class="button-view-all c-buttonJoin" >                    
-            Iniciar sesión
+            class="button-view-all c-buttonJoin loginButtonForClick"
+             >                    
+            Iniciar sesion
               <i class="fas fa-chevron-right" style="margin-left:1vw;"></i>           
             </button>
-        </form>
+        <!-- </form> -->
         <%}%>
-       <%if(isFull<1) {%> 
         <%if(isLogged){%> 
           <%if(isEverSubscribed){%> 
             <%if(code){%> 
@@ -422,8 +607,8 @@ background-image: url('<%=src%>');
                   name="more_challenges" 
                   class="button-view-all c-buttonJoin" 
                    > 
-                  <i class="fa fa-check" aria-hidden="true" style="margin-right:0.5vw"></i>
-                  Estás participando       
+                   Estas participando
+       
                 </button>         
                 <%}%> 
             <%}%>
@@ -435,8 +620,8 @@ background-image: url('<%=src%>');
                 name="more_challenges" 
                 class="button-view-all c-buttonJoin" 
                  > 
-                <i class="fa fa-check" aria-hidden="true" style="margin-right:0.5vw"></i>
-                Estás participando       
+                 Estas participando 
+      
               </button>         
               <%}%> 
               <%if(!isParticipated){%>
@@ -461,8 +646,8 @@ background-image: url('<%=src%>');
               name="more_challenges" 
               class="button-view-all c-buttonJoin" 
                > 
-              <i class="fa fa-check" aria-hidden="true" style="margin-right:0.5vw"></i>
-              Estás participando       
+               Estas participando 
+      
             </button>         
             <%}%> 
             <%if(!isParticipated){%>
@@ -478,117 +663,227 @@ background-image: url('<%=src%>');
                COMIENZA YA  
               <i class="fas fa-chevron-right" style="margin-left:1vw;"></i>     
             </button> 
-
+            
           </form>
           <%}%>    
           <%}%> 
         <%}%> 
-      <%}%> 
-      <%if(isFull==1){%>
-        <button 
-        id="button_Join"
-        type="submit" 
-        name="more_challenges" 
-        class="button-view-all c-buttonJoin" 
-        style="background-color: gray;"
-         > 
-        Spots Full      
-      </button>     
-      <%}%>    
+      
+
+    
+  
         <%if(password!='null'){%>
         <%}%>
       </div>    
-      <button id="tutorialDialogButton" class="buttonShdwEffect" style="margin-top:1vw;"><i class="fa fa-info" style="margin-right: 0.6vw;" aria-hidden="true"></i>   Tutorial</button>
-      <button id="passwordDialogButton" class="buttonShdwEffect" style="margin-left: 20px;display: none;" ><i class="fa fa-info" style="margin-right: 0.6vw;" aria-hidden="true"></i>Password Announced</button>
-      <button id="matchEnded" class="buttonShdwEffect" style="margin-left: 20px;display: none;" ><i class="fa fa-info" style="margin-right: 0.6vw;" aria-hidden="true"></i>Challenge Finished</button>
+      <button id="tutorialDialogButton" class="buttonShdwEffect  mobiletimeBannerContainer-Container2" style="margin-top:1vw;display: inline-block;">Tutorial  <i class="fa fa-info" style="margin-left: 0.6vw;" aria-hidden="true"></i></button>
+      <button id="passwordDialogButton" class="buttonShdwEffect mobiletimeBannerContainer-Container2" style="" disabled>Contraseña de sala por anunciar  <i style="margin-left: 0.6vw;" class="fas fa-lock"></i></button>
+      
+      <button id="matchEnded" class="buttonShdwEffect mobiletimeBannerContainer-Container2" style="display: none;" disabled>partida finalizada  <i style="margin-left: 0.6vw;" class="fas fa-lock"></i></button>
+      
+      <button href="#" class="buttonShdwEffect" id="btn-share" >Compartir <i class="fas fa-share-alt"></i></button> 
+
+      <a href="https://docs.google.com/forms/u/2/d/1XRBopevC2CwhUi6R1JS1URRghmHiSDnOlsY0VKaM41M/edit" target="_blank" >
+      <button  id="feedbackButton" class="buttonShdwEffect mobiletimeBannerContainer-Container2" style="display: none;border: 3px solid rgb(94, 89, 89);background-color: rgba(94, 89, 89,0.8);" >Feedback  <i style="margin-left: 0.6vw;" class="fas fa-star-half-alt"></i></button>
+      </a>
+
+   
  </div>
 </div>
-<%var spots=spots.split('/');%>  
+<input id='spotsCount' type="hidden" value='<%=spots%>'>
 
-  <div style="float: right;color: #FFF;margin-top: 15vh;margin-right:4vw;font-family: 'Roboto', sans-serif;">
-    <div style="text-align: right;">
-      <i class="fas fa-users" style="font-size: 1.5vw;margin-right: 1vw;"></i>
-      <h6 style="font-size: 1.5vw;color:white;padding:0;margin:0;float: right;"><strong><%=spots[0]+"/"+spots[1]%></strong></h6>  
+<%var spots=spots.split('/');%>  
+  <div class='challengeTopContainer2' >
+    <div class='childContent2' >
+      <i class="fas fa-users iconSpotsStyle"></i>
+      <h6 class='spotsContainer2'><strong><%=spots[0]+"/"+spots[1]%></strong></h6>  
     </div>
-    <div >
-      <div class="meter-m" style="width: 15vw;margin-top: 1vh;">
+    <div style="margin-top: 1vw;">
+      <div class="meter-m progressBarStyleMobile" style="text-align: left;">
         <span style="width:<%=(parseInt(spots[0])/parseInt(spots[1]))*100%>%;"></span>
       </div>
-      <div id="timeBannerPass" class="buttonStyleTimer" style="font-family: 'Lato', sans-serif;display: none; margin-top: 1vw;">
-      </div>
-      <div id="timeBannerRes" class="buttonStyleTimer" style="font-family: 'Lato', sans-serif;display: none; margin-top: 1vw;">
-      </div>
+      <button id="timeBanner" class="buttonShdwEffect mobiletimeBannerContainer-Container2" style="font-family: 'Lato', sans-serif;background-color: rgba(0, 0, 0, 0.8); margin-top: 1vw;">
+      </button>
+     
     </div>
   </div>
+
+
+
+  <div class="mobileOnlyJoinButton">
+   
+  <%if(!isLogged){%>
+      <button
+      id=""
+      type="submit" 
+      name="more_challenges" 
+      
+      class="button-view-all c-buttonJoin loginButtonForClick"
+       >                    
+      Iniciar sesion
+        <i class="fas fa-chevron-right" style="margin-left:1vw;"></i>           
+      </button>
+  <%}%>
+  <%if(isLogged){%> 
+    <%if(isEverSubscribed){%> 
+      <%if(code){%> 
+       
+          
+          <%if(!isParticipated){%>
+            <button 
+            id="button_Join_mobile"
+            type="submit" 
+            name="more_challenges" 
+            class="button-view-all c-buttonJoin" 
+            data-toggle="modal" data-target="#exampleModalCenter" > 
+            Participar
+
+            <i class="fas fa-chevron-right" style="margin-left:1vw;"></i>
+          </button>
+          <%}%> 
+          <%if(isParticipated){%>
+            <button 
+            id="button_Join_mobile"
+            type="submit" 
+            name="more_challenges" 
+            class="button-view-all c-buttonJoin" 
+             > 
+             Estas participando 
+       
+          </button>         
+          <%}%> 
+      <%}%>
+      <%if(!code){%> 
+        <%if(isParticipated){%>
+          <button 
+          id="button_Join_mobile"
+          type="submit" 
+          name="more_challenges" 
+          class="button-view-all c-buttonJoin" 
+           > 
+           Estas participando 
+       
+        </button>         
+        <%}%> 
+        <%if(!isParticipated){%>
+        <form action="/subscribe" method="get">
+          <button 
+          id=""
+          type="submit" 
+          name="more_challenges" 
+          class="button-view-all c-buttonJoin"> 
+          Resubscribe  
+          <i class="fas fa-chevron-right" style="margin-left:1vw;"></i>     
+        </button> 
+      </form>
+    <%}%>    
+    <%}%>
+    <%}%>
+    <%if(!isEverSubscribed){%> 
+      <%if(isParticipated){%>
+        <button 
+        id="button_Join_mobile"
+        type="submit" 
+        name="more_challenges" 
+        class="button-view-all c-buttonJoin" 
+         > 
+        Estas participando 
+               
+      </button>         
+      <%}%> 
+      <%if(!isParticipated){%>
+        <p style="color: #FFF;">
+          No tienes una suscripción activa, para ver la contraseña de esta partida,<br> activa tu suscripción haciendo click en "Comienza ya"
+        </p>
+      <form action="/subscribe" method="get">
+        <button 
+        id=""
+        type="submit" 
+        name="more_challenges" 
+        class="button-view-all c-buttonJoin" > 
+         COMIENZA YA  
+        <i class="fas fa-chevron-right" style="margin-left:1vw;"></i>     
+      </button> 
+      
+    </form>
+    <%}%>    
+    <%}%> 
+  <%}%> 
+ 
+  
+
+</div>
 </div>
 
 <div class="tabs" style=" ">
  
   <div class="tab-2" >
-    <label for="tab2-1" style="font-family: 'Raleway', sans-serif;">Vista general</label>
-    <input id="tab2-1" name="tabs-two" type="radio" checked="checked">
+    <label for="tab3-1" style="font-family: 'Raleway', sans-serif;"   ><strong>Vista general</strong></label>
+    <input id="tab3-1" name="tabs-two" type="radio" checked="checked" class='mobileTabOptimize'>
     
     <div>
           
-  <h1  class="c-heading ">
+  <h1  class="c-heading " style="font-family: 'BIGMACCA';">
 
     Premios 
     </h1>
   <div class="c-prize-mobile" style="text-align: center;">
 
-    <% for(i=0;i< prize.L.length; i++) {%>
-      
-        <div class="c-prize-background"  >
-          
+    <% for(i=0;i< prize.L.length; i++) {%>  
+        <div class="c-prize-background"  >    
             <%if(i===0){%>
               <h1  class="c-prize-text"> 
             <%=1%>ro
             </h1>
-                      <img src="images/chest_img.png" class="c-image-prize" alt="">
-
+              <img src="/images/chest_img.png" class="c-image-prize" alt="">
             <%}%>
             <%if(i===1){%>
               <h1  class="c-prize-text"> 
               <%=2%>do
               </h1>
-                        <img src="images/chest-low.png" class="c-image-prize" alt="">
+                        <img src="/images/chest-low.png" class="c-image-prize" alt="">
 
               <%}%>
             <%if(i===2){%>
               <h1  class="c-prize-text"> 
             <%=3%>ro
             </h1>
-                      <img src="images/chest-lowest.png" class="c-image-prize" alt="">
+                      <img src="/images/chest-lowest.png" class="c-image-prize" alt="">
 
             <%}%> 
             <%if(i===3){%>
               <h1  class="c-prize-text"> 
               <%=4%>ro
               </h1>
-                        <img src="images/chest-lowest.png" class="c-image-prize" alt="">
+                        <img src="/images/chest-lowest.png" class="c-image-prize" alt="">
 
               <%}%>  
               <%if(i>=4){%>
                 <h1  class="c-prize-text"> 
                 <%=i+1%>ro
                 </h1>
-                          <img src="images/chest-lowest.png" class="c-image-prize" alt="">
+                          <img src="/images/chest-lowest.png" class="c-image-prize" alt="">
 
                 <%}%>    
-          <div class="c-text-prize" style="color:white;">
+          <div class="c-text-prize" style="color:white;font-family: 'BIGMACCA';">
             <%= prize.L[i].S%>
+            <br>
+            <div class='coinToCOPHint'>(1 coin is $1000.00 COP)</div>
+            <%if(resultData!='null' && JSON.parse(resultData.Item.resultData.S).length>i){%>
+              <br>
+              <div class='winnersName' style="display: none;"><%=JSON.parse(resultData.Item.resultData.S)[i].username%></div>
+            <%}%>  
           </div>
         </div>
        <%}%>
   </div>
   
-  <h1  class="c-heading" > 
-    Descripción
+  <h1  class="c-heading" style="font-family: 'BIGMACCA';"> 
+    Descripcion
   </h1>
   <div class="c-textrd">
     <%- challengeDescription %>
   </div>
-  <h1 class="c-heading" >
+  <h1 class="c-heading" style="font-family: 'BIGMACCA';">
     Reglas
   </h1>
   <div class="c-textrd" style="margin-bottom: 6vh;">
@@ -597,12 +892,17 @@ background-image: url('<%=src%>');
     </div>
   </div>
   <div class="tab-2" >
-    <label for="tab2-2" style="font-family: 'Raleway', sans-serif;">Jugadores</label>
-    <input id="tab2-2" name="tabs-two" type="radio">
+    <label for="tab3-2" style="font-family: 'Raleway', sans-serif;"   ><strong>Jugadores</strong></label>
+    <input id="tab3-2" name="tabs-two" type="radio" class='mobileTabOptimize'>
 
      <% if(usersData!=null && userImgObj!=null){ %>
-  <div>  
+  <div> 
+  
 	<div class="limiter">
+    <h1 class="c-heading" style="font-family: 'BIGMACCA';">
+      Lista de jugadores     
+      <hr style="background-color: gray;" class="hr-mobile">
+    </h1>
 		<div class="container-table100">
 			<div class="wrap-table100">
 					<div class="table100 ver5 m-b-110">
@@ -610,7 +910,7 @@ background-image: url('<%=src%>');
 						<table>
 							<thead>
 								<tr class="row100 head">
-									<th class="cell100 column1" style="font-family: 'Open Sans', sans-serif;">#</th>
+									<th class="cell100 column1 " style="font-family: 'Open Sans', sans-serif;">#</th>
 									<th class="cell100 column2"  style="font-family: 'Open Sans', sans-serif;">Participante</th>
 									<th class="cell100 column3" style="font-family: 'Open Sans', sans-serif;">Victorias</th>
 									<th class="cell100 column4" style="font-family: 'Open Sans', sans-serif;">Total participado</th>
@@ -629,15 +929,22 @@ background-image: url('<%=src%>');
 									<td class="cell100 column2" style="font-family: 'Open Sans', sans-serif;"><%=userImgObj[i].M.score.S%></td>
 									<td class="cell100 column3" style="font-family: 'Open Sans', sans-serif;"><%=usersData[i].win_count%></td>
 									<td class="cell100 column4" style="font-family: 'Open Sans', sans-serif;"><%=usersData[i].total_count%></td>
-									<td class="cell100 column5" style="font-family: 'Open Sans', sans-serif;"><%=usersData[i].win_count=='-'?'-':(parseInt(usersData[i].win_count)/parseInt(usersData[i].total_count)*100)+'%' %> </td>
-								</tr>
-              <% } %>							
+									<td class="cell100 column5" style="font-family: 'Open Sans', sans-serif;"><%=usersData[i].win_count=='-'?'-':parseInt(parseInt(usersData[i].win_count)/parseInt(usersData[i].total_count)*100)+'%' %> </td>
+                </tr>		
+                <%if(name==userImgObj[i].M.email.S){%>
+                  <input type="hidden" id="userGameName" value="<%=userImgObj[i].M.score.S%>">
+                <%}%>
+                <%if(isAdmin){%>
+                  <input type="hidden" id="userGameName" value="Admin">
+                <%}%>
+              <%}%>
 							</tbody>
 						</table>
 					</div>
 				</div>
 			</div>
-		</div>
+    </div>
+    
   </div>
 </div>
 
@@ -651,6 +958,54 @@ background-image: url('<%=src%>');
       <h6 style="color: #FFF;">¡Sé el primero en unirse!</h6>
     </div>
   <% } %>  
+  </div>
+  <div class="tab-2">
+    <hr style="background-color: gray;" class="hr-mobile">
+    <label for="tab3-3" style="font-family: 'Raleway', sans-serif;"   ><strong>Chat en vivo</strong></label>
+    <input id="tab3-3" name="tabs-two" type="radio" class='mobileTabOptimize'>
+    <div>
+
+    <div id=messages_center>
+      <ul id="messages"></ul>
+    </div>
+  
+      <div id='bottomDiv'>
+        <div id=username_is_typing_board style="visibility: hidden;color: white;margin-left:3vw ;padding: 0.5vw;">typing..</div>
+        <form class="form-inline" id=message_form autocomplete="off">
+        
+        <%if(!isLogged){%>
+          <div class="chat-disabled-info"><div>Please Login to start chatting!</div></div>
+        <%}%>  
+        <%if(isLogged){%>         
+        <%if(!isParticipated && !isAdmin){%>
+          <div class="chat-disabled-info"><div>Please participate to start chatting!</div></div>
+        <%}%>
+        <%if(isParticipated || isAdmin){%>
+          <!-- <div id="emojiBut" type="button" ><i class="far fa-laugh-beam" style="font-size: 1.5vw;color: white;"></i></div>  -->
+          <!-- <input type="text" id="message_form_input" class="form-control form-control-lg" style="height: 8vh;display: none;"   /> -->
+          <div style="z-index: 99999;">
+            <button class='messageBubble' id='chatMsg1'>GG</button>
+            <button class='messageBubble' id='chatMsg2'>¡Buena suerte a todos!</button>
+            <button class='messageBubble' id='chatMsg3'>He perdido 😔</button>
+            <button class='messageBubble' id='chatMsg4'>¡Adiós! 👋</button>
+            <button class='messageBubble' id='chatMsg5'>¡Hola! 👋</button>
+            <button class='messageBubble' id='chatMsg6'>¡Voy a darlo todo!</button>
+            <button class='messageBubble' id='chatMsg7'>¡Sí!</button> 
+            <button class='messageBubble' id='chatMsg8'>No</button>
+            <button class='messageBubble' id='chatMsg9'>Tengo un problema con mi partida </button>
+            <button class='messageBubble' id='chatMsg10'>Necesito la asistencia de un Admin</button>  
+            <button class='messageBubble' id='chatMsg11'>¡Gané!</button>
+            <button class='messageBubble' id='chatMsg12'>¡Gané! ¿Ahora qué debo hacer?</button>
+            <button class='messageBubble' id='chatMsg13'>¡Buena partida!</button>
+            <button class='messageBubble' id='chatMsg14'>Quiero dar mi opinión respecto a este evento.</button>
+          </div>
+        <%}%>
+        <%}%> 
+          <!-- <button id='sendMsgButton' type="submit">SEND</button> -->
+      </form>  
+        </div>
+      </div>
+    
   </div>
 </div>
 
@@ -671,8 +1026,8 @@ background-image: url('<%=src%>');
           ingresa tu usuario ingame
         </h2>
       </div>
-      <div class="modal-body" style="text-align: center;" >
-        <form id='uploadForm' action='/declareResult' method='POST' encType="multipart/form-data">
+      <div id='modalBodyParticipate' class="modal-body" style="text-align: center;" >
+        <!-- <form id='uploadForm' action='/declareResult' method='POST' encType="multipart/form-data"> -->
           <!-- <input style="display: none;" type="file" name="screenshot" class="custom-file-input" id="inputGroupFile02" required onchange="checkUpload();" /> -->
           <p id="fileName" style="color: white;"></p>
           <h4 id="timeLeft" style="color: white;display: none;">Los resultados se anunciarán en</h4>
@@ -682,6 +1037,8 @@ background-image: url('<%=src%>');
             <div class="md-form mt-0">
               <input type="text" style="color:white;text-align: center;"  class="form-control" id="inputScore" placeholder="Username" required>
             </div>
+            <div id='userAlreadyParticipatedMsg' style="display: none;color: #FFF;">User already participated</div>
+            <div id='spotsFullMessage' style="display: none;color: #FFF;">¡Lo sentimos! Ya están llenos los cupos</div>
           </div>
         </div>
           <button   
@@ -691,12 +1048,12 @@ background-image: url('<%=src%>');
           class="button-view-all c-buttonJoin"
            > 
            Seleccionar imágen
-            <i class="fas fa-chevron-right" style="margin-left:1vw;"></i>
+            <i class="fas fa-external-link-alt"style="margin-left: 0.6vw;" ></i>
         </button>       
-        </form>  
+        <!-- </form>   -->
       </div>
       <div class="modal-footer" style="border: none;text-align: center;">
-        <a type="button" id="cancel_footer" data-dismiss="modal" style="color: white;font-size:1.5vw;"> Cancelar</button>
+        <button type="button" id="cancel_footer" data-dismiss="modal" class='footerMobileFontSize mr-auto' style="background-color: rgba(0,0, 0, 0);border:none;color: white;"> Cancelar</button>
       </div>
     </div>
   </div>
@@ -756,7 +1113,7 @@ background-image: url('<%=src%>');
           </div>
       </div>
       <div class="modal-footer" style="border: none;text-align: center;">
-        <a type="button" id="closeVideoDialog" data-dismiss="modal" style="color: white;font-size:1.5vw;"> Cancelar</button>
+        <button type="button" id="closeVideoDialog" data-dismiss="modal" class='footerMobileFontSize'  style="background-color: rgba(0,0, 0, 0);border:none;color: white;"> Cancelar</button>
       </div>
     </div>
   </div>
@@ -765,7 +1122,7 @@ background-image: url('<%=src%>');
 
 
   
-  <div class="modal fade" id="exampleModalCenterExpPass" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitleExp"
+<div class="modal fade" id="exampleModalCenterExpPass" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitleExp"
   aria-hidden="true">
 
   <div class="modal-dialog modal-dialog-centered" role="document">
@@ -780,12 +1137,94 @@ background-image: url('<%=src%>');
         </div>
       </div>
       <div class="modal-footer" style="border: none;text-align: center;">
-        <a type="button" id="closePasswordDialog" data-dismiss="modal" style="color: white;font-size:1.5vw;">Close</button>
+        <button type="button" id="closePasswordDialog" data-dismiss="modal" class='footerMobileFontSize mr-auto' style="background-color: rgba(0,0, 0, 0);border:none;color: white;">Cancelar</button>
       </div>
     </div>
   </div>
 </div>
 
+
+<div class="modal fade" id="exampleModalCenterExpFeedback" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitleTutorial"
+  aria-hidden="true">
+
+  <div class="modal-dialog modal-dialog-centered" role="document">
+
+    <div class="modal-content"  style="background: rgba(20,20, 20, 0.6); backdrop-filter: blur(4px);text-align: center;border-radius: 0.5vw;">
+      <div class="modal-header" style="border: none;">
+        <h2 class="modal-title" id="exampleModalLongTitle" style="color: white;font-weight: bold;width: 100%;text-align: center;">Feedback <i style="margin-left: 0.6vw;" class="fas fa-star-half-alt"></i></h2>
+      </div>
+      <div class="modal-body" style="text-align: center;" >
+        <div id="modalVideo-PasswordRow" class="row" style="padding:1vw;justify-content:center;color: white;">
+          Ayúdanos a mejorar la experiencia de retosgamer con una corta encuesta:
+          
+          <a href="https://docs.google.com/forms/u/2/d/1XRBopevC2CwhUi6R1JS1URRghmHiSDnOlsY0VKaM41M/edit" target="_blank" >
+          <button   
+          type="button"
+          id='feedbackModalButton'
+          name="more_challenges" 
+          class="button-view-all c-buttonJoin"
+          style="margin-top: 1vw;background-color: rgba(128, 255, 0, 0.808);"
+           > 
+           Responder
+           <i class="fas fa-external-link-alt"style="margin-left: 0.6vw;" ></i>
+        </button>  
+      </a>     
+        </div>
+      </div>
+      <div class="modal-footer" style="border: none;text-align: center;">
+        <button type="button" id="closeFeedbackDialog" data-dismiss="modal" class='footerMobileFontSize' style="background-color: rgba(0,0, 0, 0);border:none;color: white;">no volver a mostrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="exampleModalCenterExpShare" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitleExp"
+aria-hidden="true">
+
+<div class="modal-dialog modal-dialog-centered" role="document">
+
+  <div class="modal-content"  style="background: rgba(20,20, 20, 0.6); backdrop-filter: blur(4px);text-align: center;border-radius: 0.5vw;;">
+    <div class="modal-header" style="border: none;text-align: center;">
+      <img src="/images/RG_6.png" class='imageHeadingShareDialog'>
+    </div>
+    <div class="modal-body" style="text-align: center;" >
+      <div id="modalShareRow" class="row" style="justify-content:center;">
+        <ul style='list-style-type: none;'>
+          <li class='shareLi'>
+          
+            <a  href='#' 
+                title="'+Copy Link+'" 
+                target="_blank" id='copyButton' class="btn btn-black shareA" style="color: white;"><i class="fas fa-copy" style="margin-right: 0.5vw;"></i>Copiar Link
+              </a>
+          </li>  
+        <li class='shareLi'>
+          
+          <a  href="https://www.facebook.com/sharer/sharer.php?u=<%='https://retosgamer.com/challenge?id='+challengeId%>" 
+              target="_blank" class="btn btn-facebook shareA" style="color: white;"><i class="fab fa-facebook" style="margin-right: 0.5vw;"></i>Publicar en Facebook
+            </a>
+        </li>
+        <li class='shareLi'>
+          <%var twitterText=`https://twitter.com/intent/tweet?text=¡Ven y participa conmigo en el reto ${challengeName}, de Retos Gamer! ¡Únete a Retos Gamer y participa por grandes PREMIOS!&url=https://retosgamer.com/challenge?id=${+challengeId}`%>
+          <a href='<%-twitterText%>'
+          title="¡Únete a Retos Gamer y participa por grandes PREMIOS!" 
+          target="_blank" 
+          class="btn btn-twitter shareA"><i class="fab fa-twitter" style="margin-right: 0.5vw;"></i>Compartir en Twitter</a>
+        </li>
+        <li class='shareLi'>
+          <a 
+          href="mailto:?subject=Hi Join Retos Gamer with this Link <%='https://retosgamer.com/challenge?id='+challengeId%>" 
+          title="¡Únete a Retos Gamer y participa por grandes PREMIOS!"
+           class="btn btn-email shareA"><i class="fas fa-envelope" style="margin-right: 0.5vw;"></i> Enviar por correo</a>
+        </li>
+      </ul>
+      </div>
+    </div>
+    <div class="modal-footer" style="border: none;text-align: center;">
+      <button type="button" id="closePasswordDialog" data-dismiss="modal" class='footerMobileFontSize mr-auto' style="background-color: rgba(0,0, 0, 0);border:none;color: white;">Cancelar</button>
+    </div>
+  </div>
+</div>
+</div>
 
 
 
@@ -799,27 +1238,29 @@ background-image: url('<%=src%>');
 
     <div class="modal-content"  style="background: rgba(20,20, 20, 0.6); backdrop-filter: blur(4px);text-align: center;border-radius: 0.5vw;;">
       <div class="modal-header" style="border: none;">
-        <h2 class="modal-title" id="exampleModalLongTitle" style="color: white;font-weight: bold;width: 100%;text-align: center;">Subscription Expired!</h2>
+        <h2 class="modal-title" id="exampleModalLongTitle" style="color: white;font-weight: bold;width: 100%;text-align: center;">Subscription Finalizado!</h2>
       </div>
-      <div class="modal-body" style="text-align: center;" >
-        <form id='uploadForm' action='/declareResult' method='POST' encType="multipart/form-data">
+      <div id='thisDialogBody' class="modal-body" style="text-align: center;" >
+        <!-- <form id='uploadForm' action='/declareResult' method='POST' encType="multipart/form-data"> -->
           <input style="display: none;" type="file" name="screenshot" class="custom-file-input" id="inputGroupFile02" required onchange="checkUpload();" />
           <% var end_date_formatted =end_date.substring(0,4)+"/"+end_date.substring(4,6)+"/"+end_date.substring(6,8) %>
-          <h4 id="timeLeft" style="color: white;display: none;">Tu suscripción expiró en <%=end_date_formatted%>. Por favor renuévala para participar en este reto.</h4>
+          <h4 id="timeLeft" style="color: white;display: none;">Tu suscripción expiro en <%=end_date_formatted%>. Por favor renuévala para participar en este reto.</h4>
             <a    
               href="/subscribe"           
               type="submit" 
               class="button-view-all c-buttonJoin hover-color"
               style="padding-top: 0.5vw;;"
               >
-              Reactivar suscripción
+              Reactivar suscripcion
               <i class="fas fa-chevron-right" style="margin-left:1vw;"></i>
           </a>   
-        </form>  
+        <!-- </form>   -->
       </div>
       <div class="modal-footer" style="border: none;text-align: center;">
-        <a type="button" id="cancel_footer" data-dismiss="modal" style="color: white;font-size:1.5vw;">Close</button>
+        <button type="button" id="cancel_footer" data-dismiss="modal" class='footerMobileFontSize mr-auto' style="background-color: rgba(0,0, 0, 0);border:none;color: white;">Cancelar</button>
       </div>
     </div>
   </div>
-</
+</div>
+<%}%>
+

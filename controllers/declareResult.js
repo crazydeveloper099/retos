@@ -7,6 +7,8 @@ let challengeName;
 const fs = require('fs');
 const uploadFile= require('../data/upload_file.js');
 const fb=require('./firebase_admin.js');
+const { lowerFirst } = require('lodash');
+
 
 let unitChallenge;
 
@@ -20,7 +22,7 @@ exports.getResults = (req, res) => {
     console.log(unitChallenge);
       
       data.fetchSingleChallenge(unitChallenge, (err, userData) => {
-        if (userData) {
+        if (typeof(userData.Item)!== 'undefined') {
           sort(userData.Item.userImg.L,(array)=>{
           res.render('declareResult', {
             name: typeof(cookie.adminUser) === 'undefined' ? null : cookie.adminUser,
@@ -44,12 +46,11 @@ const sort=(array, callback)=>{
   callback(array);
 },3000);
 }
-
 exports.uploadMiddleWare = (req, res) => {
   const cookie = req.cookies;
   unitChallenge = cookie.resultPublish;
   const bufDataFile = Buffer.from(req.files.screenshot.data, "utf-8");
-    const fname = unitChallenge;
+  const fname = unitChallenge;
     
   data.fetchSingleChallenge(unitChallenge, (errCh, dataCh)=>{
     if(errCh) {console.log(errCh); res.send(errCh);}
@@ -64,24 +65,39 @@ exports.uploadMiddleWare = (req, res) => {
           "results/"+req.cookies.challengeIdChallengeClicked,
           (url) => {
             fs.unlinkSync(rootPath.rootPath+"/public/uploads/"+unitChallenge+'.jpg');
-            fb.sendToTopic(dataCh.Item.challengeName.S,unitChallenge, (errFcm, resFcm)=>{
+            fb.sendToTopicResults(dataCh.Item.challengeName.S,unitChallenge, (errFcm, resFcm)=>{
               if(errFcm)
               {res.send(errFcm);}
               else{
-            data.createResult(unitChallenge, req.body.jsonData, dataCh,url ,(err, dataVal) => {
+            data.createResult(unitChallenge, req.body.jsonData, JSON.stringify(dataCh),url ,(err, dataVal) => {
               data.updateResultPublished(unitChallenge, true,(errUpdate, dataUpdate)=>{
                 let arrData=JSON.parse(req.body.jsonData);
                 arrData.map((datai,x)=>{
                
                   data.fetchSingleUser(datai.email,(errUser,dataUser)=>{
+
+
+                    let wallet_amount=null;
+                    let differenceAmount=typeof(dataCh.Item.challengePrize.L[x]) === 'undefined'?'0':dataCh.Item.challengePrize.L[x].S.match(/\d/g).join('');
+                    let total_challenges_won=typeof(dataUser.Item.total_challenges_won) === 'undefined'?'0':dataUser.Item.total_challenges_won.S;
+
+                    if(typeof(dataUser.Item.wallet_amount) === 'undefined'){
+                      wallet_amount=differenceAmount;
+                    }
+                    else{
+                      wallet_amount=
+                      parseInt(dataUser.Item.wallet_amount.S)+
+                      parseInt(differenceAmount);
+                      wallet_amount=wallet_amount.toString()
+                    }
+                                                                          
+                                                 
                     if(x<arrData.length-1){
                       if(errUser){
                         res.send(errUser+" Please Try again!");
                       }
                       else{
-                     
                           if(dataUser.Item.challengesWon){
-                            console.log(dataCh.Item.challengePrize);
                              let updateArr=JSON.parse(dataUser.Item.challengesWon.S);
                              let newArr={
                             "challengeName":dataCh.Item.challengeName.S,
@@ -89,12 +105,11 @@ exports.uploadMiddleWare = (req, res) => {
                              "pos":x+1,
                              "prize":dataCh.Item.challengePrize.L
                             };
-                           
                             updateArr=updateArr.filter(x=>{
                               return x.challengeName!=dataCh.Item.challengeName.S});
                               updateArr.unshift(newArr);
                              updateArr=JSON.stringify(updateArr);
-                             data.updateUsersChallengesWon(datai.email,updateArr,(errUpdation, succUpdation)=>{
+                             data.updateUsersChallengesWon(datai.email,updateArr,wallet_amount,differenceAmount,total_challenges_won,(errUpdation, succUpdation)=>{
                               if(errUpdation){
                                 res.send(errUpdation+" Please Try again!");
                               }
@@ -104,14 +119,14 @@ exports.uploadMiddleWare = (req, res) => {
                               "challengeName":dataCh.Item.challengeName.S,
                               "img":datai.url,
                               "prize":dataCh.Item.challengePrize.L,
-                            "pos":x+1}];
-                            newArr=JSON.stringify(newArr);
-                            data.updateUsersChallengesWon(datai.email,newArr,(errUpdation, succUpdation)=>{
-                                if(errUpdation){
-                                  res.send(errUpdation+" Please Try again!");
-                                }
-                            });
-                          }
+                              "pos":x+1}];
+                              newArr=JSON.stringify(newArr);
+                              data.updateUsersChallengesWon(datai.email,newArr,wallet_amount,differenceAmount,total_challenges_won,(errUpdation, succUpdation)=>{
+                                  if(errUpdation){
+                                    res.send(errUpdation+" Please Try again!");
+                                  }
+                              });
+                            }
                       }
                     }
                     else{
@@ -133,7 +148,7 @@ exports.uploadMiddleWare = (req, res) => {
                               console.log(updateArr);
                              updateArr.unshift(newArr);
                              updateArr=JSON.stringify(updateArr);
-                             data.updateUsersChallengesWon(datai.email,updateArr,(errUpdation, succUpdation)=>{
+                             data.updateUsersChallengesWon(datai.email,updateArr,wallet_amount,differenceAmount,total_challenges_won,(errUpdation, succUpdation)=>{
                               if(errUpdation){
                                 res.send(errUpdation+" Please Try again!");
                               }
@@ -156,7 +171,7 @@ exports.uploadMiddleWare = (req, res) => {
                             "prize":dataCh.Item.challengePrize.L,
                           "pos":x+1}];
                             newArr=JSON.stringify(newArr);
-                            data.updateUsersChallengesWon(datai.email,newArr,(errUpdation, succUpdation)=>{
+                            data.updateUsersChallengesWon(datai.email,newArr,wallet_amount,differenceAmount,total_challenges_won,(errUpdation, succUpdation)=>{
                                 if(errUpdation){
                                   res.send(errUpdation+" Please Try again!");
                                 }

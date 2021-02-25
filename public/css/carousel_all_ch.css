@@ -1,12 +1,12 @@
 
 :root {
 
-    --carouselNew-tile-spacing: 1.5vw;
+    --carouselNew-tile-spacing: 0.5vw;
 
     --carouselNew-tile-width:   21vw;
     --carouselNew-tile-height:  calc(var(--carouselNew-tile-width) / (16 / 9));
 
-    --carouselNew-growth-factor: 1.1;
+    --carouselNew-growth-factor: 1.05;
 
     --carouselNew-fade-opacity:   0.25;
     --carouselNew-normal-opacity: 1;

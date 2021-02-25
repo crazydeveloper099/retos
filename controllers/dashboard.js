@@ -24,7 +24,7 @@ const subscriptionFetcher = (phone,res , callback) => {
       model.carrier = resp.data.carrier.S;
       subscriptionData = resp.data;
 
-      res.cookie('subscriptionData', subscriptionData, { httpOnly: true,  overwrite: true});
+      // res.cookie('subscriptionData', subscriptionData, { httpOnly: true,  overwrite: true});
     })
     .catch(error => {
     })
@@ -58,9 +58,9 @@ data.dbChallengeFetcher(function(err, dataFetched) {
         };
         await dataFetched.Items.sort(custom_sort);
 
-
-        // if(moment().isAfter(model.end_date) || typeof(cookie.username) === 'undefined' || model.end_date==='' ){
+        if(moment().isAfter(model.end_date) || typeof(cookie.username) === 'undefined' || model.end_date==='' ){
           res.render('dashboard', {
+
             name: typeof(cookie.username) === 'undefined' ? null : cookie.username,
             data: dataFetched.Items,
             end_date: model.end_date,
@@ -68,23 +68,20 @@ data.dbChallengeFetcher(function(err, dataFetched) {
             tandc: typeof(cookie.tandc) === 'undefined' ? null : cookie.tandc,
             // dataCategory:dataCategory.Items
           });
-        // }
-        // else{
-        //   res.redirect('/challengeList');
-        // }
+        }
+        else{
+          res.redirect('/challengeList');
+        }
       });
       }
-    // });
-  });
-};
-
+    });
+}
 
 exports.postDashboard = (req, res) => {
   const id=req.body.id;
   console.log(req.body);
   if(id!==null && typeof(id) !== 'undefined' ){
-    res.cookie('challengeIdChallengeClicked', id, {httpOnly: true, overwrite: true});
-    res.redirect('/challenge');
+    res.redirect('/challenge?id='+id);
   }
 };
 

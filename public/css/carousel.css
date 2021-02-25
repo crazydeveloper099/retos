@@ -1,9 +1,9 @@
 :root {
-      --carouselNew-tile-spacing: 1.5vw;
-      --carouselNew-tile-width:   15.5vw;
+      --carouselNew-tile-spacing: 1vw;
+      --carouselNew-tile-width:   25vw;
       --carouselNew-tile-height:  calc(var(--carouselNew-tile-width) / (16 / 9));
-      --carouselNew-growth-factor: 1.1;
-      --carouselNew-fade-opacity:   0.25;
+      --carouselNew-growth-factor: 1.0;
+      --carouselNew-fade-opacity:   0.4;
       --carouselNew-normal-opacity: 1;
       --carouselNew-offset-left:  calc(-1 * (var(--carouselNew-tile-width) * (var(--carouselNew-growth-factor) - 1) / 2));
       --carouselNew-offset-right: calc(var(--carouselNew-tile-width) * (var(--carouselNew-growth-factor) - 1));
@@ -17,7 +17,7 @@
       margin: 0;
       box-sizing: border-box;
       width: 100%;
-      overflow-x: auto;
+      overflow-x: hidden;
       overflow-y: hidden;
 }
 
@@ -29,7 +29,10 @@
       margin-left: calc((var(--carouselNew-tile-width) * (var(--carouselNew-growth-factor) - 1)) / 2);
       margin-right: calc((var(--carouselNew-tile-width) * (var(--carouselNew-growth-factor) - 1)) / 2);
       transition: var(--carouselNew-transition-2);
-      margin-bottom: 18vh;
+      margin-bottom: 30vh;
+      flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Content Tile */

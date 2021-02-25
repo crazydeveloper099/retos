@@ -3,31 +3,28 @@
 <script type="text/javascript">
   $(document).ready(function() {
 
-
     var j=1;
     var k=1;
     if($('#isPasswordPublished').val()=='true'){
       setInterval(()=>{
-      $('#gmtTimeNow').html('<br><br>Its<br>'+moment.tz(new Date(), "GMT").utcOffset(-300).format("MM-DD-YYYY hh:mm:ss a"))
+      $('#gmtTimeNow').html('<br><br>Its<br>'+moment.tz(new Date(), "GMT").utcOffset(-300).format("MM/DD/YYYY hh:mm:ss a"))
       },1000)
       $('.passButton').html('Password Already Published<br>Click to change')
     }
     
     $("#add_a_prize").click(function () { 
-          if(j==1){
-            $('#thisUl').append('<li><input style="float:left;" id="label'+j+'" for="exampleInputPassword1" placeholder="name '+j+'"></input><input name="prize" type="text"  id="list'+j+'" placeholder="value '+j+'" ><input name="ytLink" type="text"  id="ytLink" placeholder="<iframe> code" ></li>');
-          }
-          else{
+          
             $('#thisUl').append('<li><input style="float:left;" id="label'+j+'" for="exampleInputPassword1" placeholder="name '+j+'"></input><input name="prize" type="text"  id="list'+j+'" placeholder="value '+j+'" ></li>');
-          }
-          if(j>=1) $('.delete').css('display','inline');
+            
+          if(j>=1){$('.delete').css('display','inline');$('#link_dropdown').css('display','inline');} 
           j++;
         }); 
       $('.delete').click(function(){
         j=j-1;
          if(j<=1){
           $('.delete').css('display','none');
-          $('#ytLink').remove();
+          $('#link_dropdown').css('display','none');
+         
          } 
         $('#list'+j).remove();
         $('#label'+j).remove();
@@ -44,6 +41,8 @@
         $('#add_a_prize').hide();
         $('.delete').hide();
         $("#thisUl").empty();
+        $('#link_dropdown').css('display','none');
+
       }
     })  
 
@@ -91,8 +90,7 @@
       $('#prizeUL').append('<li id="prizeLi'+k+'"><input name="prize" type="text"  id="prizeList'+k+'" value="'+JSON.parse($('#prizeInput').val())[i].S+'" /></li>');
       k++;
     }
-
-    $('#prizeAddButton').click(()=>{
+  $('#prizeAddButton').click(()=>{
       $('#prizeUL').append('<li><input name="prize" type="text"  id="prizeList'+k+'" placeholder="Enter Prize" /></li>');
       if($('#prizeDelButton').css('display') == 'none')
       {
@@ -106,7 +104,6 @@
       $('#prizeList'+k).remove();
       $("#prizeLi"+k).remove();
     });
-
     $('#publishChanges').click(()=>{
       $('#frameModalBottom').modal({
           show: true
@@ -120,7 +117,7 @@
       var desc=$('#descInput').val();
       var spots=$('#spotsInput').val();
       var rules=$('#rulesInput').val();
-      var ytLink=$('#ytLink').val()!='undefined'?$('#ytLink').val():'null';
+      var ytLink=$('#ytLink').find(":selected").val()!='undefined'?$('#ytLink').find(":selected").val():'null';
       var prizesArr=[];
       var flag=0;
       var password=[];
@@ -153,12 +150,129 @@
       $("#jsonData").val(arr);
       $("#uploadForm").submit();
     }
+    jQuery('<div class="quantity-nav"><button class="quantity-button quantity-up">&#xf106;</button><button class="quantity-button quantity-down">&#xf107</button></div>').insertAfter('.quantity input');
+  jQuery('.quantity').each(function () {
+    var spinner = jQuery(this),
+        input = spinner.find('input[type="number"]'),
+        btnUp = spinner.find('.quantity-up'),
+        btnDown = spinner.find('.quantity-down'),
+        min = input.attr('min'),
+        max = input.attr('max');
+
+    btnUp.click(function () {
+      var oldValue = parseFloat(input.val());
+      if (oldValue >= max) {
+        var newVal = oldValue;
+      } else {
+        var newVal = oldValue + 1;
+      }
+      spinner.find("input").val(newVal);
+      spinner.find("input").trigger("change");
+    });
+
+    btnDown.click(function () {
+      var oldValue = parseFloat(input.val());
+      if (oldValue <= min) {
+        var newVal = oldValue;
+      } else {
+        var newVal = oldValue - 1;
+      }
+      spinner.find("input").val(newVal);
+      spinner.find("input").trigger("change");
+    });
+  });
   });
 </script>
 <style>
   ul {
   list-style-type: none;
 }
+
+  
+
+.quantity {
+  position: relative;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.quantity input {
+  width: 60px;
+  height: 42px;
+  line-height: 1.65;
+  float: left;
+  display: block;
+  padding: 0;
+  margin: 0;
+  padding-left: 20px;
+  border: none;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
+  font-size: 1rem;
+  border-radius: 4px;
+}
+
+.quantity input:focus {
+  outline: 0;
+}
+
+.quantity-nav {
+  float: left;
+  position: relative;
+  height: 42px;
+}
+
+.quantity-button {
+  position: relative;
+  cursor: pointer;
+  border: none;
+  border-left: 1px solid rgba(0, 0, 0, 0.08);
+  width: 21px;
+  text-align: center;
+  color: #333;
+  font-size: 13px;
+  font-family: "FontAwesome" !important;
+  line-height: 1.5;
+  padding: 0;
+  background: #FAFAFA;
+  -webkit-transform: translateX(-100%);
+  transform: translateX(-100%);
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+
+.quantity-button:active {
+  background: #EAEAEA;
+}
+
+.quantity-button.quantity-up {
+  position: absolute;
+  height: 50%;
+  top: 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  font-family: "FontAwesome";
+  border-radius: 0 4px 0 0;
+  line-height: 1.6
+}
+
+.quantity-button.quantity-down {
+  position: absolute;
+  bottom: 0;
+  height: 50%;
+  font-family: "FontAwesome";
+  border-radius: 0 0 4px 0;
+}
+
 </style>
 <input type="hidden" id="isPasswordPublished" value=<%=isPasswordPublished%>>
 <div>
@@ -217,7 +331,17 @@
       <button id="prizeDelButton"><i class="fas fa-trash-alt"></i> Remove Prize</button>
       <button id="prizeAddButton"><i class="fas fa-plus"></i> Add Prize</button>
     </div>
+    <div  id='link_dropdown' style="display:none;">
+      <label for="exampleInputPassword1" id='labelYT' style="color: white;">Choose Video preset</label>
+      <select name="ytLink"  id="ytLink"  class="custom-select">
+        <option selected>Choose</option>
+        <%videoPresetsData.Items.map(iframeCode=>{ %>
+          <option value="<%=iframeCode.iframeCode%>"><%=iframeCode.video_id%></option>
+      <%})%> 
+      </select>
+    </div>
     <div>
+      
       <ul id="thisUl"></ul> 
       <button class="passButton btn btn-primary" >Publish Password</button>   
       <input type="hidden" value="0" id="passBool">   
@@ -233,6 +357,16 @@
         <label for="resultTimer" style="color: white;"> Results will be announced by</label><br>
         <input id="resultTimer" type="text" placeholder="DD-MM-YYYY HH:MM:SS" >
       </div>
+      <!-- <div class="quantity">
+        
+        <input type="number" min="2021" max="2050" step="1" value="1">
+      </div>
+      <div class="quantity">
+        <input type="number" min="1" max="12" step="1" value="1">
+      </div>
+      <div class="quantity">
+        <input type="number" min="1" max="31" step="1" value="1">
+      </div> -->
     <%} %>
     
   </div>

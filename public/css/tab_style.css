@@ -14,7 +14,11 @@
   select:focus {
     outline: none; 
   }
-  
+  @media only screen and (min-device-width: 801px) {
+    .mobileTabOptimize{
+      display: unset;
+    }
+   
   .tabs {
     display: block;
     display: -webkit-flex;
@@ -29,7 +33,7 @@
     background-color: #000;
     border-top-left-radius: 2vw;
     border-top-right-radius:2vw ;
-
+    
   }
     .tabs [class^="tab"] label,
     .tabs [class*=" tab"] label {
@@ -56,15 +60,15 @@
       -o-transition: all 0.3s ease-in-out;
       transition: all 0.3s ease-in-out; }
       .tabs [class^="tab"] [type="radio"]:hover, .tabs [class^="tab"] [type="radio"]:focus,
-      .tabs [class*=" tab"] [type="radio"]:hover,
-      .tabs [class*=" tab"] [type="radio"]:focus {
+      .tabs [class*=" tab"] [type="radio"]:hover, .tabs [class*=" tab"] [type="radio"]:focus {}
 
-      }
       .tabs [class^="tab"] [type="radio"]:checked,
       .tabs [class*=" tab"] [type="radio"]:checked {
         border-bottom: 5px solid #fd264f; 
         border-bottom-left-radius:10px ;
         border-bottom-right-radius:10px ;
+        border-top-left-radius:10px ;
+        border-top-right-radius:10px ;
         }
       .tabs [class^="tab"] [type="radio"]:checked + div,
       .tabs [class*=" tab"] [type="radio"]:checked + div {
@@ -88,7 +92,37 @@
         margin-left: 1000%; }
       .tabs .tab-2 [type="radio"]:checked + div {
         margin-left: 0; }
-      .tabs .tab-2:last-child [type="radio"] + div {
+      .tabs .tab-2:not(:first-child):not(:last-child) [type="radio"] + div {
         margin-left: 100%; }
-      .tabs .tab-2:last-child [type="radio"]:checked + div {
+      .tabs .tab-2:not(:first-child):not(:last-child) [type="radio"]:checked + div {
         margin-left: -100%; }
+      .tabs .tab-2:last-child [type="radio"] + div {
+        margin-left: 200%; }
+      .tabs .tab-2:last-child [type="radio"]:checked + div {
+        margin-left: -200%; }
+
+      }
+@media only screen and (max-device-width: 800px) {
+  .tabs {
+    display: block;
+    margin: 0;
+    padding: 2vw;
+    background-color: #000;
+    border-top-left-radius: 2vw;
+    border-top-right-radius:2vw ;
+
+  }
+    .tabs  label {
+      color: white;
+      display: block;
+      font-size: 5.5vw;
+      font-weight: 300;
+      line-height: 1em;
+      padding: 0.1vw 1vw;
+      text-align: center; 
+    }
+    .mobileTabOptimize{
+      display: none;
+    }
+   
+}

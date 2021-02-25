@@ -14,9 +14,10 @@
         <div class="carouselNew">
          <div class="carouselNew-row" style="margin-bottom:3vw;">
         <% data.slice(k*i,(k*i)+k).map(datai =>{ %>
+          <% datai.unitChallenge=JSON.parse(datai.unitChallenge)%>
             <div class="carouselNew-tile mobile-cl-optimize"  >
               <form   action="/leaderboard" method="post">
-              <input name="id" value=<%= datai.unitChallenge.Item.challengeId.S %> type="hidden" />
+              <input name="id" value=<%= datai.challengeId %> type="hidden" />
             <a style="max-width: 100%;" href="javascript:void(0);" onclick="$(this).closest('form').submit();">
               <% var userData=datai.resultData.replace("'","");
               userData=JSON.parse(userData); %>
@@ -29,7 +30,7 @@
                 <h1 class=" heading-card-cl" style="color: #ffff89;">
                   <i class="fa fa-trophy" aria-hidden="true" style="color:ffb327;height:1vh;margin-right:0.5vw;"></i>
                   <% if( datai.unitChallenge.Item.challengePrize.L.length>1) {%>
-                    Multiple Prizes
+                    Premios múltiples
                     <% } %>
                     <% if(datai.unitChallenge.Item.challengePrize.L.length===1) { %>
                       <%= datai.unitChallenge.Item.challengePrize.L[0].S %>

@@ -12,7 +12,6 @@ const AmazonCognitoIdentity = require('amazon-cognito-identity-js');
 
 exports.Login = function (body, callback, user) {
 let poolData=null;
-console.log("*--*--*-*-**--**-*-*-*-*-*-*-*-*--**-*--**-*-----------------------------------------------------------------");
 if(user){
    console.log("this working  Usert");
     poolData = {

@@ -134,8 +134,11 @@
           <a class="nav-link nav-txt-clr a1" style="color:white;" href="/aboutUs" > <strong>NOSOTROS</strong></a>
         </li>
           <% if (name!=null) { %>
-            <li class="nav-item px-2">
+            <!-- <li class="nav-item px-2">
               <a class="nav-link nav-txt-clr a1" style="color:white;" href="/myProfile" > <strong>MI PERFIL</strong></a>
+            </li> -->
+            <li class="nav-item px-2">
+              <a class="nav-link nav-txt-clr a1" style="color:white;" href="/wallet" > <strong>MI BILLETERA</strong></a>
             </li>
         <li class="nav-item dropdown px-2">
          <a class="nav-link nav-txt-clr dropdown-toggle"" 
@@ -159,7 +162,7 @@
         <% if (name==null) { %>
           <li class="d-inline-block align-top" style="color:white;" >
             <form method="get" action="/login">
-              <button type="submit" class="btn btn-outline-warning" ><strong>Iniciar sesión</strong></button>
+              <button type="submit" class="btn btn-outline-warning" ><strong>INICIAR SESIÓN</strong></button>
           </form>
           </li>
           <% } %>
@@ -168,7 +171,7 @@
               <a class="nav-link nav-txt-clr a1" style="color:white;"  href="#"><strong><%= name %></strong></a>
             </li>
             <form method="get" action="/logout">
-              <button type="submit" class="btn btn-danger"  ><strong>cerrar sesión</strong></button>
+              <button type="submit" class="btn btn-danger"  ><strong>CERRAR SESIÓN</strong></button>
           </form>
             <% } %>
       </ul>
@@ -185,7 +188,8 @@
   var myLandbot = new LandbotLivechat({
     index: 'https://chats.landbot.io/v2/H-681998-ZMNSD6NBYYKQ62P5/index.html',
   });
-</script><script>
+</script>
+<script>
   // Show a proactive message after 10 seconds
   setTimeout(function() {
     myLandbot.sendProactive({

@@ -8,8 +8,6 @@ exports.forgetPassword = function(req, res){
 };
 
 exports.postForgetPassword=(req,res)=>{
-    console.log("*/*********************************************")
-    console.log(req.body);
     authService.forgetPassword(req.body.email,(err, data)=>{
       if(err){
         res.send(err);
